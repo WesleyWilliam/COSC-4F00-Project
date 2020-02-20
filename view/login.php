@@ -63,14 +63,20 @@ if (!isset($_SESSION)) {
 
 
 <!-- Login  -->
-<div class="alert alert-warning" role="alert">
-<?php echo $_SESSION['LOGIN_MSG']; ?>
-</div>
+
+<!-- If there is a message, show message to user -->
+<?php 
+if (!empty($_SESSION['LOGIN_MSG'])) {
+  echo "<div class=\"alert alert-warning\" role=\"alert\">";
+  echo $_SESSION['LOGIN_MSG'];
+  echo "</div>";
+}
+?>
 
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-8">
-        <h2>Login </h2>
+        <h2 class="mt-2">Login </h2>
         <form action="/~c4f00g05/controller/controller.php" method="POST">
             <div class="form-group">
                 <label for="username1">Username</label>
@@ -82,9 +88,9 @@ if (!isset($_SESSION)) {
             </div>
 
             <input type="hidden" name="COMMAND" value="LOGIN">
-            <input type="submit">
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-        <a href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Sign up</a>
+        <a type="button" class="btn btn-link mt-1" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Don't have an account yet? Sign up</a>
     </div>
   </div>    
 </div>
