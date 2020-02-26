@@ -4,13 +4,17 @@ include '../utilities/utilities.php';
 include '../model/model.php';
 $model = new Model();
 
+//Everytime the front end sends a post request, it requires a 'COMMAND' request to specify what you are asking for
 if (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'LOGIN') {
+    //LOGIN_MSG is used for temporary messages, so you want to clear it so any previous messages are cleared
     $_SESSION['LOGIN_MSG']='';
     if (empty($_POST['UNAME']) || empty($_POST['PWD'])) {
+        //Use this to set temporary messages for login where you don't want to store it in the database
         $_SESSION['LOGIN_MSG'] = "Enter both username and password";
         redirect("view/login.php");
         die();
-    } 
+    }
+    //Sends the model the login information, model returns where the account is correct
     $res = $model->loginAccount($_POST['UNAME'],$_POST['PWD']);
     if ($res == 'NOTFOUND') {    
         redirect("view/login.php");
