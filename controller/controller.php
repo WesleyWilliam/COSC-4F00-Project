@@ -16,7 +16,8 @@ if (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'LOGIN') {
     }
     //Sends the model the login information, model returns where the account is correct
     $res = $model->loginAccount($_POST['UNAME'],$_POST['PWD']);
-    if ($res == 'NOTFOUND') {    
+    if ($res == 'NOTFOUND') {
+        $_SESSION['LOGIN_MSG'] = "Username or password is incorrect";
         redirect("view/login.php");
         die();
     } else {
@@ -34,8 +35,12 @@ if (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'LOGIN') {
     } else {
         $res = $model->createAccount($_POST['UNAME'],$_POST['PWD']);
         if ($res == "SUCCESS") {
-            redirect("view/login.php");
             $_SESSION['LOGIN_MSG'] = 'You can log in now';
+            redirect("view/login.php");
+            die();
+        } elseif ($res=="ACCEXISTS") {
+            $_SESSION['SIGNUP_MSG'] = "Account already exists" ;
+            redirect("view/signup.php");
             die();
         } else {
             redirect("view/signup.php");

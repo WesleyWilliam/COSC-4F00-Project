@@ -23,7 +23,6 @@ class Model {
         // How you query stuff, mostly just normal sql
         $user = R::findOne('users',' username LIKE ? AND password LIKE ? ',[$username,$password]);
         if (!isset($user)) {
-            $_SESSION['LOGIN_MSG'] = "Username or password is incorrect";
             return 'NOTFOUND';
         } else {
             return "SUCCESS" ;
@@ -34,7 +33,6 @@ class Model {
         //Check if user exists first
         $query = R::find('users',' username LIKE ? ', [$username]);
         if (!empty($query)) {
-            $_SESSION['SIGNUP_MSG'] = "Account already exists" ;
             return "ACCEXISTS";
         } else {
             // Create a Redbean object called "bean"
