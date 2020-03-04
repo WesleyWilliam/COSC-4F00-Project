@@ -5,6 +5,5 @@ mkdir licenses
 mv lib/licenses.txt licenses/
 rm lib/rb.tgz
 
-mv config.php config/
 
 chmod -R 701 *
