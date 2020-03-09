@@ -77,7 +77,7 @@ if (!empty($_SESSION['LOGIN_MSG'])) {
   <div class="row justify-content-center">
     <div class="col-8">
         <h2 class="mt-2">Login </h2>
-        <form action="/~c4f00g05/controller/controller.php" method="POST">
+        <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
             <div class="form-group">
                 <label for="username1">Username</label>
                 <input type="text" class="form-control" id="username1" name="UNAME">
