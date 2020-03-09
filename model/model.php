@@ -9,6 +9,7 @@ class Model {
 
     public function __construct() {
         require '../lib/rb-postgres.php';
+		require '../lib/password.php';
         if (!isset($_SESSION)) {
             session_start();
         }
