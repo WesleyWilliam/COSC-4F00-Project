@@ -6,8 +6,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- Local CSS -->
+    <style>
+      #sidebar {
+        
+      }
+    </style>
+
     <!-- Including bootstrap CSS files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script> 
 </head>
 <body>
 
@@ -62,9 +71,83 @@ if (!isset($_SESSION)) {
 </nav>
 
 
-<h1 class="display-1 text-center">Editor page</h1>
+
+<!-- Editor -->
+<div class="row">
+    <div class="col" id="sidebar">
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-action active">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Text</span>
+          
+          <i data-feather="align-justify"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Image</span>
+          
+          <i data-feather="image"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Link</span>
+          
+          <i data-feather="link"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>List</span>
+          
+          <i data-feather="list"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Media</span>
+          
+          <i data-feather="film"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Layout</span>
+          
+          <i data-feather="layout"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Grid</span>
+          
+          <i data-feather="grid"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Size</span>
+          
+          <i data-feather="maximize"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Snippets</span>
+            <i data-feather="plus"></i>
+          </div>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="col-10">Editor</div>
+  </div>
 
 
+  <script>
+  feather.replace()
+</script>
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
