@@ -75,20 +75,20 @@ if (!empty($_POST['CONTACT_MSG'])) {
 ?>
 
 <!-- Contact form -->
-<form action="#" method="POST">
-  <div class="form-contact">
+<form class="ml-4" action="#" method="POST">
+  <div class="w-25 p-3">
     <label for="emailInput">Email address</label>
     <input type="email" class="form-control" id="emailInput" placeholder="Enter email">
   </div>
-  <div class="form-group">
+  <div class="w-25 p-3">
     <label for="nameInput">Name</label>
     <input type="text" class="form-control" id="nameInput" placeholder="Enter your full name">
   </div>
-  <div class="form-group">
+  <div class="w-50 p-3">
     <label for="messageInput">Message</label>
     <textarea type="text" class="form-control" id="messageInput" placeholder="Enter message" rows="5"></textarea>
   </div>
-  <div class="form-group">
+  <div class="w-100 p-3">
     <button type="submit" class="btn btn-primary mb-2">Send</button>
   </div>
   <input type="hidden" name="CONTACT_MSG" value="Message sent!">
