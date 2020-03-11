@@ -46,5 +46,21 @@ if (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'LOGIN') {
             redirect("view/signup.php");
         }
     }
+    //Uploads an image
+} elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'PIC_UPLOAD') {
+    $_SESSION
+    $target_dir = "uploads/images/";
+    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    // Check if image file is a actual image or fake image
+    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+    if($check === false) {
+        $_SESSION['UPLOAD_MSG'] = "Not an image";
+        redirect("view/file-upload.php");
+        die();
+    }
+    $new_filename = $model->storeImage(basename($_FILES["fileToUpload"]["name"]));
 }
 ?>

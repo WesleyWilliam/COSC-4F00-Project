@@ -46,5 +46,15 @@ class Model {
             return "SUCCESS";
         }
     }
+
+    public function storeImage($filename) {
+        $imagebean = R::dispense('image');
+        $imagebean -> old_filename = $filename;
+        $id =R::store($imagebean);
+        $new_filename = strval($id) . '.' . pathinfo(basename($_FILES["fileToUpload"]["name"]),PATHINFO_EXTENSION);
+        $imagebean -> filename = $new_filename;
+        R::store($imagebean);
+        return $new_filename;
+    }
 }
 ?>
