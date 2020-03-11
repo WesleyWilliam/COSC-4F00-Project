@@ -8,9 +8,7 @@
 
     <!-- Local CSS -->
     <style>
-      #sidebar {
-        
-      }
+
     </style>
 
     <!-- Including bootstrap CSS files -->
@@ -19,6 +17,42 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script> 
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Javascript code -->
+    <script>
+
+      var components = [];
+
+      $('#editor-user-page').hide();
+
+      components
+      // When sidebar item is clicked
+      // $('#sidebarList li').on('click', function (e) {
+      //   $( "#sidebarList li" ).removeClass("active")
+      //   $(this).addClass("active")
+      // })
+
+      $(document).on('click', '.text-enter-button', function(){
+        let text =  $('#userText').val();
+        $('#textModal').modal('hide')
+        components.push(text)
+        showChanges();
+      })
+
+
+
+      // Function to render changes
+      function showChanges() {
+        $('#editor-user-page').empty()
+        if (components.length == 1) {
+          $('#editor-user-page').removeClass("invisible").addClass("visible");
+        }
+        for (let i = 0; i < components.length; i++) {
+          $('#editor-user-page').append("<h2>" + components[i] + "</h2>")
+        }
+      }
+
+    </script>
 </head>
 <body>
 
@@ -79,7 +113,7 @@ if (!isset($_SESSION)) {
     <!-- Side bar -->
     <div class="col" id="sidebar">
       <ul class="list-group" id="sidebarList">
-        <li class="list-group-item list-group-item-action active">
+        <li class="list-group-item list-group-item-action" id="text-sidebar-button" data-toggle="modal" data-target="#textModal">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
           <span>Text</span>
           
@@ -145,19 +179,47 @@ if (!isset($_SESSION)) {
     </div>
 
     <!-- Editor -->
-    <div class="col-10"></div>
+    <div class="col-10">
+      <div class="jumbotron mt-3 mr-3 invisible" id="editor-user-page">
+      
+      </div>
+    </div>
+
+
+
+    <div class="modal fade" id="textModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Please enter text content</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">Text:</label>
+                <input type="text" class="form-control" id="userText">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary text-enter-button">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 
   <script>
-    feather.replace()
-
-    $('#sidebarList li').on('click', function (e) {
-      $( "#sidebarList li" ).removeClass("active")
-      $(this).addClass("active")
-    })
-
+      feather.replace() // For icons
   </script>
+
+
+
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
