@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <!-- Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script> 
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -74,8 +76,9 @@ if (!isset($_SESSION)) {
 
 <!-- Editor -->
 <div class="row">
+    <!-- Side bar -->
     <div class="col" id="sidebar">
-      <ul class="list-group">
+      <ul class="list-group" id="sidebarList">
         <li class="list-group-item list-group-item-action active">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
           <span>Text</span>
@@ -138,16 +141,23 @@ if (!isset($_SESSION)) {
             <i data-feather="plus"></i>
           </div>
         </li>
-        
       </ul>
     </div>
-    <div class="col-10">Editor</div>
+
+    <!-- Editor -->
+    <div class="col-10"></div>
   </div>
 
 
   <script>
-  feather.replace()
-</script>
+    feather.replace()
+
+    $('#sidebarList li').on('click', function (e) {
+      $( "#sidebarList li" ).removeClass("active")
+      $(this).addClass("active")
+    })
+
+  </script>
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
