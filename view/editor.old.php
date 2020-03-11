@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
+
 <?php
 include('../model/model.php');
 $config = require('../config/config.php');
@@ -61,41 +62,7 @@ if (!isset($_SESSION)) {
 </nav>
 
 
-
-
-<!-- Sign Up -->
-
-<!-- If there is a message, show message to user -->
-<?php 
-if (!empty($_SESSION['SIGNUP_MSG'])) {
-  echo "<div class=\"alert alert-warning\" role=\"alert\">";
-  echo $_SESSION['SIGNUP_MSG'];
-  echo "</div>";
-}
-?>
-
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-8">
-        <h2 class="mt-2">Sign up </h2>
-        <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
-            <div class="form-group">
-                <label for="username1">Username</label>
-                <input type="text" class="form-control" id="username1" name="UNAME">
-            </div>
-            <div class="form-group">
-                <label for="password1">Password</label>
-                <input type="password" class="form-control" id="password1" name="PWD">
-            </div>
-
-            <input type="hidden" name="COMMAND" value="SIGNUP">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        <a type="button" class="btn btn-link mt-1" href="<?php echo $config['home-file-path'] . '/view/login.php' ?>">Already have an account? Log in</a>
-    </div>
-  </div>    
-</div>
-
+<h1 class="display-1 text-center">Welcome</h1>
 
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
