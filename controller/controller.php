@@ -46,6 +46,7 @@ if (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'LOGIN') {
             redirect("view/signup.php");
         }
     }
+
     //Uploads an image
 } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'PIC_UPLOAD') {
     $target_dir = "uploads/images/";
@@ -72,6 +73,13 @@ if (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'LOGIN') {
         //die();
         }
 
+    }
+} elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_WIZARD') {
+    if (strlen($_POST['WEBSITE']) < 3) {
+        redirect("view/website-name.php");
+        die();
+    } else {
+        $model->addWebsite($_POST['WEBSITE']);
     }
 
 }

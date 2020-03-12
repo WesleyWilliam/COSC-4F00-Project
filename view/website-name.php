@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-
 <?php
 include('../model/model.php');
 $config = require('../config/config.php');
@@ -19,6 +18,7 @@ if (!isset($_SESSION)) {
     session_start();
 }
 ?>
+
 
 <!-- Nav Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -62,7 +62,17 @@ if (!isset($_SESSION)) {
 </nav>
 
 
-<h1 class="display-1 text-center">Settings page</h1>
+<h1 class="text-center mt-5 text-muted">Enter name of your website</h1>
+
+<form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+  <div class="form-group form-group-lg">
+    <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z_]{3}[A-Za-z_]*$" title="3 characters, only a-z and underline">
+  </div>
+  <div class="form-group" style="text-align:center">
+    <button class="btn btn-primary" type="Submit">Submit</button>
+    <input type="hidden" name="COMMAND" value="WEBSITE_WIZARD">
+  </div>
+</form>
 
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
