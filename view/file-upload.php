@@ -29,6 +29,7 @@ if (!isset($_SESSION)) {
     <input type="submit" value="Upload Image" name="submit">
     <input type="hidden" name="COMMAND" value="PIC_UPLOAD">
   </form>
-
+        
+<?php $_SESSION['UPLOAD_MSG'] = '' ; ?>
 </body>
 </html>
