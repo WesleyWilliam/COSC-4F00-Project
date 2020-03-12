@@ -43,5 +43,12 @@ class Model {
             return "SUCCESS";
         }
     }
+
+    public function addWebsite($name) {
+        $website = R::dispense('websites');
+        $website -> user_id = '';
+        $website -> name = $name;
+        return R::store($website);
+    }
 }
 ?>
