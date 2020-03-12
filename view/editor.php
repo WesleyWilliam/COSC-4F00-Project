@@ -99,10 +99,6 @@ if (!isset($_SESSION)) {
         <a class="nav-link" href="#">Editor</a>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
   </div>
 </nav>
 
@@ -180,7 +176,22 @@ if (!isset($_SESSION)) {
 
     <!-- Editor -->
     <div class="col-10">
-      <div class="jumbotron mt-3 mr-3 invisible" id="editor-user-page">
+
+      <div class="d-flex justify-content-between mt-2 mr-4 pb-2 border-bottom"> 
+        <div>
+          <button type="button" class="btn btn-outline-info mr-2 w-5">Themes</button>
+          <button type="button" class="btn btn-outline-info mr-2">Help</button>
+          <button type="button" class="btn btn-outline-info">Edit</button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
+          <button type="button" class="btn btn-outline-success mr-2">Save</button>
+          <button type="button" class="btn btn-outline-info">Preview</button>
+        </div>
+        
+      </div>
+
+      <div class="jumbotron mt-3 mr-4 invisible" id="editor-user-page">
       
       </div>
     </div>
