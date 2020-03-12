@@ -3,8 +3,6 @@
 class Model {
 
     
-    private $password_list;
-    private $bean; //ORM
     private $config;
 
     public function __construct() {
@@ -13,7 +11,6 @@ class Model {
         if (!isset($_SESSION)) {
             session_start();
         }
-        $this->password_list = Array();
         $this->config = require('../config/config.php');
         $cfg = $this->config;
         R::setup('pgsql:host=localhost;dbname=' . $cfg['dbname'],$cfg['db-user'],$cfg['db-pwd']);
