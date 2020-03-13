@@ -62,7 +62,72 @@ if (!isset($_SESSION)) {
 </nav>
 
 
-<h1 class="display-1 text-center">Select Theme page</h1>
+<!-- Title -->
+<div class="border-bottom mr-5 ml-5">
+  <h1 class="display-4 text-center pb-3">Select Webpage Theme</h1>
+</div>
+
+<!-- Theme list -->
+<div class="d-flex justify-content-around pt-5">
+
+
+<div class="card" style="width: 18rem;">
+    <img src=".\theme_custom.PNG" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">Custom</h5>
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    </div>
+    <ul class="list-group list-group-flush">
+    </ul>
+    <div class="card-body">
+      <a href="#" class="card-link">Select</a>
+      <a href="#" class="card-link">Info</a>
+    </div>
+  </div>
+
+
+  <div class="card" style="width: 18rem;">
+    <img src=".\theme_ararat.PNG" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">Ararat</h5>
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    </div>
+    <ul class="list-group list-group-flush">
+    </ul>
+    <div class="card-body">
+      <a href="#" class="card-link">Select</a>
+      <a href="#" class="card-link">Info</a>
+    </div>
+  </div>
+
+  <div class="card" style="width: 18rem;">
+    <img src=".\theme_stack.PNG" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">Stack</h5>
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    </div>
+    <ul class="list-group list-group-flush">
+    </ul>
+    <div class="card-body">
+      <a href="#" class="card-link">Select</a>
+      <a href="#" class="card-link">Info</a>
+    </div>
+  </div>
+
+  <div class="card" style="width: 18rem;">
+    <img src=".\theme_mighty.PNG" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">Mighty</h5>
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    </div>
+    <ul class="list-group list-group-flush">
+    </ul>
+    <div class="card-body">
+      <a href="#" class="card-link">Select</a>
+      <a href="#" class="card-link">Info</a>
+    </div>
+  </div>
+</div>
 
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -179,7 +179,7 @@ if (!isset($_SESSION)) {
 
       <div class="d-flex justify-content-between mt-2 mr-4 pb-2 border-bottom"> 
         <div>
-          <button type="button" class="btn btn-outline-info mr-2 w-5">Themes</button>
+          <button type="button" class="btn btn-outline-info mr-2">Themes</button>
           <button type="button" class="btn btn-outline-info mr-2">Help</button>
           <button type="button" class="btn btn-outline-info">Edit</button>
         </div>
