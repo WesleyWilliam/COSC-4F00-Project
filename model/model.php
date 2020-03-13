@@ -1,5 +1,7 @@
 <?php
 
+class SessionNotFound extends Exception { }
+
 class Model {
 
     
@@ -56,10 +58,19 @@ class Model {
         R::store($imagebean);
         return $new_filename;
     }
+
+    public function getUser() {
+        //Good query to index
+        $res = R::findOne('users', ' session Like ? ', [session_id()]);
+        if (!isset($res)) {
+            throw new SessionNotFound();
+        }
+        return $res;
+    }
   
     public function addWebsite($name) {
         $website = R::dispense('websites');
-        $website -> user_id = '';
+        $website -> user = $this -> getUser();
         $website -> name = $name;
         return R::store($website);
     }
