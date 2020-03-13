@@ -23,6 +23,8 @@ class Model {
         if (!isset($user)) {
             return 'NOTFOUND';
         } else {
+            $user -> session = session_id();
+            r::store($user);
             return "SUCCESS" ;
         }
     }
@@ -38,8 +40,9 @@ class Model {
             // Add fields to it
             $user->username = $username;
             $user->password = $password;
-            //Store it in the database, Redbean sets up everything
+            $user->session = '';
             R::store($user);
+            //Store it in the database, Redbean sets up everything
             return "SUCCESS";
         }
     }
