@@ -55,6 +55,7 @@ class Model {
         $imagebean -> filename = $new_filename;
         R::store($imagebean);
         return $new_filename;
+    }
   
     public function addWebsite($name) {
         $website = R::dispense('websites');
