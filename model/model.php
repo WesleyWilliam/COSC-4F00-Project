@@ -21,13 +21,14 @@ class Model {
 
     public function loginAccount($username,$password) {
         // How you query stuff, mostly just normal sql
-        $user = R::findOne('users',' username LIKE ? AND password LIKE ? ',[$username,$password]);
-        if (!isset($user)) {
-            return 'NOTFOUND';
-        } else {
+        $user = R::findOne('users',' username LIKE ?',[$username]);
+        $hash = $user -> password;
+        if (isset($user) && password_verify($password, $hash)) {
             $user -> session = session_id();
             r::store($user);
-            return "SUCCESS" ;
+            return "SUCCESS";
+        } else {
+            return 'NOTFOUND';
         }
     }
     
@@ -41,7 +42,7 @@ class Model {
             $user = R::dispense('users');
             // Add fields to it
             $user->username = $username;
-            $user->password = $password;
+            $user->password = password_hash($password, PASSWORD_BCRYPT);
             $user->session = '';
             R::store($user);
             //Store it in the database, Redbean sets up everything
