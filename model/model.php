@@ -82,5 +82,16 @@ class Model {
         R::store($user);
         return "SUCCESS";
     }
+
+    public function getComponents($website) {
+        $user = $this -> getUser();
+        $site = R::load('websites',$website);
+        if ($user->id === $site->user_id) {
+            return $site->components;
+        } else {
+            return "WRONGUSER";
+        }
+    }
+    
 }
 ?>

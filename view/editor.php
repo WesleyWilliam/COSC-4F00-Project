@@ -18,12 +18,48 @@
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
+<?php
+require_once('../model/model.php');
+include ('../utilities/utilities.php');
+$config = require('../config/config.php');
+$model = new Model();
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+
+try {
+    $component = NULL;
+    if (isset($_GET['website'])) {
+        $component = $model -> getComponents($_GET['website']);
+        if ($component == "WRONGUSER") {
+            echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
+            die();
+        }
+    } else {
+        //Later on well make this go to the first website for your user
+        echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
+        die();
+    }
+} catch (SessionNotFound $e) {
+    redirect('view/login.php');
+    die();
+}
+?>
+
     <!-- Javascript code -->
     <script>
 
-      var components = [];
+var str = <?php echo json_encode($component); ?> ;
+var components = JSON.parse(str) ;
+
+
 
       $('#editor-user-page').hide();
+
+$(document).ready(function() {
+    showChanges();
+});
 
       components
       // When sidebar item is clicked
@@ -79,15 +115,6 @@ function drop(ev) {
     </script>
 </head>
 <body>
-
-<?php
-include('../model/model.php');
-$config = require('../config/config.php');
-$model = new Model();
-if (!isset($_SESSION)) {
-    session_start();
-}
-?>
 
 <!-- Nav Bar -->
 <?php include 'navbar.php' ?>
