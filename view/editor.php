@@ -90,41 +90,7 @@ if (!isset($_SESSION)) {
 ?>
 
 <!-- Nav Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">
-  <img src=".\cms_logo.svg" width="30" height="30" alt="">
-  CMS
-  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Subscriptions
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Premium Plans</a>
-          <a class="dropdown-item" href="#">Standard Plans</a>
-          <a class="dropdown-item" href="#">Free Content</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Domains</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Editor</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+<?php include 'navbar.php' ?>
 
 
 

@@ -84,7 +84,9 @@ try {
             $id = $model->addWebsite($_POST['WEBSITE']);
             echo strval($id);
         }
-        
+    } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
+        $model->logout();
+        redirect('view/login.php');
     }
 } catch (SessionNotFound $e) {
     redirect('view/login.php');
