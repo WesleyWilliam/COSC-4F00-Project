@@ -74,5 +74,11 @@ class Model {
         $website -> name = $name;
         return R::store($website);
     }
+
+    public function logout () {
+        $user = $this->getUser();
+        $user -> session = '';
+        return "SUCCESS";
+    }
 }
 ?>
