@@ -78,6 +78,7 @@ class Model {
     public function logout () {
         $user = $this->getUser();
         $user -> session = '';
+        R::store($user);
         return "SUCCESS";
     }
 }
