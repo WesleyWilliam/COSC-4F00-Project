@@ -51,6 +51,30 @@
           $('#editor-user-page').append("<h2>" + components[i] + "</h2>")
         }
       }
+	  
+	  //drag and drop stuff
+	  
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  //ev.preventDefault();
+  //var data = ev.dataTransfer.getData("text");
+  //ev.target.appendChild(document.getElementById(data));
+  
+          $('#textModal').modal('show')
+
+  
+}
+	  
+	  
+	  
+	  
 
     </script>
 </head>
@@ -109,13 +133,14 @@ if (!isset($_SESSION)) {
     <!-- Side bar -->
     <div class="col" id="sidebar">
       <ul class="list-group" id="sidebarList">
-        <li class="list-group-item list-group-item-action" id="text-sidebar-button" data-toggle="modal" data-target="#textModal">
+        <li class="list-group-item list-group-item-action" id="text-sidebar-button" data-toggle="modal" data-target="#textModal" draggable="true" ondragstart=drag(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
           <span>Text</span>
           
           <i data-feather="align-justify"></i>
           </div>
         </li>
+		
         <li class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
           <span>Image</span>
@@ -123,6 +148,7 @@ if (!isset($_SESSION)) {
           <i data-feather="image"></i>
           </div>
         </li>
+		
         <li class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
           <span>Link</span>
@@ -191,7 +217,7 @@ if (!isset($_SESSION)) {
         
       </div>
 
-      <div class="jumbotron mt-3 mr-4 invisible" id="editor-user-page">
+      <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" ondrop="drop(event)" ondragover="allowDrop(event)">
       
       </div>
     </div>
