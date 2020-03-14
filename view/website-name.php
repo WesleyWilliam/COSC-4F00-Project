@@ -24,17 +24,19 @@ if (!isset($_SESSION)) {
 <?php include 'navbar.php' ?>
 
 
-<h1 class="text-center mt-5 text-muted">Enter name of your website</h1>
+<div class="container">
+  <h1 class="text-center mt-5 text-muted">Enter name of your website</h1>
 
-<form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
-  <div class="form-group form-group-lg">
-    <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z_]{3}[A-Za-z_]*$" title="3 characters, only a-z and underline">
-  </div>
-  <div class="form-group" style="text-align:center">
-    <button class="btn btn-primary" type="Submit">Submit</button>
-    <input type="hidden" name="COMMAND" value="WEBSITE_WIZARD">
-  </div>
-</form>
+  <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+    <div class="form-group form-group-lg">
+      <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z_]{3}[A-Za-z_]*$" title="3 characters, only a-z and underline">
+    </div>
+    <div class="form-group" style="text-align:center">
+      <button class="btn btn-primary" type="Submit">Submit</button>
+      <input type="hidden" name="COMMAND" value="WEBSITE_WIZARD">
+    </div>
+  </form>
+</div>
 
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
