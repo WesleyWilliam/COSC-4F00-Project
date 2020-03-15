@@ -50,27 +50,20 @@ try {
     <!-- Javascript code -->
     <script>
 
-var str = <?php echo json_encode($component); ?> ;
-var components = JSON.parse(str) ;
-
-
+    var str = <?php echo json_encode($component); ?> ;
+    var components = JSON.parse(str) ;
+   var index; //this index is used to keep track of which element is currently selected on the page
 
       $('#editor-user-page').hide();
 
-$(document).ready(function() {
-    showChanges();
-});
+      $(document).ready(function() {
+          showChanges();
+      });
 
-      components
-      // When sidebar item is clicked
-      // $('#sidebarList li').on('click', function (e) {
-      //   $( "#sidebarList li" ).removeClass("active")
-      //   $(this).addClass("active")
-      // )
 
       $(document).on('click', '.text-enter-button', function(){
         let text =  $('#userText').val();
-        $('#textModal').modal('hide')
+        $('#addTextModal').modal('hide')
         components.push(text)
         showChanges();
       });
@@ -108,7 +101,7 @@ $(document).ready(function() {
           $('#editor-user-page').removeClass("invisible").addClass("visible");
         }
         for (let i = 0; i < components.length; i++) {
-          $('#editor-user-page').append("<h2>" + components[i] + "</h2>")
+          $('#editor-user-page').append("<h2 onclick='editText("+i+");'" +"hover='yellow'>" + components[i] + "</h2>")
         }
       }
 	  
@@ -123,16 +116,31 @@ function drag(ev) {
 }
 
 function drop(ev) {
-  //ev.preventDefault();
-  //var data = ev.dataTransfer.getData("text");
-  //ev.target.appendChild(document.getElementById(data));
-  
-          $('#textModal').modal('show')
+    ev.preventDefault();
+          $('#addTextModal').modal('show')
 
   
 }
 	  
-	  
+	  function editText(i) {
+index = i;
+            $('#editTextModal').modal('show')
+
+}
+
+function deleteElement(){
+	
+	        $('#editor-user-page').empty()
+        if (components.length == 1) {
+          $('#editor-user-page').removeClass("invisible").addClass("visible");
+        }
+		components.splice(index, 1);
+        for (let i = 0; i < components.length; i++) {
+          $('#editor-user-page').append("<h2 onclick='editText("+i+");'" +"hover='yellow'>" + components[i] + "</h2>")
+        }
+		index = components.length;
+	
+}
 	  
 	  
 
@@ -150,7 +158,7 @@ function drop(ev) {
     <!-- Side bar -->
     <div class="col" id="sidebar">
       <ul class="list-group" id="sidebarList">
-        <li class="list-group-item list-group-item-action" id="text-sidebar-button" data-toggle="modal" data-target="#textModal" draggable="true" ondragstart=drag(event)">
+        <li class="list-group-item list-group-item-action" id="text-sidebar-button" data-toggle="modal" data-target="#textModal" draggable="true" ondragstart="drag(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
           <span>Text</span>
           
@@ -241,7 +249,8 @@ function drop(ev) {
 
 
 
-    <div class="modal fade" id="textModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal fade" id="addTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -260,6 +269,26 @@ function drop(ev) {
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary text-enter-button">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Text</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Save</button>
           </div>
         </div>
       </div>
