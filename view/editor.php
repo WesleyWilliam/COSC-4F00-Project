@@ -18,29 +18,81 @@
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
+<?php
+require_once('../model/model.php');
+include ('../utilities/utilities.php');
+$config = require('../config/config.php');
+$model = new Model();
+if (!isset($_SESSION)) {
+    session_start();
+}
+
+
+try {
+    $component = NULL;
+    if (isset($_GET['website'])) {
+        $component = $model -> getComponents($_GET['website']);
+        if ($component == "WRONGUSER") {
+            echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
+            die();
+        }
+    } else {
+        //Later on well make this go to the first website for your user
+        echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
+        die();
+    }
+} catch (SessionNotFound $e) {
+    redirect('view/login.php');
+    die();
+}
+?>
+
     <!-- Javascript code -->
     <script>
 
-      var components = [];
-	  var index; //this index is used to keep track of which element is currently selected on the page
+    var str = <?php echo json_encode($component); ?> ;
+    var components = JSON.parse(str) ;
+   var index; //this index is used to keep track of which element is currently selected on the page
 
       $('#editor-user-page').hide();
 
-      components
-      // When sidebar item is clicked
-      // $('#sidebarList li').on('click', function (e) {
-      //   $( "#sidebarList li" ).removeClass("active")
-      //   $(this).addClass("active")
-      // })
+      $(document).ready(function() {
+          showChanges();
+      });
+
 
       $(document).on('click', '.text-enter-button', function(){
         let text =  $('#userText').val();
         $('#addTextModal').modal('hide')
         components.push(text)
         showChanges();
+      });
+
+
+      $(document).on('click','.save-editor-changes',function() {
+        // $.post("../controller/controller.php",
+        // {COMMAND: "SAVE-EDITOR", WEBPAGE: "<?php echo $_GET['website'] ?>", COMPONENTS: JSON.stringify(components)}, function(data,status) {
+        //   alert(data);
+        // }
+        // )
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+        }
+          };
+        var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php"
+        console.log(url);
+        xhttp.open("POST",url,true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        var webpage_id = "<?php echo $_GET['website']; ?> ";
+        if(!isNaN(webpage_id)) {
+          xhttp.send("COMMAND=SAVE-EDITOR&WEBPAGE=" + webpage_id + "&COMPONENTS=" + encodeURI(JSON.stringify(components)));
+        } 
+        
       })
 
-
+          
 
       // Function to render changes
       function showChanges() {
@@ -96,51 +148,8 @@ function deleteElement(){
 </head>
 <body>
 
-<?php
-include('../model/model.php');
-$config = require('../config/config.php');
-$model = new Model();
-if (!isset($_SESSION)) {
-    session_start();
-}
-?>
-
 <!-- Nav Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">
-  <img src=".\cms_logo.svg" width="30" height="30" alt="">
-  CMS
-  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Subscriptions
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Premium Plans</a>
-          <a class="dropdown-item" href="#">Standard Plans</a>
-          <a class="dropdown-item" href="#">Free Content</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Domains</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Editor</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+<?php include 'navbar.php' ?>
 
 
 
@@ -227,7 +236,7 @@ if (!isset($_SESSION)) {
         </div>
         <div>
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
-          <button type="button" class="btn btn-outline-success mr-2">Save</button>
+          <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save</button>
           <button type="button" class="btn btn-outline-info">Preview</button>
         </div>
         
