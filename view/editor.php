@@ -66,16 +66,40 @@ $(document).ready(function() {
       // $('#sidebarList li').on('click', function (e) {
       //   $( "#sidebarList li" ).removeClass("active")
       //   $(this).addClass("active")
-      // })
+      // )
 
       $(document).on('click', '.text-enter-button', function(){
         let text =  $('#userText').val();
         $('#textModal').modal('hide')
         components.push(text)
         showChanges();
+      });
+
+
+      $(document).on('click','.save-editor-changes',function() {
+        // $.post("../controller/controller.php",
+        // {COMMAND: "SAVE-EDITOR", WEBPAGE: "<?php echo $_GET['website'] ?>", COMPONENTS: JSON.stringify(components)}, function(data,status) {
+        //   alert(data);
+        // }
+        // )
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+        }
+          };
+        var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php"
+        console.log(url);
+        xhttp.open("POST",url,true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        var webpage_id = "<?php echo $_GET['website']; ?> ";
+        if(!isNaN(webpage_id)) {
+          xhttp.send("COMMAND=SAVE-EDITOR&WEBPAGE=" + webpage_id + "&COMPONENTS=" + encodeURI(JSON.stringify(components)));
+        } 
+        
       })
 
-
+          
 
       // Function to render changes
       function showChanges() {
@@ -204,7 +228,7 @@ function drop(ev) {
         </div>
         <div>
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
-          <button type="button" class="btn btn-outline-success mr-2">Save</button>
+          <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save</button>
           <button type="button" class="btn btn-outline-info">Preview</button>
         </div>
         

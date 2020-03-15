@@ -92,6 +92,23 @@ class Model {
             return "WRONGUSER";
         }
     }
+
+    public function saveComponents($website, $components) {
+        $website = R::load('websites',$website);
+        if ($website->user_id === $this->getUser()->id) {
+            $website -> components = $components;
+            R::store($website);
+            return "SUCCESS";
+        } else {
+            return "WRONGUSER";
+        }
+    }
+
+    public function log($msg) {
+        $log = R::dispense('logs');
+        $log -> message = $msg;
+        R::store($log);
+    }
     
 }
 ?>

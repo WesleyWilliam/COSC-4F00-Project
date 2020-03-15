@@ -87,6 +87,8 @@ try {
     } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
         $model->logout();
         redirect('view/login.php');
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
+        echo $model->saveComponents($_POST['WEBPAGE'],$_POST['COMPONENTS']);
     }
 } catch (SessionNotFound $e) {
     redirect('view/login.php');
