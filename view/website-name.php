@@ -40,12 +40,10 @@ if (!isset($_SESSION)) {
 
   <h4 class="mt-5 text-muted text-left">Your existing webpages</h4>
   <div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action">
-      Website_One
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">Website_Two</a>
-    <a href="#" class="list-group-item list-group-item-action">Website_Three</a>
-    <a href="#" class="list-group-item list-group-item-action">Website_Four</a>
+    <?php foreach ($model->listWebsites() as $website) {
+      echo '<a href="' . $config['home-file-path'] . '" class="list-group-item list-group-item-action">' . $website->name . '</a>' ;
+    } ?>
+
   </div>
 </div>
 

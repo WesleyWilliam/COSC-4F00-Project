@@ -112,6 +112,12 @@ class Model {
         $log -> message = $msg;
         R::store($log);
     }
+
+    public function listWebsites() {
+        $user = $this -> getUser();
+        $websites = R::findAll('websites',' user_id = ? ',[$user->id]);
+        return $websites;
+    }
     
 }
 ?>
