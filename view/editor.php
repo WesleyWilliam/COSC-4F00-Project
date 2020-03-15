@@ -18,46 +18,47 @@
     <!-- Jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<?php
-require_once('../model/model.php');
-include ('../utilities/utilities.php');
-$config = require('../config/config.php');
-$model = new Model();
-if (!isset($_SESSION)) {
-    session_start();
-}
+    <?php
+    require_once('../model/model.php');
+    include ('../utilities/utilities.php');
+    $config = require('../config/config.php');
+    $model = new Model();
+    if (!isset($_SESSION)) {
+        session_start();
+    }
 
 
-try {
-    $component = NULL;
-    if (isset($_GET['website'])) {
-        $component = $model -> getComponents($_GET['website']);
-        if ($component == "WRONGUSER") {
-            echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
+    try {
+        $component = NULL;
+        if (isset($_GET['website'])) {
+            $component = $model -> getComponents($_GET['website']);
+            if ($component == "WRONGUSER") {
+                echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
+                die();
+            }
+        } else {
+            //Later on well make this go to the first website for your user
+            echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
             die();
         }
-    } else {
-        //Later on well make this go to the first website for your user
-        echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
+    } catch (SessionNotFound $e) {
+        redirect('view/login.php');
         die();
     }
-} catch (SessionNotFound $e) {
-    redirect('view/login.php');
-    die();
-}
-?>
+    ?>
 
     <!-- Javascript code -->
     <script>
 
     var str = <?php echo json_encode($component); ?> ;
     var components = JSON.parse(str) ;
-   var index; //this index is used to keep track of which element is currently selected on the page
+    var index; //this index is used to keep track of which element is currently selected on the page
 
       $('#editor-user-page').hide();
 
       $(document).ready(function() {
           showChanges();
+          $(".save-webpage-alert").hide();
       });
 
 
@@ -70,6 +71,8 @@ try {
 
 
       $(document).on('click','.save-editor-changes',function() {
+        $(".save-webpage-alert").show();
+        
         // $.post("../controller/controller.php",
         // {COMMAND: "SAVE-EDITOR", WEBPAGE: "<?php echo $_GET['website'] ?>", COMPONENTS: JSON.stringify(components)}, function(data,status) {
         //   alert(data);
@@ -79,8 +82,7 @@ try {
         xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           console.log(this.responseText);
-        }
-          };
+        }};
         var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php"
         console.log(url);
         xhttp.open("POST",url,true);
@@ -89,7 +91,10 @@ try {
         if(!isNaN(webpage_id)) {
           xhttp.send("COMMAND=SAVE-EDITOR&WEBPAGE=" + webpage_id + "&COMPONENTS=" + encodeURI(JSON.stringify(components)));
         } 
-        
+
+        setTimeout(function(){
+          $(".save-webpage-alert").hide();
+        }, 5000);
       })
 
           
@@ -106,45 +111,39 @@ try {
       }
 	  
 	  //drag and drop stuff
-	  
-function allowDrop(ev) {
-  ev.preventDefault();
-}
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
 
-function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
-}
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
 
-function drop(ev) {
-    ev.preventDefault();
-          $('#addTextModal').modal('show')
+    function drop(ev) {
+      ev.preventDefault();
+      $('#addTextModal').modal('show')
+    }
+        
+    function editText(i) {
+      index = i;
+      $('#editTextModal').modal('show')
+    }
 
-  
-}
-	  
-	  function editText(i) {
-index = i;
-            $('#editTextModal').modal('show')
-
-}
-
-function deleteElement(){
-	
-	        $('#editor-user-page').empty()
-        if (components.length == 1) {
-          $('#editor-user-page').removeClass("invisible").addClass("visible");
-        }
-		components.splice(index, 1);
-        for (let i = 0; i < components.length; i++) {
-          $('#editor-user-page').append("<h2 onclick='editText("+i+");'" +"hover='yellow'>" + components[i] + "</h2>")
-        }
-		index = components.length;
-	
-}
+    function deleteElement(){
+      $('#editor-user-page').empty()
+      if (components.length == 1) {
+        $('#editor-user-page').removeClass("invisible").addClass("visible");
+      }
+      components.splice(index, 1);
+      for (let i = 0; i < components.length; i++) {
+        $('#editor-user-page').append("<h2 onclick='editText("+i+");'" +"hover='yellow'>" + components[i] + "</h2>")
+      }
+      index = components.length;
+    }
 	  
 	  
 
-    </script>
+</script>
 </head>
 <body>
 
@@ -241,10 +240,13 @@ function deleteElement(){
         </div>
         
       </div>
-
+      <div class="alert alert-success save-webpage-alert mr-4" role="alert">
+        Webpage changes saved.
+      </div>
       <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" ondrop="drop(event)" ondragover="allowDrop(event)">
       
       </div>
+      
     </div>
 
 

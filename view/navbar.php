@@ -1,3 +1,4 @@
+
 <?php
   $config = require('../config/config.php');
 ?>
@@ -42,7 +43,6 @@
       }
       ?>
 
-      <!-- <li class="nav-item"><a class="nav-link" href="< ?php echo $config['home-file-path'] . '/view/website-name.php' ?>">My Webpages</a></li> -->
     </ul>
 
     <?php 
