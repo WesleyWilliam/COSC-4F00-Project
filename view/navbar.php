@@ -1,3 +1,6 @@
+<?php
+  $config = require('../config/config.php');
+?>
 <!-- Nav Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">
@@ -36,5 +39,6 @@
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
+    <a class="btn btn-outline-success my-2 my-sm-0" href="<?php echo $config['home-file-path']; ?>/controller/controller.php?COMMAND=LOGOUT">Logout</a>
   </div>
 </nav>

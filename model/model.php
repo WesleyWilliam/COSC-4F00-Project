@@ -73,6 +73,7 @@ class Model {
         $website = R::dispense('websites');
         $website -> user = $this -> getUser();
         $website -> name = $name;
+        $website -> components = '[]';
         return R::store($website);
     }
 
@@ -82,5 +83,33 @@ class Model {
         R::store($user);
         return "SUCCESS";
     }
+
+    public function getComponents($website) {
+        $user = $this -> getUser();
+        $site = R::load('websites',$website);
+        if ($user->id === $site->user_id) {
+            return $site->components;
+        } else {
+            return "WRONGUSER";
+        }
+    }
+
+    public function saveComponents($website, $components) {
+        $website = R::load('websites',$website);
+        if ($website->user_id === $this->getUser()->id) {
+            $website -> components = $components;
+            R::store($website);
+            return "SUCCESS";
+        } else {
+            return "WRONGUSER";
+        }
+    }
+
+    public function log($msg) {
+        $log = R::dispense('logs');
+        $log -> message = $msg;
+        R::store($log);
+    }
+    
 }
 ?>

@@ -23,7 +23,7 @@ try {
             redirect("view/login.php");
             die();
         } else {
-            redirect("view/welcome.php");
+            redirect("view/website-name.php");
         }    
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SIGNUP') {
         $_SESSION['SIGNUP_MSG'] = '';
@@ -82,11 +82,14 @@ try {
             die();
         } else {
             $id = $model->addWebsite($_POST['WEBSITE']);
-            echo strval($id);
+            redirect("view/editor.php?website=" . strval($id));
+            
         }
     } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
         $model->logout();
         redirect('view/login.php');
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
+        echo $model->saveComponents($_POST['WEBPAGE'],$_POST['COMPONENTS']);
     }
 } catch (SessionNotFound $e) {
     redirect('view/login.php');
