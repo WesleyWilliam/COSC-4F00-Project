@@ -1,3 +1,4 @@
+
 <?php
   $config = require('../config/config.php');
 ?>
@@ -14,7 +15,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="<?php echo $config['home-file-path'] . '/view/welcome.php' ?>">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Features</a>
@@ -31,10 +32,29 @@
           <a class="dropdown-item" href="#">Domains</a>
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Editor</a>
-      </li>
+
+
+      <!-- See whether user is logged in or not -->
+      <?php 
+      if (!empty($_SESSION['loggedinvar'])) {
+        echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"";
+        echo  $config['home-file-path'];
+        echo "/view/website-name.php\">My Webpages</a></li>";
+      }
+      ?>
+
     </ul>
-    <a class="btn btn-outline-success my-2 my-sm-0" href="<?php echo $config['home-file-path']; ?>/controller/controller.php?COMMAND=LOGOUT">Logout</a>
+
+    <?php 
+      if (!empty($_SESSION['loggedinvar'])) {
+        echo "<a class=\"btn btn-outline-warning my-2 my-sm-0\" href=\"";
+        echo  $config['home-file-path'];
+        echo "/controller/controller.php?COMMAND=LOGOUT\">Logout</a>";
+      } else {
+        echo "<a class=\"btn btn-outline-success my-2 my-sm-0\" href=\"";
+        echo  $config['home-file-path'];
+        echo "/view/login.php\">Login</a>";
+      }
+      ?>
   </div>
 </nav>
