@@ -73,6 +73,7 @@ class Model {
         $website = R::dispense('websites');
         $website -> user = $this -> getUser();
         $website -> name = $name;
+        $website -> components = '[]';
         return R::store($website);
     }
 
