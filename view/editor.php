@@ -64,7 +64,7 @@ function drag(ev) {
 }
 
 function drop(ev) {
-  
+    ev.preventDefault();
           $('#addTextModal').modal('show')
 
   
