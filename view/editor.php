@@ -39,6 +39,13 @@
         components.push(text)
         showChanges();
       })
+	  
+	        $(document).on('click', '.text-edit-button', function(){
+        let text =  $('#editText').val();
+        $('#editTextModal').modal('hide')
+        components[index] = text;
+        showChanges();
+      })
 
 
 
@@ -275,11 +282,19 @@ if (!isset($_SESSION)) {
             </button>
           </div>
           <div class="modal-body">
+		  
+		             <form>
+              <div class="form-group">
+                <label for="userText">Text:</label>
+                <input type="text" class="form-control" id="editText">
+              </div>
+            </form>
+		  
               <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Save</button>
+            <button type="button" class="btn btn-primary text-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
           </div>
         </div>
       </div>
