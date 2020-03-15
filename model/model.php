@@ -26,6 +26,7 @@ class Model {
         if (isset($user) && password_verify($password, $hash)) {
             $user -> session = session_id();
             r::store($user);
+            $_SESSION["loggedinvar"] = "true";
             return "SUCCESS";
         } else {
             return 'NOTFOUND';
@@ -81,6 +82,7 @@ class Model {
         $user = $this->getUser();
         $user -> session = '';
         R::store($user);
+        $_SESSION["loggedinvar"] = "";
         return "SUCCESS";
     }
 
