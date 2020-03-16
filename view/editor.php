@@ -65,16 +65,16 @@
       $(document).on('click', '.text-enter-button', function(){
         let text =  $('#userText').val();
         $('#addTextModal').modal('hide')
-<<<<<<< Updated upstream
+//<<<<<<< Upated upstream
 		var component = {head1 : "<h2 onclick='editText(",
 						index : components.length,
 						head2 : ")'>",
 						content : text,
 						tail : "</h2>"
 		}
-=======
+//=======
 		var component = "<h2 onclick='editText("+components.length+");'>" + text + "</h2>";
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
         components.push(component)
         showChanges();
       });
@@ -111,11 +111,11 @@
 	        $(document).on('click', '.text-edit-button', function(){
         let text =  $('#editText').val();
         $('#editTextModal').modal('hide')
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
         components[index].content = text;
-=======
+//=======
         components[index] = "<h2 onclick='editText("+index+");'>" + text + "</h2>";
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
         showChanges();
       })
 
@@ -128,15 +128,15 @@
           $('#editor-user-page').removeClass("invisible").addClass("visible");
         }
         for (let i = 0; i < components.length; i++) {
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
 			
 			var theComponent = "";
-			theComponent += components[i].head1 + components[i].index + components[i].head2 + components[i].content + components[i].tail;
-			
+			theComponent.concat(components[i].head1, components[i].index ,components[i].head2 ,components[i].content , components[i].tail);
+			console.log(theComponent);
           $('#editor-user-page').append(theComponent)
-=======
+//=======
           $('#editor-user-page').append(components[i])
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
         }
       }
 	  
@@ -166,15 +166,15 @@
         $('#editor-user-page').removeClass("invisible").addClass("visible");
       }
       components.splice(index, 1);
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
       for (let i = 0; i < components.length; i++) {
 components[i].index = i;
       }
 	  showChanges();
-=======
+//=======
 	  console.log(components);
 		showChanges();
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
       index = components.length;
     }
 	  
