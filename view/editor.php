@@ -122,9 +122,10 @@
 			
 			var theComponent = "";
 			theComponent += components[i].head1 + components[i].index + components[i].head2 + components[i].content + components[i].tail;
-			
+			console.log("test"+theComponent);
           $('#editor-user-page').append(theComponent)
         }
+		
       }
 	  
 	  //drag and drop stuff
