@@ -20,6 +20,13 @@ class Model {
 
 
     public function loginAccount($username,$password) {
+        $user = NULL;
+        try {
+            $user = $this->getUser();
+            return "SUCCESS";
+        } catch(SessionNotFound $e) {
+            //Do nothing
+        }
         // How you query stuff, mostly just normal sql
         $user = R::findOne('users',' username LIKE ?',[$username]);
         $hash = $user -> password;
@@ -71,11 +78,16 @@ class Model {
     }
   
     public function addWebsite($name) {
-        $website = R::dispense('websites');
-        $website -> user = $this -> getUser();
-        $website -> name = $name;
-        $website -> components = '[]';
-        return R::store($website);
+        $user = $this -> getUser();
+        if (R::findOne('websites',' name like ? AND user_id = ? ',[$name,$user->id])) {
+            return "ALREADYEXISTS";
+        } else {
+            $website = R::dispense('websites');
+            $website -> user = $user;
+            $website -> name = $name;
+            $website -> components = '[]';
+            return R::store($website);
+        }
     }
 
     public function logout () {
