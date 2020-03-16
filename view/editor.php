@@ -61,21 +61,11 @@
           $(".save-webpage-alert").hide();
       });
 
-//making a text block
+
       $(document).on('click', '.text-enter-button', function(){
         let text =  $('#userText').val();
         $('#addTextModal').modal('hide')
-//<<<<<<< Upated upstream
-		var component = {head1 : "<h2 onclick='editText(",
-						index : components.length,
-						head2 : ")'>",
-						content : text,
-						tail : "</h2>"
-		}
-//=======
-		var component = "<h2 onclick='editText("+components.length+");'>" + text + "</h2>";
-//>>>>>>> Stashed changes
-        components.push(component)
+        components.push(text)
         showChanges();
       });
 
@@ -107,15 +97,10 @@
         }, 5000);
       })
 	  
-	  //editing text 
 	        $(document).on('click', '.text-edit-button', function(){
         let text =  $('#editText').val();
         $('#editTextModal').modal('hide')
-//<<<<<<< Updated upstream
-        components[index].content = text;
-//=======
-        components[index] = "<h2 onclick='editText("+index+");'>" + text + "</h2>";
-//>>>>>>> Stashed changes
+        components[index] = text;
         showChanges();
       })
 
@@ -128,7 +113,6 @@
           $('#editor-user-page').removeClass("invisible").addClass("visible");
         }
         for (let i = 0; i < components.length; i++) {
-//<<<<<<< Updated upstream
 			
 			var theComponent = "";
 
@@ -136,9 +120,7 @@
 			console.log("test"+theComponent);
 
           $('#editor-user-page').append(theComponent)
-//=======
-          $('#editor-user-page').append(components[i])
-//>>>>>>> Stashed changes
+          //$('#editor-user-page').append(components[i])
         }
 		
       }
@@ -157,7 +139,6 @@
       $('#addTextModal').modal('show')
     }
         
-		// called when user clicks an text element
     function editText(i) {
       index = i;
       $('#editTextModal').modal('show')
@@ -169,15 +150,9 @@
         $('#editor-user-page').removeClass("invisible").addClass("visible");
       }
       components.splice(index, 1);
-//<<<<<<< Updated upstream
       for (let i = 0; i < components.length; i++) {
-components[i].index = i;
+        $('#editor-user-page').append("<h2 onclick='editText("+i+");'" +"hover='yellow'>" + components[i] + "</h2>")
       }
-	  showChanges();
-//=======
-	  console.log(components);
-		showChanges();
-//>>>>>>> Stashed changes
       index = components.length;
     }
 	  

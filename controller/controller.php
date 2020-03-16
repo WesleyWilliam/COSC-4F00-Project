@@ -77,12 +77,18 @@ try {
             
         }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_WIZARD') {
+        $_SESSION['WEBSITE_MSG']='';
         if (strlen($_POST['WEBSITE']) < 3) {
             redirect("view/website-name.php");
             die();
         } else {
             $id = $model->addWebsite($_POST['WEBSITE']);
-            redirect("view/editor.php?website=" . strval($id));
+            if ($id == "ALREADYEXISTS") {
+                redirect("view/website-name.php");
+            } else {
+                redirect("view/editor.php?website=" . strval($id));
+            }
+            
             
         }
     } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
