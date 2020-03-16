@@ -1,5 +1,7 @@
 <?php
 
+class SessionNotFound extends Exception { }
+
 class Model {
 
     
@@ -19,11 +21,15 @@ class Model {
 
     public function loginAccount($username,$password) {
         // How you query stuff, mostly just normal sql
-        $user = R::findOne('users',' username LIKE ? AND password LIKE ? ',[$username,$password]);
-        if (!isset($user)) {
-            return 'NOTFOUND';
+        $user = R::findOne('users',' username LIKE ?',[$username]);
+        $hash = $user -> password;
+        if (isset($user) && password_verify($password, $hash)) {
+            $user -> session = session_id();
+            r::store($user);
+            $_SESSION["loggedinvar"] = "true";
+            return "SUCCESS";
         } else {
-            return "SUCCESS" ;
+            return 'NOTFOUND';
         }
     }
     
@@ -37,18 +43,81 @@ class Model {
             $user = R::dispense('users');
             // Add fields to it
             $user->username = $username;
-            $user->password = $password;
-            //Store it in the database, Redbean sets up everything
+            $user->password = password_hash($password, PASSWORD_BCRYPT);
+            $user->session = '';
             R::store($user);
+            //Store it in the database, Redbean sets up everything
             return "SUCCESS";
         }
     }
 
+    public function storeImage($filename) {
+        $imagebean = R::dispense('image');
+        $imagebean -> old_filename = $filename;
+        $id =R::store($imagebean);
+        $new_filename = strval($id) . '.' . pathinfo(basename($_FILES["fileToUpload"]["name"]),PATHINFO_EXTENSION);
+        $imagebean -> filename = $new_filename;
+        R::store($imagebean);
+        return $new_filename;
+    }
+
+    public function getUser() {
+        //Good query to index
+        $res = R::findOne('users', ' session Like ? ', [session_id()]);
+        if (!isset($res)) {
+            throw new SessionNotFound();
+        }
+        return $res;
+    }
+  
     public function addWebsite($name) {
         $website = R::dispense('websites');
-        $website -> user_id = '';
+        $website -> user = $this -> getUser();
         $website -> name = $name;
+        $website -> components = '[]';
         return R::store($website);
     }
+
+    public function logout () {
+        $user = $this->getUser();
+        $user -> session = '';
+        R::store($user);
+        $_SESSION["loggedinvar"] = "";
+        return "SUCCESS";
+    }
+
+    public function getComponents($website) {
+        $user = $this -> getUser();
+        $site = R::load('websites',$website);
+        if ($user->id === $site->user_id) {
+            return $site->components;
+        } else {
+            return "WRONGUSER";
+        }
+    }
+
+    public function saveComponents($website, $components) {
+        $website = R::load('websites',$website);
+        if ($website->user_id === $this->getUser()->id) {
+            $website -> components = $components;
+            R::store($website);
+            return "SUCCESS";
+        } else {
+            return "WRONGUSER";
+        }
+    }
+
+    public function log($msg) {
+        $log = R::dispense('logs');
+        $log -> message = $msg;
+        R::store($log);
+    }
+
+    public function listWebsites() {
+        $user = $this -> getUser();
+        $websites = R::findAll('websites',' user_id = ? ',[$user->id]);
+        return $websites;
+    }
+    
 }
 ?>
