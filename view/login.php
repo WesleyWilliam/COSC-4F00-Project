@@ -12,11 +12,21 @@
 <body>
 <?php
 include('../model/model.php');
+include('../utilities/utilities.php');
 $config = require('../config/config.php');
 $model = new Model();
 if (!isset($_SESSION)) {
     session_start();
 }
+
+//Redirect if already logged in
+try {
+  $model->getUser();
+  redirect('view/website-name.php');
+} catch(SessionNotFound $e) {
+  //Do nothing
+}
+
 ?>
 
 

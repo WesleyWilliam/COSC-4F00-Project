@@ -19,6 +19,15 @@ if (!isset($_SESSION)) {
 }
 ?>
 
+<!-- If there is a message, show message to user -->
+<?php 
+if (!empty($_SESSION['WEBSITE_MSG'])) {
+  echo "<div class=\"alert alert-warning\" role=\"alert\">";
+  echo $_SESSION['LOGIN_MSG'];
+  echo "</div>";
+}
+?>
+
 
 <!-- Nav Bar -->
 <?php include 'navbar.php' ?>
