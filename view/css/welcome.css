@@ -1,0 +1,50 @@
+.masthead {
+  height: 100vh;
+  min-height: 500px;
+  background-image: url("../img/art-artistic-beautiful-bloom.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.info-column-img{
+  height: 100vh;
+  min-height: 500px;
+  background-image: url("../img/brix-preview.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.info-banner-1{
+  background-color: #ffc48c;
+  color: white;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.info-column-1{
+  background-color: rgb(140, 255, 146);
+  color: white;
+  padding-top: 50px;
+    
+}
+  
+.info-column-2a{
+  background-color: #fffbd7;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.info-column-2b{
+  background-color: #c4ecff;
+  color: white;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
