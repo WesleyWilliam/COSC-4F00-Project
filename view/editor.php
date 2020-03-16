@@ -65,7 +65,13 @@
       $(document).on('click', '.text-enter-button', function(){
         let text =  $('#userText').val();
         $('#addTextModal').modal('hide')
-        components.push(text)
+		var component = {head1 : "<h2 onclick='editText(",
+						index : components.length,
+						head2 : ")'>",
+						content : text,
+						tail : "</h2>"
+		}
+        components.push(component)
         showChanges();
       });
 
@@ -100,7 +106,7 @@
 	        $(document).on('click', '.text-edit-button', function(){
         let text =  $('#editText').val();
         $('#editTextModal').modal('hide')
-        components[index] = text;
+        components[index].content = text;
         showChanges();
       })
 
@@ -113,7 +119,11 @@
           $('#editor-user-page').removeClass("invisible").addClass("visible");
         }
         for (let i = 0; i < components.length; i++) {
-          $('#editor-user-page').append("<h2 onclick='editText("+i+");'" +"hover='yellow'>" + components[i] + "</h2>")
+			
+			var theComponent = "";
+			theComponent += components[i].head1 + components[i].index + components[i].head2 + components[i].content + components[i].tail;
+			
+          $('#editor-user-page').append(theComponent)
         }
       }
 	  
@@ -143,8 +153,9 @@
       }
       components.splice(index, 1);
       for (let i = 0; i < components.length; i++) {
-        $('#editor-user-page').append("<h2 onclick='editText("+i+");'" +"hover='yellow'>" + components[i] + "</h2>")
+components[i].index = i;
       }
+	  showChanges();
       index = components.length;
     }
 	  
