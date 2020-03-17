@@ -42,9 +42,11 @@ class Model {
     
     public function createAccount($username,$email,$password) {
         //Check if user exists first
-        $query = R::find('users',' username LIKE ? ', [$username]);
-        if (!empty($query)) {
+        $query = R::findOne('users',' username LIKE ? OR email LIKE ? ', [$username,$email]);
+        if (!empty($query) && $query->username == $username) {
             return "ACCEXISTS";
+        } elseif (!empty($query) && $query->email == $email) {
+            return "EMAILEXISTS";
         } else {
             // Create a Redbean object called "bean"
             $user = R::dispense('users');

@@ -44,6 +44,9 @@ try {
                 $_SESSION['SIGNUP_MSG'] = "Account already exists" ;
                 redirect("view/signup.php");
                 die();
+            } elseif ($res=="EMAILEXISTS") {
+                $_SESSION['SIGNUP_MSG'] = "Email already exists" ;
+                redirect("view/signup.php");
             } else {
                 redirect("view/signup.php");
             }
@@ -96,6 +99,17 @@ try {
         redirect('view/login.php');
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
         echo $model->saveComponents($_POST['WEBPAGE'],$_POST['COMPONENTS']);
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'RECOVERPWD') {
+        $_SESSION['RECOVERPWD_MSG']='';
+        if ($_POST['PWD'] != $_POST['PWD2']) {
+            $_SESSION['RECOVERPWD_MSG']="Passwords don't match";
+            redirect('view/recover-password.php');
+        } elseif (empty($_POST['PWD']) || strlen($_POST['PWD']) < 8) {
+            $_SESSION['RECOVERPWD_MSG'] = "Password must be at least 8 characters";
+            redirect('view/recover-password.php');
+        } else {
+            
+        }
     }
 } catch (SessionNotFound $e) {
     redirect('view/login.php');
