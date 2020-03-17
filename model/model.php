@@ -40,7 +40,7 @@ class Model {
         }
     }
     
-    public function createAccount($username,$password) {
+    public function createAccount($username,$email,$password) {
         //Check if user exists first
         $query = R::find('users',' username LIKE ? ', [$username]);
         if (!empty($query)) {
@@ -51,6 +51,7 @@ class Model {
             // Add fields to it
             $user->username = $username;
             $user->password = password_hash($password, PASSWORD_BCRYPT);
+            $user->email = $email;
             $user->session = '';
             R::store($user);
             //Store it in the database, Redbean sets up everything

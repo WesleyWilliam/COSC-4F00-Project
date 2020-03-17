@@ -35,7 +35,7 @@ try {
             $_SESSION['SIGNUP_MSG'] = "Password must be at least 8 characters";
             redirect("view/signup.php");
         } else {
-            $res = $model->createAccount($_POST['UNAME'],$_POST['PWD']);
+            $res = $model->createAccount($_POST['UNAME'],$_POST['EMAIL'],$_POST['PWD']);
             if ($res == "SUCCESS") {
                 $_SESSION['LOGIN_MSG'] = 'You can log in now';
                 redirect("view/login.php");
