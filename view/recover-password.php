@@ -1,4 +1,5 @@
 #!/usr/bin/php-cgi
+<!-- This is the page you get redirected to when you click on the reset password link in your email -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,6 +44,7 @@ if (!empty($_SESSION['RECOVERPWD_MSG'])) {
                 <input type="password" class="form-control" id="password2" name="PWD2">
             </div>
             <input type="hidden" name="COMMAND" value="RECOVERPWD">
+            <input type="hidden" name="CODE" value="<?php echo $_GET['code']; ?>">
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>

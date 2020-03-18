@@ -1,15 +1,21 @@
 #!/usr/bin/php-cgi
 <?php
+$config = require('../config/config.php');
 include '../utilities/utilities.php';
 include '../model/model.php';
 $model = new Model();
 
 try {
+
+    //_MSG is used for temporary messages, so you want to clear it so any previous messages are cleared
+    $_SESSION['LOGIN_MSG']='';
+    $_SESSION['SIGNUP_MSG'] = '';
+    $_SESSION['UPLOAD_MSG'] = '';
+    $_SESSION['RECOVEREMAIL_MSG'] = '';
+    $_SESSION['RECOVERPWD_MSG'] = '';
     
 //Everytime the front end sends a post request, it requires a 'COMMAND' request to specify what you are asking for
     if (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'LOGIN') {
-        //LOGIN_MSG is used for temporary messages, so you want to clear it so any previous messages are cleared
-        $_SESSION['LOGIN_MSG']='';
         if (empty($_POST['UNAME']) || empty($_POST['PWD'])) {
             //Use this to set temporary messages for login where you don't want to store it in the database
             $_SESSION['LOGIN_MSG'] = "Enter both username and password";
@@ -26,7 +32,7 @@ try {
             redirect("view/website-name.php");
         }    
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SIGNUP') {
-        $_SESSION['SIGNUP_MSG'] = '';
+
         if (empty($_POST['UNAME']) || strlen($_POST['UNAME']) < 4 || strpos($_POST['UNAME'],' ') !== false) {
             $_SESSION['SIGNUP_MSG'] = "Username must be at least 4 characters, no spaces";
             redirect("view/signup.php");
@@ -103,14 +109,45 @@ try {
         $_SESSION['RECOVERPWD_MSG']='';
         if ($_POST['PWD'] != $_POST['PWD2']) {
             $_SESSION['RECOVERPWD_MSG']="Passwords don't match";
-            redirect('view/recover-password.php');
+            if (is_numeric($_POST['CODE'])) {
+                redirect('view/recover-password.php?code=' . $_POST['CODE']);
+            }
         } elseif (empty($_POST['PWD']) || strlen($_POST['PWD']) < 8) {
             $_SESSION['RECOVERPWD_MSG'] = "Password must be at least 8 characters";
-            redirect('view/recover-password.php');
+            if (is_numeric($_POST['CODE'])) {
+                redirect('view/recover-password.php?code=' . $_POST['CODE']);
+            }
         } else {
-            
+            $res = $model->recoverPassword($_POST['CODE'],$_POST['PWD']);
+            if($res == "CODEWRONG") {
+                $_SESSION['RECOVERMAIL_MSG'] = 'Something went wrong, try again' ;
+                redirect('view/recover-email.php');
+                die();
+            } elseif ($res == "TIMEOUT") {
+                $_SESSION['RECOVERPWD_MSG'] = 'Password timed out, try again' ;
+                redirect('view/recover-email.php');
+                die();
+            } elseif ($res == "SUCCESS") {
+                $_SESSION['LOGIN_MSG'] = 'Enter new password';
+                redirect('view/login.php');
+                die();
+            }
+        }
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'RECOVEREMAIL') {
+        $res = $model->recoverCode($_POST['EMAIL']);
+        if ($res == "EMAILDNE") {
+            $_SESSION['RECOVEREMAIL_MSG'] = "Email does not exist";
+            redirect("view/recover-email.php");
+            die();
+        } else {
+            $msg = "Click on this link to reset your password\n www.cosc.brocku.ca" . $config['home-file-path'] . '/view/recover-password.php?code=' . strval($res);
+            mail($_POST['EMAIL'],"Recovery email for Brix", $msg);
+            $_SESSION['RECOVEREMAIL_MSG'] = 'Message sent, check your email and junk folder';
+            redirect('view/recover-email.php');
         }
     }
+    //Should put something here in case the if statement doesn't catch it
+    echo "Something went wrong, proceed to panic";
 } catch (SessionNotFound $e) {
     redirect('view/login.php');
 }

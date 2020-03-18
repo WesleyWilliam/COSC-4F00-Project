@@ -61,7 +61,8 @@ if (!empty($_SESSION['LOGIN_MSG'])) {
             <input type="hidden" name="COMMAND" value="LOGIN">
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-        <a type="button" class="btn btn-link mt-1" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Don't have an account yet? Sign up</a>
+        <a type="button" class="btn btn-link mt-1" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Don't have an account yet? Sign up</a> <br>
+        <a type="button" class="btn btn-link mt-1" href="<?php echo $config['home-file-path'] . '/view/recover-email.php' ?>">Forgot password</a>
     </div>
   </div>    
 </div>

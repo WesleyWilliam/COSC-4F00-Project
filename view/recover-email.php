@@ -1,4 +1,5 @@
 #!/usr/bin/php-cgi
+<!-- Enter your email here and it'll send a reset link to you -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +21,8 @@ if (!isset($_SESSION)) {
 }
 ?>
 
+<?php include 'navbar.php' ?>
+
 <!-- If there is a message, show message to user -->
 <?php 
 if (!empty($_SESSION['RECOVEREMAIL_MSG'])) {
@@ -35,8 +38,8 @@ if (!empty($_SESSION['RECOVEREMAIL_MSG'])) {
         <h2 class="mt-2">Enter your email</h2>
         <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
             <div class="form-group">
-                <label for="email1">Password</label>
-                <input type="email" class="form-control" id="password1" name="email1" required>
+                <label for="email1">Email</label>
+                <input type="email" class="form-control" id="email1" name="EMAIL" required>
             </div>
             <input type="hidden" name="COMMAND" value="RECOVEREMAIL">
             <button type="submit" class="btn btn-primary">Submit</button>
