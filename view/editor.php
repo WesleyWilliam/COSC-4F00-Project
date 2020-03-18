@@ -67,11 +67,9 @@
       $('#addTextModal').modal('hide')
 
       var component = {
-        head1: "<h2 onclick ='editText(",
         index: components.length,
-        head2: ")'>",
-        content: text,
-        tail: "</h2>"
+        type: "text",
+        content: text
       };
 
       components.push(component);
@@ -114,6 +112,13 @@
       showChanges();
     })
 
+    //Function to output text component html code
+    function textComponentOutput(component) {
+      var res = "";
+      //component.head1 + component.index + component.head2 + component.content + components.tail
+      res += "<h2 onclick ='editText(" + component.index + ")'>" + component.content + "</h2>";
+      return res;
+    }
 
 
     // Function to render changes
@@ -123,15 +128,12 @@
         $('#editor-user-page').removeClass("invisible").addClass("visible");
       }
       for (let i = 0; i < components.length; i++) {
-
-        var theComponent = "";
-
-        theComponent += components[i].head1 + components[i].index + components[i].head2 + components[i].content + components[i].tail;
-        //theComponent.concat(components[i].head1 , components[i].index , components[i].head2, components[i].content, components[i].tail);
-        console.log("test" + theComponent);
-
-        $('#editor-user-page').append(theComponent)
-        //$('#editor-user-page').append(components[i])
+        switch(components[i].type) {
+          case 'text':
+            $('#editor-user-page').append(textComponentOutput(components[i]));
+            break;
+        }
+          
       }
 
     }
