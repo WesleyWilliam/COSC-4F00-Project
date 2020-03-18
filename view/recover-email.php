@@ -1,4 +1,5 @@
 #!/usr/bin/php-cgi
+<!-- Enter your email here and it'll send a reset link to you -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,36 +11,23 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
+
 <?php
 include('../model/model.php');
-include('../utilities/utilities.php');
 $config = require('../config/config.php');
 $model = new Model();
 if (!isset($_SESSION)) {
     session_start();
 }
-
-//Redirect if already logged in
-try {
-  $model->getUser();
-  redirect('view/website-name.php');
-} catch(SessionNotFound $e) {
-  //Do nothing
-}
-
 ?>
-
 
 <?php include 'navbar.php' ?>
 
-
-<!-- Login  -->
-
 <!-- If there is a message, show message to user -->
 <?php 
-if (!empty($_SESSION['LOGIN_MSG'])) {
+if (!empty($_SESSION['RECOVEREMAIL_MSG'])) {
   echo "<div class=\"alert alert-warning\" role=\"alert\">";
-  echo $_SESSION['LOGIN_MSG'];
+  echo $_SESSION['RECOVEREMAIL_MSG'];
   echo "</div>";
 }
 ?>
@@ -47,27 +35,18 @@ if (!empty($_SESSION['LOGIN_MSG'])) {
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-8">
-        <h2 class="mt-2">Login </h2>
+        <h2 class="mt-2">Enter your email</h2>
         <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
             <div class="form-group">
-                <label for="username1">Username</label>
-                <input type="text" class="form-control" id="username1" name="UNAME">
+                <label for="email1">Email</label>
+                <input type="email" class="form-control" id="email1" name="EMAIL" required>
             </div>
-            <div class="form-group">
-                <label for="password1">Password</label>
-                <input type="password" class="form-control" id="password1" name="PWD">
-            </div>
-
-            <input type="hidden" name="COMMAND" value="LOGIN">
+            <input type="hidden" name="COMMAND" value="RECOVEREMAIL">
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-        <a type="button" class="btn btn-link mt-1" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Don't have an account yet? Sign up</a> <br>
-        <a type="button" class="btn btn-link mt-1" href="<?php echo $config['home-file-path'] . '/view/recover-email.php' ?>">Forgot password</a>
     </div>
   </div>    
 </div>
-
-
 
 
 
