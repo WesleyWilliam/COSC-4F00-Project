@@ -42,9 +42,11 @@ class Model {
     
     public function createAccount($username,$email,$password) {
         //Check if user exists first
-        $query = R::find('users',' username LIKE ? ', [$username]);
-        if (!empty($query)) {
+        $query = R::findOne('users',' username LIKE ? OR email LIKE ? ', [$username,$email]);
+        if (!empty($query) && $query->username == $username) {
             return "ACCEXISTS";
+        } elseif (!empty($query) && $query->email == $email) {
+            return "EMAILEXISTS";
         } else {
             // Create a Redbean object called "bean"
             $user = R::dispense('users');
@@ -130,6 +132,40 @@ class Model {
         $user = $this -> getUser();
         $websites = R::findAll('websites',' user_id = ? ',[$user->id]);
         return $websites;
+    }
+    //To send to someone if they forget their password
+    public function recoverCode($email) {
+        $user = R::findOne('users',' email Like ? ',[$email]);
+        if (!isset($user)) {
+            return "EMAILDNE";
+        } else {
+            $recover = R::dispense('recover');
+            $recover -> user = $user;
+            R::store($recover);
+            $code = 0;
+            do {
+                $code = rand();
+            } while (R::findOne('recover',' code = ? ',[$code]));
+            $recover -> code = $code;
+            $recover -> time = time();
+            R::store($recover);
+            return $code;
+        }   
+    }
+    
+    public function recoverPassword($code, $password) {
+        $recover = R::findOne('recover',' code = ? ',[$code]);
+        if (!isset($recover)) {
+            return "CODEWRONG";
+        } elseif ((time() - $recover -> time) > (30 * 60)) {
+            //Code won't work after 30 minutes
+            return "TIMEDOUT";
+        } else {
+            $user = R::load('users',$recover->user_id);
+            $user->password = password_hash($password, PASSWORD_BCRYPT);
+            R::store($user);
+            return "SUCCESS";
+        }
     }
     
 }
