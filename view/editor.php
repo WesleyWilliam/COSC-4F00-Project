@@ -82,15 +82,15 @@
 
     $(document).on('click','.paragraph-enter-button', function() {
       let res = editor.getData();
-      console.log(res);
       $('#addParagraphModal').modal('hide');
+      var component = {
+        type: "paragraph",
+        html: res
+      };
+      console.log(res);
+      components.push(component);
+      showChanges();
     });
-
-    $(document).on('click','.paragraph-sidebar', function () {
-      console.log("Something");
-      $('#addParagraphModal').modal('show')
-    });
-
 
     $(document).on('click', '.save-editor-changes', function() { // Save current state of the editor components
       $(".save-webpage-alert").show();
@@ -158,6 +158,11 @@
       return res;
     }
 
+    //Function to output paragraph component html code
+    function paragraphComponentOutput(component) {
+      return component.html;
+    }
+
 
     // Function to render changes
     function showChanges() {
@@ -173,7 +178,10 @@
           case 'image':
             $('#editor-user-page').append(imageComponentOutput(components[i]));
             break;
-            
+          case 'paragraph':
+            console.log(paragraphComponentOutput(components[i]));
+            $('#editor-user-page').append(paragraphComponentOutput(components[i]));
+            break;
         }
 
       }
@@ -192,6 +200,10 @@
       ev.dataTransfer.setData("component", "image");
     }
 
+    function dragParagraph(ev) {
+      ev.dataTransfer.setData("component","paragraph");
+    }
+
     function drop(ev) {
       ev.preventDefault();
       var component = ev.dataTransfer.getData("component")
@@ -199,6 +211,8 @@
         $('#addTextModal').modal('show')
       } else if (component == "image") {
         $('#addImageModal').modal('show')
+      } else if (component == "paragraph") {
+        $('#addParagraphModal').modal('show');
       }
     }
 
@@ -300,7 +314,7 @@
             <i data-feather="plus"></i>
           </div>
         </li>
-        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" data-toggle="modal" data-target="#textModal" draggable="true" ondragstart="drag(event)">
+        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" draggable="true" ondragstart="dragParagraph(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Paragraph</span>
             <i data-feather="align-left"></i>
@@ -368,7 +382,7 @@
         </div>
       </div>
     </div>
-
+    <!-- Paragraph modal -->
     <div class="modal fade" id="addParagraphModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
