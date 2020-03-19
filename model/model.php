@@ -167,6 +167,27 @@ class Model {
             return "SUCCESS";
         }
     }
+    public function updateAccountPreferences($fName, $lName, $dob, $phone, $email) {
+        $user = $this -> getUser();
+        $query = R::findOne('users',' email LIKE ?', [$email]);
+        if (empty($query) || $query == $user) {
+            $user -> firstname = $fName;
+            $user -> lastname = $lName;
+            $user -> dob = $dob;
+            $user -> phonenumber = $phone;
+            $user -> email = $email;
+            r::store($user);
+            return "SUCCESS";
+        } else {
+            return 'EMAILEXISTS';
+        }
+    }
+    public function deleteAccount() {
+        $user = $this -> getUser();
+        R::trash( $user );
+        return "SUCCESS";
+    }
+    
     
 }
 ?>
