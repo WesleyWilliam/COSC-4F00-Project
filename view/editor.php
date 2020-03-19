@@ -62,7 +62,7 @@
     });
 
 
-    $(document).on('click', '.text-enter-button', function() {
+    $(document).on('click', '.text-enter-button', function() { // Save changes of Text component
       let text = $('#userText').val();
       let header = $('#hType').val();
 
@@ -80,14 +80,9 @@
     });
 
 
-    $(document).on('click', '.save-editor-changes', function() {
+    $(document).on('click', '.save-editor-changes', function() { // Save current state of the editor components
       $(".save-webpage-alert").show();
 
-      // $.post("../controller/controller.php",
-      // {COMMAND: "SAVE-EDITOR", WEBPAGE: "<?php echo $_GET['website'] ?>", COMPONENTS: JSON.stringify(components)}, function(data,status) {
-      //   alert(data);
-      // }
-      // )
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -102,24 +97,51 @@
       if (!isNaN(webpage_id)) {
         xhttp.send("COMMAND=SAVE-EDITOR&WEBPAGE=" + webpage_id + "&COMPONENTS=" + encodeURI(JSON.stringify(components)));
       }
-
       setTimeout(function() {
         $(".save-webpage-alert").hide();
       }, 5000);
     })
 
-    $(document).on('click', '.text-edit-button', function() {
+    $(document).on('click', '.image-add-button', function() { // Add image component
+      $('#addImageModal').modal('hide')
+
+      var component = {
+        index: components.length,
+        type: "image",
+        header: "img",
+        content: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F12%2F2016%2F11%2FGettyImages-155781839-2000.jpg"
+      };
+
+      components.push(component);
+      showChanges();
+
+    })
+
+    $(document).on('click', '.text-edit-button', function() { 
       let text = $('#editText').val();
       $('#editTextModal').modal('hide')
-      components[index] = text;
+      components[index].content = text;
       showChanges();
     })
+
+    $(document).on('click', '.image-edit-button', function() { 
+      $('#editTextModal').modal('hide')
+      showChanges();
+    })
+    
 
     //Function to output text component html code
     function textComponentOutput(component) {
       var res = "";
       //component.head1 + component.index + component.head2 + component.content + components.tail
       res += "<p class=" + component.header + " " + "onclick ='editText(" + component.index + ")'>" + component.content + "</p>";
+      return res;
+    }
+
+    // Function to output image component html code
+    function imageComponentOutput(component) {
+      var res = "";
+      res += "<img src=\"" + component.content + "\" onclick =\"editImage(" + component.index + ")\" height=\"300\"  alt=\"description\" >";
       return res;
     }
 
@@ -135,6 +157,10 @@
           case 'text':
             $('#editor-user-page').append(textComponentOutput(components[i]));
             break;
+          case 'image':
+            $('#editor-user-page').append(imageComponentOutput(components[i]));
+            break;
+            
         }
 
       }
@@ -146,18 +172,31 @@
       ev.preventDefault();
     }
 
-    function drag(ev) {
-      ev.dataTransfer.setData("text", ev.target.id);
+    function dragText(ev) {
+      ev.dataTransfer.setData("component", "text");
+    }
+    function dragImage(ev) {
+      ev.dataTransfer.setData("component", "image");
     }
 
     function drop(ev) {
       ev.preventDefault();
-      $('#addTextModal').modal('show')
+      var component = ev.dataTransfer.getData("component")
+      if (component == "text") {
+        $('#addTextModal').modal('show')
+      } else if (component == "image") {
+        $('#addImageModal').modal('show')
+      }
     }
 
     function editText(i) {
       index = i;
       $('#editTextModal').modal('show')
+    }
+
+    function editImage(i) {
+      index = i;
+      $('#editImageModal').modal('show')
     }
 
     function deleteElement() {
@@ -196,7 +235,7 @@
     <!-- Side bar -->
     <div class="col" id="sidebar">
       <ul class="list-group" id="sidebarList">
-        <li class="list-group-item list-group-item-action" id="text-sidebar-button" data-toggle="modal" data-target="#textModal" draggable="true" ondragstart="drag(event)">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragText(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Text</span>
 
@@ -204,11 +243,18 @@
           </div>
         </li>
 
-        <li class="list-group-item list-group-item-action">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragImage(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Image</span>
 
             <i data-feather="image"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Grid</span>
+
+            <i data-feather="grid"></i>
           </div>
         </li>
 
@@ -238,13 +284,6 @@
             <span>Layout</span>
 
             <i data-feather="layout"></i>
-          </div>
-        </li>
-        <li class="list-group-item list-group-item-action">
-          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-            <span>Grid</span>
-
-            <i data-feather="grid"></i>
           </div>
         </li>
         <li class="list-group-item list-group-item-action">
@@ -288,6 +327,7 @@
 
     </div>
 
+    <!-- Text Modal -->
     <div class="modal fade" id="addTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -322,6 +362,7 @@
       </div>
     </div>
 
+    <!-- Edit text modal -->
     <div class="modal fade" id="editTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -344,6 +385,66 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary text-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image modal -->
+    <div class="modal fade" id="addImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">Image URL (optional)</label>
+                <input type="text" class="form-control" id="addImageURL">
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="imageFile">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary image-add-button" data-dismiss="modal" aria-label="Close">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Edit image modal -->
+    <div class="modal fade" id="editImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Image</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">Image URL (optional)</label>
+                <input type="text" class="form-control" id="addImageURL">
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="imageFile">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary image-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
           </div>
         </div>
       </div>
