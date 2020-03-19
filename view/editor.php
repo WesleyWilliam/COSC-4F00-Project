@@ -6,63 +6,345 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- Local CSS -->
+    <style>
+
+    </style>
+
     <!-- Including bootstrap CSS files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script> 
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <?php
+    require_once('../model/model.php');
+    include ('../utilities/utilities.php');
+    $config = require('../config/config.php');
+    $model = new Model();
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+
+
+    try {
+        $component = NULL;
+        if (isset($_GET['website'])) {
+            $component = $model -> getComponents($_GET['website']);
+            if ($component == "WRONGUSER") {
+                echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
+                die();
+            }
+        } else {
+            //Later on well make this go to the first website for your user
+            echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
+            die();
+        }
+    } catch (SessionNotFound $e) {
+        redirect('view/login.php');
+        die();
+    }
+    ?>
+
+    <!-- Javascript code -->
+    <script>
+
+    var str = <?php echo json_encode($component); ?> ;
+    var components = JSON.parse(str) ;
+    var index; //this index is used to keep track of which element is currently selected on the page
+
+      $('#editor-user-page').hide();
+
+      $(document).ready(function() {
+          showChanges();
+          $(".save-webpage-alert").hide();
+      });
+
+
+      $(document).on('click', '.text-enter-button', function(){
+        let text =  $('#userText').val();
+        $('#addTextModal').modal('hide')
+		
+		var component = {
+			head1: "<h2 onclick ='editText(",
+			index: components.length,
+			head2 : ")'>", 
+			content : text ,
+			tail : "</h2>"};
+		
+        components.push(component);
+        showChanges();
+      });
+
+
+      $(document).on('click','.save-editor-changes',function() {
+        $(".save-webpage-alert").show();
+        
+        // $.post("../controller/controller.php",
+        // {COMMAND: "SAVE-EDITOR", WEBPAGE: "<?php echo $_GET['website'] ?>", COMPONENTS: JSON.stringify(components)}, function(data,status) {
+        //   alert(data);
+        // }
+        // )
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+        }};
+        var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php"
+        console.log(url);
+        xhttp.open("POST",url,true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        var webpage_id = "<?php echo $_GET['website']; ?> ";
+        if(!isNaN(webpage_id)) {
+          xhttp.send("COMMAND=SAVE-EDITOR&WEBPAGE=" + webpage_id + "&COMPONENTS=" + encodeURI(JSON.stringify(components)));
+        } 
+
+        setTimeout(function(){
+          $(".save-webpage-alert").hide();
+        }, 5000);
+      })
+	  
+	        $(document).on('click', '.text-edit-button', function(){
+        let text =  $('#editText').val();
+        $('#editTextModal').modal('hide')
+        components[index] = text;
+        showChanges();
+      })
+
+          
+
+      // Function to render changes
+      function showChanges() {
+        $('#editor-user-page').empty()
+        if (components.length == 1) {
+          $('#editor-user-page').removeClass("invisible").addClass("visible");
+        }
+        for (let i = 0; i < components.length; i++) {
+			
+			var theComponent = "";
+
+			theComponent += components[i].head1 +components[i].index + components[i].head2 +components[i].content + components[i].tail;
+ //theComponent.concat(components[i].head1 , components[i].index , components[i].head2, components[i].content, components[i].tail);
+			console.log("test"+theComponent);
+
+          $('#editor-user-page').append(theComponent)
+          //$('#editor-user-page').append(components[i])
+        }
+		
+      }
+	  
+	  //drag and drop stuff
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      $('#addTextModal').modal('show')
+    }
+        
+    function editText(i) {
+      index = i;
+      $('#editTextModal').modal('show')
+    }
+
+    function deleteElement(){
+      $('#editor-user-page').empty()
+      if (components.length == 1) {
+        $('#editor-user-page').removeClass("invisible").addClass("visible");
+      }
+      components.splice(index, 1);
+showChanges();
+      index = components.length;
+    }
+
+    $(document).on('click', '.preview-editor', function(){
+      const new_page = $('#editor-user-page').html();
+      var strWindowFeatures = "dependent=yes,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
+      
+      let myWindow = window.open("view-webpage.html","newWindow", strWindowFeatures);  
+
+      myWindow.onload = function(){
+        myWindow.document.getElementById('main-body').innerHTML = new_page;
+      }
+      
+    })
+	  
+	  
+
+</script>
 </head>
 <body>
 
-<?php
-include('../model/model.php');
-$config = require('../config/config.php');
-$model = new Model();
-if (!isset($_SESSION)) {
-    session_start();
-}
-?>
-
 <!-- Nav Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">
-  <img src=".\cms_logo.svg" width="30" height="30" alt="">
-  CMS
-  </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<?php include 'navbar.php' ?>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Subscriptions
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Premium Plans</a>
-          <a class="dropdown-item" href="#">Standard Plans</a>
-          <a class="dropdown-item" href="#">Free Content</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Domains</a>
+
+
+<!-- Editor -->
+<div class="row">
+    <!-- Side bar -->
+    <div class="col" id="sidebar">
+      <ul class="list-group" id="sidebarList">
+        <li class="list-group-item list-group-item-action" id="text-sidebar-button" data-toggle="modal" data-target="#textModal" draggable="true" ondragstart="drag(event)">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Text</span>
+          
+          <i data-feather="align-justify"></i>
+          </div>
+        </li>
+		
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Image</span>
+          
+          <i data-feather="image"></i>
+          </div>
+        </li>
+		
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Link</span>
+          
+          <i data-feather="link"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>List</span>
+          
+          <i data-feather="list"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Media</span>
+          
+          <i data-feather="film"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Layout</span>
+          
+          <i data-feather="layout"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Grid</span>
+          
+          <i data-feather="grid"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+          <span>Size</span>
+          
+          <i data-feather="maximize"></i>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Snippets</span>
+            <i data-feather="plus"></i>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Editor -->
+    <div class="col-10">
+
+      <div class="d-flex justify-content-between mt-2 mr-4 pb-2 border-bottom"> 
+        <div>
+          <button type="button" class="btn btn-outline-info mr-2">Themes</button>
+          <button type="button" class="btn btn-outline-info mr-2">Help</button>
+          <button type="button" class="btn btn-outline-info">Edit</button>
         </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Editor</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+        <div>
+          <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
+          <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save</button>
+          <button type="button" class="btn btn-outline-info preview-editor">Preview</button>
+        </div>
+        
+      </div>
+      <div class="alert alert-success save-webpage-alert mr-4" role="alert">
+        Webpage changes saved.
+      </div>
+      <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" ondrop="drop(event)" ondragover="allowDrop(event)">
+      
+      </div>
+      
+    </div>
+
+
+
+
+    <div class="modal fade" id="addTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Please enter text content</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">Text:</label>
+                <input type="text" class="form-control" id="userText">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary text-enter-button">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="editTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Text</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+		  
+		             <form>
+              <div class="form-group">
+                <label for="userText">Text:</label>
+                <input type="text" class="form-control" id="editText">
+              </div>
+            </form>
+		  
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary text-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
-</nav>
 
 
-<h1 class="display-1 text-center">Editor page</h1>
+  <script>
+      feather.replace() // For icons
+  </script>
+
 
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
