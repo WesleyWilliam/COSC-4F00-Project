@@ -119,7 +119,7 @@
     function textComponentOutput(component) {
       var res = "";
       //component.head1 + component.index + component.head2 + component.content + components.tail
-      res += "<" + component.header + " onclick ='editText(" + component.index + ")'>" + component.content + "</" + component.header + ">";
+      res += "<p class=" + component.header + " " + "onclick ='editText(" + component.index + ")'>" + component.content + "</p>";
       return res;
     }
 
@@ -276,9 +276,6 @@
 
     </div>
 
-
-
-
     <div class="modal fade" id="addTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -297,11 +294,11 @@
               <div class="form-group">
                 <label for="hType">Select Header:</label>
                 <select class="form-control" id="hType">
-                  <option>h1</option>
-                  <option>h2</option>
-                  <option>h3</option>
-                  <option>h4</option>
-                  <option>p</option>
+                  <option class="display-3" value="display-3">Title</option>
+                  <option class="h3" value="h3">Subtitle</option>
+                  <option class="p" value="p">Body</option>
+                  <option class="text-muted" value="text-muted">Muted</option>
+                  <option class="text-monospace" value="text-monospace">Monospaced</option>
                 </select>
               </div>
             </form>
