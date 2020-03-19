@@ -50,7 +50,8 @@ if (!empty($_SESSION['WEBSITE_MSG'])) {
   <h4 class="mt-5 text-muted text-left">Your existing webpages</h4>
   <div class="list-group">
     <?php foreach ($model->listWebsites() as $website) {
-      echo '<a href="' . $config['home-file-path'] . '" class="list-group-item list-group-item-action">' . $website->name . '</a>' ;
+      echo '<a href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . '" class="list-group-item list-group-item-action">' . $website->name . '</a>' ;
+      
     } ?>
 
   </div>
