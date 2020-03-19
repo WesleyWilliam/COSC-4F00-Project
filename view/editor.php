@@ -100,8 +100,6 @@
           console.log(this.responseText);
         }
       };
-    $document.on('click','')
-
       var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php"
       console.log(url);
       xhttp.open("POST", url, true);
