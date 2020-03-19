@@ -64,11 +64,14 @@
 
     $(document).on('click', '.text-enter-button', function() {
       let text = $('#userText').val();
+      let header = $('#hType').val();
+
       $('#addTextModal').modal('hide')
 
       var component = {
         index: components.length,
         type: "text",
+        header: header,
         content: text
       };
 
@@ -116,7 +119,7 @@
     function textComponentOutput(component) {
       var res = "";
       //component.head1 + component.index + component.head2 + component.content + components.tail
-      res += "<h2 onclick ='editText(" + component.index + ")'>" + component.content + "</h2>";
+      res += "<" + component.header + " onclick ='editText(" + component.index + ")'>" + component.content + "</" + component.header + ">";
       return res;
     }
 
@@ -128,12 +131,12 @@
         $('#editor-user-page').removeClass("invisible").addClass("visible");
       }
       for (let i = 0; i < components.length; i++) {
-        switch(components[i].type) {
+        switch (components[i].type) {
           case 'text':
             $('#editor-user-page').append(textComponentOutput(components[i]));
             break;
         }
-          
+
       }
 
     }
@@ -291,6 +294,16 @@
                 <label for="userText">Text:</label>
                 <input type="text" class="form-control" id="userText">
               </div>
+              <div class="form-group">
+                <label for="hType">Select Header:</label>
+                <select class="form-control" id="hType">
+                  <option>h1</option>
+                  <option>h2</option>
+                  <option>h3</option>
+                  <option>h4</option>
+                  <option>p</option>
+                </select>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -310,7 +323,6 @@
             </button>
           </div>
           <div class="modal-body">
-
             <form>
               <div class="form-group">
                 <label for="userText">Text:</label>
