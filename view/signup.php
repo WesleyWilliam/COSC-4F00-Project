@@ -46,6 +46,10 @@ if (!empty($_SESSION['SIGNUP_MSG'])) {
                 <input type="text" class="form-control" id="username1" name="UNAME">
             </div>
             <div class="form-group">
+                <label for="email1">Email Address</label>
+                <input type="email" class="form-control" id="email1" name="EMAIL" required>
+            </div>
+            <div class="form-group">
                 <label for="password1">Password</label>
                 <input type="password" class="form-control" id="password1" name="PWD">
             </div>

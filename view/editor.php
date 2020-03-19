@@ -64,14 +64,15 @@
 
     $(document).on('click', '.text-enter-button', function() {
       let text = $('#userText').val();
+      let header = $('#hType').val();
+
       $('#addTextModal').modal('hide')
 
       var component = {
-        head1: "<h2 onclick ='editText(",
         index: components.length,
-        head2: ")'>",
-        content: text,
-        tail: "</h2>"
+        type: "text",
+        header: header,
+        content: text
       };
 
       components.push(component);
@@ -114,6 +115,13 @@
       showChanges();
     })
 
+    //Function to output text component html code
+    function textComponentOutput(component) {
+      var res = "";
+      //component.head1 + component.index + component.head2 + component.content + components.tail
+      res += "<p class=" + component.header + " " + "onclick ='editText(" + component.index + ")'>" + component.content + "</p>";
+      return res;
+    }
 
 
     // Function to render changes
@@ -123,15 +131,12 @@
         $('#editor-user-page').removeClass("invisible").addClass("visible");
       }
       for (let i = 0; i < components.length; i++) {
+        switch (components[i].type) {
+          case 'text':
+            $('#editor-user-page').append(textComponentOutput(components[i]));
+            break;
+        }
 
-        var theComponent = "";
-
-        theComponent += components[i].head1 + components[i].index + components[i].head2 + components[i].content + components[i].tail;
-        //theComponent.concat(components[i].head1 , components[i].index , components[i].head2, components[i].content, components[i].tail);
-        console.log("test" + theComponent);
-
-        $('#editor-user-page').append(theComponent)
-        //$('#editor-user-page').append(components[i])
       }
 
     }
@@ -283,9 +288,6 @@
 
     </div>
 
-
-
-
     <div class="modal fade" id="addTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -300,6 +302,16 @@
               <div class="form-group">
                 <label for="userText">Text:</label>
                 <input type="text" class="form-control" id="userText">
+              </div>
+              <div class="form-group">
+                <label for="hType">Select Header:</label>
+                <select class="form-control" id="hType">
+                  <option class="display-3" value="display-3">Title</option>
+                  <option class="h3" value="h3">Subtitle</option>
+                  <option class="p" value="p">Body</option>
+                  <option class="text-muted" value="text-muted">Muted</option>
+                  <option class="text-monospace" value="text-monospace">Monospaced</option>
+                </select>
               </div>
             </form>
           </div>
@@ -320,7 +332,6 @@
             </button>
           </div>
           <div class="modal-body">
-
             <form>
               <div class="form-group">
                 <label for="userText">Text:</label>

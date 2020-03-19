@@ -1,4 +1,5 @@
 #!/usr/bin/php-cgi
+<!-- This is the page you get redirected to when you click on the reset password link in your email -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
+
 <?php
 include('../model/model.php');
 $config = require('../config/config.php');
@@ -21,42 +23,33 @@ if (!isset($_SESSION)) {
 
 <!-- If there is a message, show message to user -->
 <?php 
-if (!empty($_SESSION['WEBSITE_MSG'])) {
+if (!empty($_SESSION['RECOVERPWD_MSG'])) {
   echo "<div class=\"alert alert-warning\" role=\"alert\">";
-  echo $_SESSION['LOGIN_MSG'];
+  echo $_SESSION['RECOVERPWD_MSG'];
   echo "</div>";
 }
 ?>
 
-
-<!-- Nav Bar -->
-<?php include 'navbar.php' ?>
-
-
 <div class="container">
-  <h1 class="text-center mt-5 text-muted">Enter name of your website</h1>
-
-  <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
-    <div class="form-group form-group-lg">
-      <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z_]{3}[A-Za-z_]*$" title="3 characters, only a-z and underline">
+  <div class="row justify-content-center">
+    <div class="col-8">
+        <h2 class="mt-2">Enter new password</h2>
+        <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+            <div class="form-group">
+                <label for="password1">Password</label>
+                <input type="password" class="form-control" id="password1" name="PWD">
+            </div>
+            <div class="form-group">
+                <label for="password2">Confirm Password</label>
+                <input type="password" class="form-control" id="password2" name="PWD2">
+            </div>
+            <input type="hidden" name="COMMAND" value="RECOVERPWD">
+            <input type="hidden" name="CODE" value="<?php echo $_GET['code']; ?>">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
-    <div class="form-group" style="text-align:center">
-      <button class="btn btn-primary" type="Submit">Submit</button>
-      <input type="hidden" name="COMMAND" value="WEBSITE_WIZARD">
-    </div>
-  </form>
-
-
-  <h4 class="mt-5 text-muted text-left">Your existing webpages</h4>
-  <div class="list-group">
-    <?php foreach ($model->listWebsites() as $website) {
-      echo '<a href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . '" class="list-group-item list-group-item-action">' . $website->name . '</a>' ;
-      
-    } ?>
-
-  </div>
+  </div>    
 </div>
-
 
 
 

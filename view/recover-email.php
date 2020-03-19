@@ -1,4 +1,5 @@
 #!/usr/bin/php-cgi
+<!-- Enter your email here and it'll send a reset link to you -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
+
 <?php
 include('../model/model.php');
 $config = require('../config/config.php');
@@ -19,44 +21,32 @@ if (!isset($_SESSION)) {
 }
 ?>
 
+<?php include 'navbar.php' ?>
+
 <!-- If there is a message, show message to user -->
 <?php 
-if (!empty($_SESSION['WEBSITE_MSG'])) {
+if (!empty($_SESSION['RECOVEREMAIL_MSG'])) {
   echo "<div class=\"alert alert-warning\" role=\"alert\">";
-  echo $_SESSION['LOGIN_MSG'];
+  echo $_SESSION['RECOVEREMAIL_MSG'];
   echo "</div>";
 }
 ?>
 
-
-<!-- Nav Bar -->
-<?php include 'navbar.php' ?>
-
-
 <div class="container">
-  <h1 class="text-center mt-5 text-muted">Enter name of your website</h1>
-
-  <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
-    <div class="form-group form-group-lg">
-      <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z_]{3}[A-Za-z_]*$" title="3 characters, only a-z and underline">
+  <div class="row justify-content-center">
+    <div class="col-8">
+        <h2 class="mt-2">Enter your email</h2>
+        <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+            <div class="form-group">
+                <label for="email1">Email</label>
+                <input type="email" class="form-control" id="email1" name="EMAIL" required>
+            </div>
+            <input type="hidden" name="COMMAND" value="RECOVEREMAIL">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
-    <div class="form-group" style="text-align:center">
-      <button class="btn btn-primary" type="Submit">Submit</button>
-      <input type="hidden" name="COMMAND" value="WEBSITE_WIZARD">
-    </div>
-  </form>
-
-
-  <h4 class="mt-5 text-muted text-left">Your existing webpages</h4>
-  <div class="list-group">
-    <?php foreach ($model->listWebsites() as $website) {
-      echo '<a href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . '" class="list-group-item list-group-item-action">' . $website->name . '</a>' ;
-      
-    } ?>
-
-  </div>
+  </div>    
 </div>
-
 
 
 
