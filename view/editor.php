@@ -18,7 +18,8 @@
   <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
   <!-- Jquery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
+  <!-- CKEditor -->
+  <script src="https://cdn.ckeditor.com/ckeditor5/17.0.0/classic/ckeditor.js"></script>
   <?php
   require_once('../model/model.php');
   include('../utilities/utilities.php');
@@ -78,21 +79,28 @@
       showChanges();
     });
 
+    $(document).on('click','.paragraph-enter-button', function() {
+      let res = editor.getData();
+      console.log(res);
+      $('#addParagraphModal').modal('hide');
+    });
+
+    $(document).on('click','.paragraph-sidebar', function () {
+      console.log("Something");
+      $('#addParagraphModal').modal('show')
+    });
+
 
     $(document).on('click', '.save-editor-changes', function() {
       $(".save-webpage-alert").show();
-
-      // $.post("../controller/controller.php",
-      // {COMMAND: "SAVE-EDITOR", WEBPAGE: "<?php echo $_GET['website'] ?>", COMPONENTS: JSON.stringify(components)}, function(data,status) {
-      //   alert(data);
-      // }
-      // )
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           console.log(this.responseText);
         }
       };
+    $document.on('click','')
+
       var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php"
       console.log(url);
       xhttp.open("POST", url, true);
@@ -142,6 +150,7 @@
     }
 
     function drag(ev) {
+      console.log(ev);
       ev.dataTransfer.setData("text", ev.target.id);
     }
 
@@ -243,6 +252,12 @@
             <i data-feather="plus"></i>
           </div>
         </li>
+        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" data-toggle="modal" data-target="#textModal" draggable="true" ondragstart="drag(event)">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Paragraph</span>
+            <i data-feather="align-left"></i>
+          </div>
+        </li>
       </ul>
     </div>
 
@@ -297,6 +312,42 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="addParagraphModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Please enter Paragraph content</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="editor">
+              <p>This is some sample content.</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary paragraph-enter-button">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        let editor;
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                removePlugins: ['Image', 'EasyImage', 'CKFinder', "ImageCaption", "ImageStyle", "ImageToolbar", "ImageUpload", "MediaEmbed", "Table", "TableToolbar"],
+                // toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote']
+            })
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    </script>
 
     <div class="modal fade" id="editTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
