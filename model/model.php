@@ -53,6 +53,7 @@ class Model {
             // Add fields to it
             $user->username = $username;
             $user->password = password_hash($password, PASSWORD_BCRYPT);
+            $user->email = $email;
             $user->session = '';
             R::store($user);
             //Store it in the database, Redbean sets up everything
@@ -131,6 +132,40 @@ class Model {
         $user = $this -> getUser();
         $websites = R::findAll('websites',' user_id = ? ',[$user->id]);
         return $websites;
+    }
+    //To send to someone if they forget their password
+    public function recoverCode($email) {
+        $user = R::findOne('users',' email Like ? ',[$email]);
+        if (!isset($user)) {
+            return "EMAILDNE";
+        } else {
+            $recover = R::dispense('recover');
+            $recover -> user = $user;
+            R::store($recover);
+            $code = 0;
+            do {
+                $code = rand();
+            } while (R::findOne('recover',' code = ? ',[$code]));
+            $recover -> code = $code;
+            $recover -> time = time();
+            R::store($recover);
+            return $code;
+        }   
+    }
+    
+    public function recoverPassword($code, $password) {
+        $recover = R::findOne('recover',' code = ? ',[$code]);
+        if (!isset($recover)) {
+            return "CODEWRONG";
+        } elseif ((time() - $recover -> time) > (30 * 60)) {
+            //Code won't work after 30 minutes
+            return "TIMEDOUT";
+        } else {
+            $user = R::load('users',$recover->user_id);
+            $user->password = password_hash($password, PASSWORD_BCRYPT);
+            R::store($user);
+            return "SUCCESS";
+        }
     }
     
 }
