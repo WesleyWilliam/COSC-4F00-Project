@@ -208,6 +208,18 @@
       showChanges();
       index = components.length;
     }
+
+    $(document).on('click', '.preview-editor', function() {
+      const new_page = $('#editor-user-page').html();
+      var strWindowFeatures = "dependent=yes,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
+
+      let myWindow = window.open("view-webpage.html", "newWindow", strWindowFeatures);
+
+      myWindow.onload = function() {
+        myWindow.document.getElementById('main-body').innerHTML = new_page;
+      }
+
+    })
   </script>
 </head>
 
@@ -302,7 +314,7 @@
         <div>
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
           <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save</button>
-          <button type="button" class="btn btn-outline-info">Preview</button>
+          <button type="button" class="btn btn-outline-info preview-editor">Preview</button>
         </div>
 
       </div>
