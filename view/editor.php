@@ -106,7 +106,6 @@
       $('#addImageModal').modal('hide')
 
       var component = {
-        index: components.length,
         type: "image",
         header: "img",
         content: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F12%2F2016%2F11%2FGettyImages-155781839-2000.jpg"
@@ -117,18 +116,51 @@
 
     })
 
-    $(document).on('click', '.text-edit-button', function() { 
+    $(document).on('change', '#imageFile', function() {
+      var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php";
+      var properties = document.getElementById("imageFile").files[0];
+      //  $.post(url,{COMMAND: 'PIC_UPLOAD'},function(data,status) {
+      //    console.log(data);
+      //  });
+      var form_data = new FormData();
+      form_data.append("file", properties);
+      form_data.append("COMMAND", "PIC_UPLOAD");
+
+
+      $.ajax({
+        url: url,
+        method: "POST",
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+        success: function(data) {
+          $('#addImageModal').modal('hide')
+          console.log(data);
+          var component = {
+            type: "image",
+            header: "img",
+            content: "<?php echo $config['home-file-path']; ?>/" + data
+            };
+
+          components.push(component);
+          showChanges();
+        }
+      });
+    })
+
+    $(document).on('click', '.text-edit-button', function() {
       let text = $('#editText').val();
       $('#editTextModal').modal('hide')
       components[index].content = text;
       showChanges();
     })
 
-    $(document).on('click', '.image-edit-button', function() { 
+    $(document).on('click', '.image-edit-button', function() {
       $('#editTextModal').modal('hide')
       showChanges();
     })
-    
+
 
     //Function to output text component html code
     function textComponentOutput(component) {
@@ -160,7 +192,7 @@
           case 'image':
             $('#editor-user-page').append(imageComponentOutput(components[i]));
             break;
-            
+
         }
 
       }
@@ -175,6 +207,7 @@
     function dragText(ev) {
       ev.dataTransfer.setData("component", "text");
     }
+
     function dragImage(ev) {
       ev.dataTransfer.setData("component", "image");
     }
@@ -407,7 +440,7 @@
                 <input type="text" class="form-control" id="addImageURL">
               </div>
               <div class="custom-file">
-                <input type="file" class="custom-file-input" id="imageFile">
+                <input type="file" class="custom-file-input" id="imageFile" name="file">
                 <label class="custom-file-label" for="customFile">Choose file</label>
               </div>
             </form>
@@ -420,49 +453,17 @@
     </div>
 
 
-    <!-- Edit image modal -->
-    <div class="modal fade" id="editImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Edit Image</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="userText">Image URL (optional)</label>
-                <input type="text" class="form-control" id="addImageURL">
-              </div>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="imageFile">
-                <label class="custom-file-label" for="customFile">Choose file</label>
-              </div>
-            </form>
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary image-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
 
 
-  <script>
-    feather.replace() // For icons
-  </script>
+    <script>
+      feather.replace() // For icons
+    </script>
 
 
 
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 
 </html>
