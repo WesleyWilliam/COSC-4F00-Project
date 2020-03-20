@@ -63,22 +63,19 @@
     });
 
 
-    $(document).on('click', '.text-enter-button', function() { // Save changes of Text component
-      let text = $('#userText').val();
-      let header = $('#hType').val();
+    function addTextComponent() {
 
-      $('#addTextModal').modal('hide')
+
 
       var component = {
-        index: components.length,
         type: "text",
-        header: header,
-        content: text
+        header: "display-3",
+        content: "this is content"
       };
 
       components.push(component);
       showChanges();
-    });
+    };
 
     $(document).on('click','.paragraph-enter-button', function() {
       let res = editor.getData();
@@ -91,6 +88,19 @@
       components.push(component);
       showChanges();
     });
+
+    function addImageComponent() {
+
+      var component = {
+        type: "image",
+        header: "img",
+        content: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F12%2F2016%2F11%2FGettyImages-155781839-2000.jpg"
+      };
+
+      components.push(component);
+      showChanges();
+
+    }
 
     $(document).on('click', '.save-editor-changes', function() { // Save current state of the editor components
       $(".save-webpage-alert").show();
@@ -113,19 +123,7 @@
       }, 5000);
     })
 
-    $(document).on('click', '.image-add-button', function() { // Add image component
-      $('#addImageModal').modal('hide')
 
-      var component = {
-        type: "image",
-        header: "img",
-        content: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F12%2F2016%2F11%2FGettyImages-155781839-2000.jpg"
-      };
-
-      components.push(component);
-      showChanges();
-
-    })
 
     $(document).on('change', '#imageFile', function() {
       var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php";
@@ -174,17 +172,17 @@
 
 
     //Function to output text component html code
-    function textComponentOutput(component) {
+    function textComponentOutput(component, index) {
       var res = "";
       //component.head1 + component.index + component.head2 + component.content + components.tail
-      res += "<p class=" + component.header + " " + "onclick ='editText(" + component.index + ")'>" + component.content + "</p>";
+      res += "<p class=" + component.header + " " + "onclick ='editText(" + index + ")'>" + component.content + "</p>";
       return res;
     }
 
     // Function to output image component html code
-    function imageComponentOutput(component) {
+    function imageComponentOutput(component, index) {
       var res = "";
-      res += "<img src=\"" + component.content + "\" onclick =\"editImage(" + component.index + ")\" height=\"300\"  alt=\"description\" >";
+      res += "<img src=\"" + component.content + "\" onclick =\"editImage(" + index + ")\" height=\"300\"  alt=\"description\" >";
       return res;
     }
 
@@ -203,10 +201,10 @@
       for (let i = 0; i < components.length; i++) {
         switch (components[i].type) {
           case 'text':
-            $('#editor-user-page').append(textComponentOutput(components[i]));
+            $('#editor-user-page').append(textComponentOutput(components[i], i));
             break;
           case 'image':
-            $('#editor-user-page').append(imageComponentOutput(components[i]));
+            $('#editor-user-page').append(imageComponentOutput(components[i], i));
             break;
           case 'paragraph':
             console.log(paragraphComponentOutput(components[i]));
@@ -239,9 +237,9 @@
       ev.preventDefault();
       var component = ev.dataTransfer.getData("component")
       if (component == "text") {
-        $('#addTextModal').modal('show')
+        addTextComponent();
       } else if (component == "image") {
-        $('#addImageModal').modal('show')
+        addImageComponent();
       } else if (component == "paragraph") {
         $('#addParagraphModal').modal('show');
       }
@@ -425,6 +423,15 @@
         </div>
       </div>
     </div>
+
+
+
+
+
+
+
+
+
     <!-- Paragraph modal -->
     <div class="modal fade" id="addParagraphModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
