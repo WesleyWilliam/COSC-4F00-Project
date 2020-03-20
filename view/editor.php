@@ -80,7 +80,7 @@
       showChanges();
     });
 
-    $(document).on('click','.paragraph-enter-button', function() {
+    $(document).on('click', '.paragraph-enter-button', function() {
       let res = editor.getData();
       $('#addParagraphModal').modal('hide');
       var component = {
@@ -152,7 +152,7 @@
             type: "image",
             header: "img",
             content: "<?php echo $config['home-file-path']; ?>/" + data
-            };
+          };
 
           components.push(component);
           showChanges();
@@ -232,7 +232,7 @@
     }
 
     function dragParagraph(ev) {
-      ev.dataTransfer.setData("component","paragraph");
+      ev.dataTransfer.setData("component", "paragraph");
     }
 
     function drop(ev) {
@@ -425,9 +425,17 @@
         </div>
       </div>
     </div>
+    <!-- Ensures the link in CKEditor works -->
+    <style>
+      :root {
+        --ck-z-default: 100;
+        --ck-z-modal: calc(var(--ck-z-default) + 999);
+      }
+    </style>
+
     <!-- Paragraph modal -->
-    <div class="modal fade" id="addParagraphModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal fade" id="addParagraphModal" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Please enter Paragraph content</h5>
@@ -448,18 +456,18 @@
     </div>
 
     <script>
-        let editor;
-        ClassicEditor
-            .create(document.querySelector('#editor'), {
-                removePlugins: ['Image', 'EasyImage', 'CKFinder', "ImageCaption", "ImageStyle", "ImageToolbar", "ImageUpload", "MediaEmbed", "Table", "TableToolbar"],
-                // toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote']
-            })
-            .then(newEditor => {
-                editor = newEditor;
-            })
-            .catch(error => {
-                console.log(error);
-            });
+      let editor;
+      ClassicEditor
+        .create(document.querySelector('#editor'), {
+          removePlugins: ['Image', 'EasyImage', 'CKFinder', "ImageCaption", "ImageStyle", "ImageToolbar", "ImageUpload", "MediaEmbed"],
+          // toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote']
+        })
+        .then(newEditor => {
+          editor = newEditor;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     </script>
 
     <div class="modal fade" id="editTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
