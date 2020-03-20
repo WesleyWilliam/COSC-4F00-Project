@@ -34,7 +34,8 @@ if (!isset($_SESSION)) {
 <?php 
 if (!empty($_SESSION['SIGNUP_MSG'])) {
   echo "<div class=\"alert alert-warning\" role=\"alert\">";
-  echo $_SESSION['SIGNUP_MSG'];
+  // echo $_SESSION['SIGNUP_MSG'];
+  echo "helloWorld";
   echo "</div>";
 }
 ?>
@@ -66,7 +67,8 @@ if (!empty($_SESSION['SIGNUP_MSG'])) {
                 <input type="hidden" name="COMMAND" value="SIGNUP">
                 <button type="submit" class="btn btn-lg btn-primary">Submit</button>
                 <br>
-                <a type="button" class="btn btn-link mt-1 pl-0" href="<?php echo $config['home-file-path'] . '/view/login.php' ?>">Already have an account? Sign in</a>              </form> 
+                <a type="button" class="btn btn-link mt-1 pl-0" href="<?php echo $config['home-file-path'] . '/view/login.php' ?>">Already have an account? Sign in</a>
+                </form> 
             </div>
           </div>    
         </div>
