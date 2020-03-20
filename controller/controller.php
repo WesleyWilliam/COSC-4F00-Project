@@ -145,6 +145,11 @@ try {
             $_SESSION['RECOVEREMAIL_MSG'] = 'Message sent, check your email and junk folder';
             redirect('view/recover-email.php');
         }
+    } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
+        $model->logout();
+        redirect('view/login.php');
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
+        echo $model->saveComponents($_POST['WEBPAGE'],$_POST['COMPONENTS']);
     }
     //Should put something here in case the if statement doesn't catch it
     echo "Something went wrong, proceed to panic";
