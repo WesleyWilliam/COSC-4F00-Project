@@ -23,7 +23,7 @@
       <div class="row h-100 align-items-center">
         <div class="col-12 text-center">
           <h1 class="font-weight-light" style="padding-bottom: 25px;">Simple Tools You'll Love.</h1>
-          <a class="btn btn-primary btn-lg" href="signup.php" style="border-radius: 50px;">Build Your Website Today!</a>
+          <a class="btn btn-primary btn-lg" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>" style="border-radius: 50px;">Build Your Website Today!</a>
         </div>
       </div>
     </div>
@@ -40,7 +40,7 @@
       </div>
       <div class="container col">
         <h3 style="padding-bottom: 25px;"> From online stores, to blogs, to albums and more - if you need a website, it's all possible with our Brix website builder.</h3>
-        <a class="btn btn-success btn-lg" href="signup.php">Lets Get Started</a>
+        <a class="btn btn-success btn-lg" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Lets Get Started</a>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
           </span></h1>
           <h1 class="display-5 align-middle"> Simply drag, drop, and build your very own websites!</h1>
           <div class="mx-auto " style="padding-top: 25px;">
-          <a class="btn btn-info btn-lg"  href="signup.php">Start Now</a>
+          <a class="btn btn-info btn-lg"  href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Start Now</a>
           </div>
         </div>
 
@@ -138,7 +138,7 @@
         </div>
         <h1 class="display-3 align-middle text-center" style="padding-top: 50px;"> Drag, Drop, Build.</h1>
         <div class="text-center mx-auto " style="padding-top: 50px;">
-          <a class="btn btn-success btn-lg" href="signup.php">Start Today for Free</a>
+          <a class="btn btn-success btn-lg" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Start Today for Free</a>
         </div>
       </div>
     </div>

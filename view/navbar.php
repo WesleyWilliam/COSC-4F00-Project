@@ -14,7 +14,7 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav mr-auto nav-links">
           <li class="nav-item active" style="padding-left: 35px;">
-            <a class="nav-link" href="welcome.php">Home
+            <a class="nav-link" href="<?php echo $config['home-file-path'] . '/view/welcome.php' ?>">Home
                   <span class="sr-only">(current)</span>
                 </a>
           </li>
@@ -37,7 +37,7 @@
         
         <ul class="navbar-nav ml-auto nav-links">
         <li class="nav-item">
-            <a class="btn btn-outline-primary" href="login.php">Sign in</a>
+            <a class="btn btn-outline-primary" href="<?php echo $config['home-file-path'] . '/view/login.php' ?>">Sign in</a>
           </li>
         </ul>
       </div>
