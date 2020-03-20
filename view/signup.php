@@ -8,6 +8,9 @@
 
     <!-- Including bootstrap CSS files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!--CSS files -->
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
 <?php
@@ -31,17 +34,24 @@ if (!isset($_SESSION)) {
 <?php 
 if (!empty($_SESSION['SIGNUP_MSG'])) {
   echo "<div class=\"alert alert-warning\" role=\"alert\">";
-  echo $_SESSION['SIGNUP_MSG'];
+  // echo $_SESSION['SIGNUP_MSG'];
+  echo "helloWorld";
   echo "</div>";
 }
 ?>
 
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-8">
-        <h2 class="mt-2">Sign up </h2>
-        <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
-            <div class="form-group">
+<div class="container-fluid">
+  <div class="row no-gutter">
+    <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+    <div class="col-md-8 col-lg-6">
+      <div class="login d-flex align-items-center py-5">
+
+        <div class="container" style="padding-top: 100px;" >
+          <div class="row justify-content-center">
+            <div class="col-8">
+              <img src="img/sign-up.png" style="width: 300px; padding-bottom:30px;" alt="brix-colours"></span>
+              <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+              <div class="form-group">
                 <label for="username1">Username</label>
                 <input type="text" class="form-control" id="username1" name="UNAME">
             </div>
@@ -54,12 +64,17 @@ if (!empty($_SESSION['SIGNUP_MSG'])) {
                 <input type="password" class="form-control" id="password1" name="PWD">
             </div>
 
-            <input type="hidden" name="COMMAND" value="SIGNUP">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        <a type="button" class="btn btn-link mt-1" href="<?php echo $config['home-file-path'] . '/view/login.php' ?>">Already have an account? Log in</a>
+                <input type="hidden" name="COMMAND" value="SIGNUP">
+                <button type="submit" class="btn btn-lg btn-primary">Submit</button>
+                <br>
+                <a type="button" class="btn btn-link mt-1 pl-0" href="<?php echo $config['home-file-path'] . '/view/login.php' ?>">Already have an account? Sign in</a>
+                </form> 
+            </div>
+          </div>    
+        </div>
+      </div>
     </div>
-  </div>    
+  </div>
 </div>
 
 
