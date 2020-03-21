@@ -65,8 +65,6 @@
 
     function addTextComponent() {
 
-
-
       var component = {
         type: "text",
         header: "display-3",
@@ -76,6 +74,19 @@
       components.push(component);
       showChanges();
     };
+
+    
+    function addMediaComponent() {
+
+      var component = {
+        type: "media",
+        header: "media",
+        content: "https://www.youtube.com/embed/kJQP7kiw5Fk"
+      };
+
+components.push(component);
+showChanges();
+};
 
     $(document).on('click', '.paragraph-enter-button', function() {
       let res = editor.getData();
@@ -168,13 +179,21 @@
 
     $(document).on('click', '.image-edit-button', function() {
       let text = $('#addImageURL').val();
-      console.log("text: "+ text);
       $('#editImageModal').modal('hide')
       components[index].content = text;
 
       showChanges();
     })
 
+
+    $(document).on('click', '.media-edit-button', function() {
+      let text = $('#editMediaURL').val();
+      $('#editMediaModal').modal('hide')
+      text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
+      components[index].content = text;
+
+      showChanges();
+    })
 
     //Function to output text component html code
     function textComponentOutput(component, index) {
@@ -188,6 +207,13 @@
     function imageComponentOutput(component, index) {
       var res = "";
       res += "<img src=\"" + component.content + "\" onclick =\"editImage(" + index + ")\" height=\"300\"  alt=\"description\" >";
+      return res;
+    }
+
+    // Function to output media component html code
+    function mediaComponentOutput(component, index) {
+      var res = "";
+      res += "<div onclick ='editMedia(" + index + ")'> <iframe width='560' height='315' src="+component.content +" frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
       return res;
     }
 
@@ -210,6 +236,9 @@
             break;
           case 'image':
             $('#editor-user-page').append(imageComponentOutput(components[i], i));
+            break;
+          case 'media':
+            $('#editor-user-page').append(mediaComponentOutput(components[i], i));
             break;
           case 'paragraph':
             console.log(paragraphComponentOutput(components[i]));
@@ -238,6 +267,10 @@
       ev.dataTransfer.setData("component", "paragraph");
     }
 
+    function dragMedia(ev) {
+      ev.dataTransfer.setData("component", "media");
+    }
+
     function drop(ev) {
       ev.preventDefault();
       var component = ev.dataTransfer.getData("component")
@@ -247,6 +280,9 @@
         addImageComponent();
       } else if (component == "paragraph") {
         $('#addParagraphModal').modal('show');
+
+      } else if (component == "media") {
+        addMediaComponent();
       }
     }
 
@@ -260,7 +296,12 @@
       index = i;
       $('#editImageModal').modal('show');
 
-      
+    }
+
+    function editMedia(i) {
+      index = i;
+      $('#editMediaModal').modal('show');
+
     }
 
     function deleteElement() {
@@ -336,7 +377,7 @@
             <i data-feather="list"></i>
           </div>
         </li>
-        <li class="list-group-item list-group-item-action">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragMedia(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Media</span>
 
@@ -476,7 +517,9 @@
           </div>
         </div>
       </div>
-      </div>
+    </div>
+
+    
 
       <!-- EditImage modal-->
       <div class="modal fade" id="editImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -506,8 +549,35 @@
           </div>
         </div>
       </div>
+      </div>
+      <!-- EditMedia modal -->
 
-      <!-- EditImage modal (testing)-->
+    <div class="modal fade" id="editMediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Media</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">URL:</label>
+                <input type="text" class="form-control" id="editMediaURL" >
+              </div>
+            </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary media-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
 
 
 
