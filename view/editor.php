@@ -162,6 +162,7 @@
       let text = $('#editText').val();
       $('#editTextModal').modal('hide')
       components[index].content = text;
+      components[index].header = $("#hType").val();
       showChanges();
     })
 
@@ -247,12 +248,14 @@
 
     function editText(i) {
       index = i;
-      $('#editTextModal').modal('show')
+      $('#editTextModal').modal('show');
+      $('#editText').val(components[i].content);
     }
 
     function editImage(i) {
       index = i;
       $('#editImageModal').modal('show')
+      
     }
 
     function deleteElement() {
@@ -389,41 +392,6 @@
 
     </div>
 
-    <!-- Text Modal -->
-    <div class="modal fade" id="addTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Please enter text content</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="userText">Text:</label>
-                <input type="text" class="form-control" id="userText">
-              </div>
-              <div class="form-group">
-                <label for="hType">Select Header:</label>
-                <select class="form-control" id="hType">
-                  <option class="display-3" value="display-3">Title</option>
-                  <option class="h3" value="h3">Subtitle</option>
-                  <option class="p" value="p">Body</option>
-                  <option class="text-muted" value="text-muted">Muted</option>
-                  <option class="text-monospace" value="text-monospace">Monospaced</option>
-                </select>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary text-enter-button">Save</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Ensures the link in CKEditor works -->
     <style>
       :root {
@@ -482,61 +450,68 @@
             <form>
               <div class="form-group">
                 <label for="userText">Text:</label>
-                <input type="text" class="form-control" id="editText">
+                <input type="text" class="form-control" id="editText" >
               </div>
             </form>
-
-            <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary text-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            <div class="form-group">
+              <label for="hType">Select Header:</label>
+              <select class="form-control" id="hType">
+                <option class="display-3" value="display-3">Title</option>
+                <option class="h3" value="h3">Subtitle</option>
+                <option class="p" value="p">Body</option>
+                <option class="text-muted" value="text-muted">Muted</option>
+                <option class="text-monospace" value="text-monospace">Monospaced</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary text-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Image modal -->
-    <div class="modal fade" id="addImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="userText">Image URL (optional)</label>
-                <input type="text" class="form-control" id="addImageURL">
-              </div>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="imageFile" name="file">
-                <label class="custom-file-label" for="customFile">Choose file</label>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary image-add-button" data-dismiss="modal" aria-label="Close">Save</button>
+      <!-- Image modal -->
+      <div class="modal fade" id="addImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="userText">Image URL (optional)</label>
+                  <input type="text" class="form-control" id="addImageURL">
+                </div>
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="imageFile" name="file">
+                  <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary image-add-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
 
 
 
-    <script>
-      feather.replace() // For icons
-    </script>
+      <script>
+        feather.replace() // For icons
+      </script>
 
 
 
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 
 </html>
