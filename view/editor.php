@@ -75,6 +75,21 @@
       showChanges();
     };
 
+    
+    function addMediaComponent() {
+
+      var component = {
+        type: "media",
+        header: "media",
+        content: "https://www.youtube.com/embed/kJQP7kiw5Fk"
+      };
+
+components.push(component);
+showChanges();
+};
+
+   
+
     function addImageComponent() {
 
       var component = {
@@ -162,7 +177,10 @@
     })
 
     $(document).on('click', '.image-edit-button', function() {
-      $('#editTextModal').modal('hide')
+      let text = $('#addImageURL').val();
+      $('#editImageModal').modal('hide')
+      components[index].content = text;
+
       showChanges();
     });
 
@@ -174,6 +192,15 @@
       showChanges();
     });
 
+
+    $(document).on('click', '.media-edit-button', function() {
+      let text = $('#editMediaURL').val();
+      $('#editMediaModal').modal('hide')
+      text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
+      components[index].content = text;
+
+      showChanges();
+    })
 
     //Function to output text component html code
     function textComponentOutput(component, index) {
@@ -187,6 +214,13 @@
     function imageComponentOutput(component, index) {
       var res = "";
       res += "<img src=\"" + component.content + "\" onclick =\"editImage(" + index + ")\" height=\"300\"  alt=\"description\" >";
+      return res;
+    }
+
+    // Function to output media component html code
+    function mediaComponentOutput(component, index) {
+      var res = "";
+      res += "<div onclick ='editMedia(" + index + ")'> <iframe width='560' height='315' src="+component.content +" frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
       return res;
     }
 
@@ -209,6 +243,9 @@
             break;
           case 'image':
             $('#editor-user-page').append(imageComponentOutput(components[i], i));
+            break;
+          case 'media':
+            $('#editor-user-page').append(mediaComponentOutput(components[i], i));
             break;
           case 'paragraph':
             $('#editor-user-page').append(paragraphComponentOutput(components[i],i));
@@ -234,6 +271,10 @@
       ev.dataTransfer.setData("component", "paragraph");
     }
 
+    function dragMedia(ev) {
+      ev.dataTransfer.setData("component", "media");
+    }
+
     function drop(ev) {
       ev.preventDefault();
       var component = ev.dataTransfer.getData("component");
@@ -244,6 +285,8 @@
         addImageComponent();
       } else if (component == "paragraph") {
         addParagraphComponent();
+      } else if (component == "media") {
+        addMediaComponent();
       }
     }
 
@@ -263,6 +306,12 @@
       index = i;
       editor.setData(components[i].html);
       $('#editParagraphModal').modal('show');
+    }
+    
+    function editMedia(i) {
+      index = i;
+      $('#editMediaModal').modal('show');
+
     }
 
     function deleteElement() {
@@ -338,7 +387,7 @@
             <i data-feather="list"></i>
           </div>
         </li>
-        <li class="list-group-item list-group-item-action">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragMedia(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Media</span>
 
@@ -443,6 +492,7 @@
         });
     </script>
 
+    <!-- EditText modal -->
     <div class="modal fade" id="editTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -476,6 +526,71 @@
           </div>
         </div>
       </div>
+    </div>
+
+    
+
+      <!-- EditImage modal-->
+      <div class="modal fade" id="editImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body"> 
+              <form>
+                <div class="form-group">
+                  <label for="userText">Image URL (optional)</label>
+                  <input type="text" class="form-control" id="addImageURL">
+                </div>
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="imageFile" name="file">
+                  <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+              </form> 
+            </div> 
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary image-edit-button" data-dismiss="modal" aria-label="Close">Save</button>            
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- EditMedia modal -->
+
+    <div class="modal fade" id="editMediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Media</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">URL:</label>
+                <input type="text" class="form-control" id="editMediaURL" >
+              </div>
+            </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary media-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+
 
       <script>
         feather.replace() // For icons
