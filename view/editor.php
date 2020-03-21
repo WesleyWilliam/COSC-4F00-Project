@@ -167,7 +167,11 @@
     })
 
     $(document).on('click', '.image-edit-button', function() {
-      $('#editTextModal').modal('hide')
+      let text = $('#addImageURL').val();
+      console.log(text);
+      $('#editImageModal').modal('hide')
+      components[index].content = text;
+
       showChanges();
     })
 
@@ -254,7 +258,8 @@
 
     function editImage(i) {
       index = i;
-      $('#editImageModal').modal('show')
+      $('#editImageModal').modal('show');
+
       
     }
 
@@ -437,6 +442,7 @@
         });
     </script>
 
+    <!-- EditText modal -->
     <div class="modal fade" id="editTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -470,9 +476,10 @@
           </div>
         </div>
       </div>
+      </div>
 
-      <!-- Image modal -->
-      <div class="modal fade" id="addImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <!-- EditImage modal-->
+      <div class="modal fade" id="editImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -481,7 +488,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body"> 
               <form>
                 <div class="form-group">
                   <label for="userText">Image URL (optional)</label>
@@ -491,14 +498,17 @@
                   <input type="file" class="custom-file-input" id="imageFile" name="file">
                   <label class="custom-file-label" for="customFile">Choose file</label>
                 </div>
-              </form>
-            </div>
+              </form> 
+            </div> 
             <div class="modal-footer">
               <button type="button" class="btn btn-primary image-add-button" data-dismiss="modal" aria-label="Close">Save</button>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- EditImage modal (testing)-->
+
 
 
 
