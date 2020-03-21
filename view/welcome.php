@@ -15,8 +15,9 @@
 </head>
 <body>
   <?php 
-  $page = 'welcome';
-  include "navbar.php";
+
+    $page = 'welcome';
+    include "navbar.php";
   ?>
 
 
