@@ -15,7 +15,7 @@
 </head>
 <body>
   <?php 
-  $page = 'welcome';
+  $page = 'features';
   include "navbar.php";
   ?>
 

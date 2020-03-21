@@ -13,25 +13,25 @@
           </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav mr-auto nav-links">
-          <li class="nav-item active" style="padding-left: 35px;">
+        <li class="nav-item <?php if ($page == 'welcome') echo ' active' ;?>" style="padding-left: 35px;">
             <a class="nav-link" href="<?php echo $config['home-file-path'] . '/view/welcome.php' ?>">Home
                   <span class="sr-only">(current)</span>
                 </a>
           </li>
-          <li class="nav-item" style="padding-left: 35px;">
-            <a class="nav-link" href="#">Features</a>
+          <li class="nav-item <?php if ($page == 'features') echo ' active' ;?>" style="padding-left: 35px;">
+            <a class="nav-link" href="<?php echo $config['home-file-path'] . '/view/features.php' ?>">Features</a>
           </li>
-          <li class="nav-item" style="padding-left: 35px;">
-            <a class="nav-link" href="#">Styles</a>
+          <li class="nav-item <?php if ($page == 'styles') echo ' active' ;?>" style="padding-left: 35px;">
+            <a class="nav-link" href="<?php echo $config['home-file-path'] . '/view/styles.php' ?>">Styles</a>
           </li>
-          <li class="nav-item" style="padding-left: 35px;">
-            <a class="nav-link" href="#">Subscriptions</a>
+          <li class="nav-item <?php if ($page == 'subscriptions') echo ' active' ;?>" style="padding-left: 35px;">
+            <a class="nav-link" href="<?php echo $config['home-file-path'] . '/view/subscriptions.php' ?>">Subscriptions</a>
           </li>
-          <li class="nav-item" style="padding-left: 35px;">
-            <a class="nav-link" href="#">Templates</a>
+          <li class="nav-item <?php if ($page == 'templates') echo ' active' ;?>" style="padding-left: 35px;">
+            <a class="nav-link" href="<?php echo $config['home-file-path'] . '/view/templates.php' ?>">Templates</a>
           </li>
-          <li class="nav-item" style="padding-left: 35px;">
-            <a class="nav-link" href="#">Support</a>
+          <li class="nav-item <?php if ($page == 'support') echo ' active' ;?>" style="padding-left: 35px;">
+            <a class="nav-link" href="<?php echo $config['home-file-path'] . '/view/support.php' ?>">Support</a>
           </li>
         </ul>
         

@@ -15,7 +15,7 @@
 </head>
 <body>
   <?php 
-  $page = 'welcome';
+  $page = 'templates';
   include "navbar.php";
   ?>
 
