@@ -53,6 +53,7 @@
   <script>
     var str = <?php echo json_encode($component); ?>;
     var components = JSON.parse(str);
+    var editor = null;
     var index; //this index is used to keep track of which element is currently selected on the page
 
     $('#editor-user-page').hide();
@@ -64,7 +65,6 @@
 
 
     function addTextComponent() {
-
       var component = {
         type: "text",
         header: "display-3",
@@ -88,17 +88,7 @@ components.push(component);
 showChanges();
 };
 
-    $(document).on('click', '.paragraph-enter-button', function() {
-      let res = editor.getData();
-      $('#addParagraphModal').modal('hide');
-      var component = {
-        type: "paragraph",
-        html: res
-      };
-      console.log(res);
-      components.push(component);
-      showChanges();
-    });
+   
 
     function addImageComponent() {
 
@@ -111,6 +101,15 @@ showChanges();
       components.push(component);
       showChanges();
 
+    }
+
+    function addParagraphComponent() {
+      var component = {
+        type: "paragraph",
+        html: "<p>Content<\/p>"
+      }
+      components.push(component);
+      showChanges();
     }
 
     $(document).on('click', '.save-editor-changes', function() { // Save current state of the editor components
@@ -183,7 +182,15 @@ showChanges();
       components[index].content = text;
 
       showChanges();
-    })
+    });
+
+    $(document).on('click', '.paragraph-edit-button', function() {
+      let res = editor.getData();
+      $('#editParagraphModal').modal('hide');
+      console.log(index);
+      components[index].html = editor.getData();
+      showChanges();
+    });
 
 
     $(document).on('click', '.media-edit-button', function() {
@@ -218,8 +225,8 @@ showChanges();
     }
 
     //Function to output paragraph component html code
-    function paragraphComponentOutput(component) {
-      return component.html;
+    function paragraphComponentOutput(component, index) {
+      return "<div onclick=\"editParagraph(" + index + ")\">" + component.html + "</div>";
     }
 
 
@@ -241,13 +248,10 @@ showChanges();
             $('#editor-user-page').append(mediaComponentOutput(components[i], i));
             break;
           case 'paragraph':
-            console.log(paragraphComponentOutput(components[i]));
-            $('#editor-user-page').append(paragraphComponentOutput(components[i]));
+            $('#editor-user-page').append(paragraphComponentOutput(components[i],i));
             break;
         }
-
       }
-
     }
 
     //drag and drop stuff
@@ -273,14 +277,14 @@ showChanges();
 
     function drop(ev) {
       ev.preventDefault();
-      var component = ev.dataTransfer.getData("component")
+      var component = ev.dataTransfer.getData("component");
+      console.log(component);
       if (component == "text") {
         addTextComponent();
       } else if (component == "image") {
         addImageComponent();
       } else if (component == "paragraph") {
-        $('#addParagraphModal').modal('show');
-
+        addParagraphComponent();
       } else if (component == "media") {
         addMediaComponent();
       }
@@ -298,6 +302,12 @@ showChanges();
 
     }
 
+    function editParagraph(i) {
+      index = i;
+      editor.setData(components[i].html);
+      $('#editParagraphModal').modal('show');
+    }
+    
     function editMedia(i) {
       index = i;
       $('#editMediaModal').modal('show');
@@ -447,7 +457,7 @@ showChanges();
     </style>
 
     <!-- Paragraph modal -->
-    <div class="modal fade" id="addParagraphModal" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="editParagraphModal" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -462,14 +472,13 @@ showChanges();
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary paragraph-enter-button">Save</button>
+            <button type="button" class="btn btn-primary paragraph-edit-button">Save</button>
           </div>
         </div>
       </div>
     </div>
 
     <script>
-      let editor;
       ClassicEditor
         .create(document.querySelector('#editor'), {
           removePlugins: ['Image', 'EasyImage', 'CKFinder', "ImageCaption", "ImageStyle", "ImageToolbar", "ImageUpload", "MediaEmbed"],
@@ -497,7 +506,7 @@ showChanges();
             <form>
               <div class="form-group">
                 <label for="userText">Text:</label>
-                <input type="text" class="form-control" id="editText" >
+                <input type="text" class="form-control" id="editText">
               </div>
             </form>
             <div class="form-group">
