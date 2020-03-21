@@ -15,7 +15,7 @@
 </head>
 <body>
   <?php 
-  $page = 'welcome';
+  $page = 'subscriptions';
   include "navbar.php";
   ?>
 
