@@ -168,7 +168,7 @@
 
     $(document).on('click', '.image-edit-button', function() {
       let text = $('#addImageURL').val();
-      console.log(text);
+      console.log("text: "+ text);
       $('#editImageModal').modal('hide')
       components[index].content = text;
 
@@ -501,8 +501,8 @@
               </form> 
             </div> 
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary image-add-button" data-dismiss="modal" aria-label="Close">Save</button>
-            </div>
+            <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary image-edit-button" data-dismiss="modal" aria-label="Close">Save</button>            
           </div>
         </div>
       </div>
