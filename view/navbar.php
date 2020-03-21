@@ -1,7 +1,28 @@
 
 <?php
-  $config = require('../config/config.php');
+
+  if ($page == 'signup'){
+
+    include('../model/model.php');
+    $config = require('../config/config.php');
+    $model = new Model();
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+
+  } else {
+    
+    require('../model/model.php');
+    require('../utilities/utilities.php');
+    $config = require('../config/config.php');
+    $model = new Model();
+    
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+  }
 ?>
+
 <!-- Nav Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
     <div class="container-fluid">
@@ -41,9 +62,11 @@
           <!-- See whether user is logged in or not -->
           <?php 
           if (!empty($_SESSION['loggedinvar'])) {
+            echo "<div style=\"padding-left: 30px;\">";
             echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"";
             echo  $config['home-file-path'];
             echo "/view/website-name.php\">My Webpages</a></li>";
+            echo "</div>"; 
           }
           ?>
 
@@ -51,13 +74,17 @@
 
           <?php 
             if (!empty($_SESSION['loggedinvar'])) {
-              echo "<a class=\"btn btn-outline-warning my-2 my-sm-0\" href=\"";
+              echo "<div style=\"padding-left: 30px;\">";
+              echo "<a class=\"btn btn-outline-danger my-2 my-sm-0\" href=\"";
               echo  $config['home-file-path'];
               echo "/controller/controller.php?COMMAND=LOGOUT\">Logout</a>";
+              echo "</div>"; 
             } else {
+              echo "<div style=\"padding-left: 30px;\">";
               echo "<a class=\"btn btn-outline-success my-2 my-sm-0\" href=\"";
               echo  $config['home-file-path'];
               echo "/view/login.php\">Login</a>";
+              echo "</div>"; 
             }
           ?>
 

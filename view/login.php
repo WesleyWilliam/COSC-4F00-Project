@@ -14,13 +14,8 @@
 </head>
 <body>
 <?php
-include('../model/model.php');
-include('../utilities/utilities.php');
-$config = require('../config/config.php');
-$model = new Model();
-if (!isset($_SESSION)) {
-    session_start();
-}
+$page = 'login';
+include 'navbar.php';
 
 //Redirect if already logged in
 try {
@@ -33,7 +28,7 @@ try {
 ?>
 
 
-<?php include 'navbar.php' ?>
+
 
 
 <!-- Login  -->
