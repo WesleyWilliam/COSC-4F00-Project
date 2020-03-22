@@ -1,240 +1,354 @@
 #!/usr/bin/php-cgi
 <!DOCTYPE html>
 <html>
+
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Local CSS -->
-    <style>
+  <!-- Local CSS -->
+  <style>
 
-    </style>
+  </style>
 
-    <!-- Including bootstrap CSS files -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <!-- Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script> 
-    <!-- Jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- Including bootstrap CSS files -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <!-- Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <!-- Jquery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- CKEditor -->
+  <script src="https://cdn.ckeditor.com/ckeditor5/17.0.0/classic/ckeditor.js"></script>
+  <?php
+  require_once('../model/model.php');
+  include('../utilities/utilities.php');
+  $config = require('../config/config.php');
+  $model = new Model();
+  if (!isset($_SESSION)) {
+    session_start();
+  }
 
-    <?php
-    require_once('../model/model.php');
-    include ('../utilities/utilities.php');
-    $config = require('../config/config.php');
-    $model = new Model();
-    if (!isset($_SESSION)) {
-        session_start();
-    }
 
-
-    try {
-        $component = NULL;
-        if (isset($_GET['website'])) {
-            $component = $model -> getComponents($_GET['website']);
-            if ($component == "WRONGUSER") {
-                echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
-                die();
-            }
-        } else {
-            //Later on well make this go to the first website for your user
-            echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
-            die();
-        }
-    } catch (SessionNotFound $e) {
-        redirect('view/login.php');
+  try {
+    $component = NULL;
+    if (isset($_GET['website'])) {
+      $component = $model->getComponents($_GET['website']);
+      if ($component == "WRONGUSER") {
+        echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
         die();
+      }
+    } else {
+      //Later on well make this go to the first website for your user
+      echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
+      die();
     }
-    ?>
+  } catch (SessionNotFound $e) {
+    redirect('view/login.php');
+    die();
+  }
+  ?>
 
-    <!-- Javascript code -->
-    <script>
-
-    var str = <?php echo json_encode($component); ?> ;
-    var components = JSON.parse(str) ;
+  <!-- Javascript code -->
+  <script>
+    var str = <?php echo json_encode($component); ?>;
+    var components = JSON.parse(str);
     var index; //this index is used to keep track of which element is currently selected on the page
 
-      $('#editor-user-page').hide();
+    $('#editor-user-page').hide();
 
-      $(document).ready(function() {
-          showChanges();
-          $(".save-webpage-alert").hide();
-      });
-
-
-      $(document).on('click', '.text-enter-button', function(){
-        let text =  $('#userText').val();
-        $('#addTextModal').modal('hide')
-		
-		var component = {
-			head1: "<h2 onclick ='editText(",
-			index: components.length,
-			head2 : ")'>", 
-			content : text ,
-			tail : "</h2>"};
-		
-        components.push(component);
-        showChanges();
-      });
+    $(document).ready(function() {
+      showChanges();
+      $(".save-webpage-alert").hide();
+    });
 
 
-      $(document).on('click','.save-editor-changes',function() {
-        $(".save-webpage-alert").show();
-        
-        // $.post("../controller/controller.php",
-        // {COMMAND: "SAVE-EDITOR", WEBPAGE: "<?php echo $_GET['website'] ?>", COMPONENTS: JSON.stringify(components)}, function(data,status) {
-        //   alert(data);
-        // }
-        // )
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
+    $(document).on('click', '.text-enter-button', function() { // Save changes of Text component
+      let text = $('#userText').val();
+      let header = $('#hType').val();
+
+      $('#addTextModal').modal('hide')
+
+      var component = {
+        index: components.length,
+        type: "text",
+        header: header,
+        content: text
+      };
+
+      components.push(component);
+      showChanges();
+    });
+
+    $(document).on('click','.paragraph-enter-button', function() {
+      let res = editor.getData();
+      $('#addParagraphModal').modal('hide');
+      var component = {
+        type: "paragraph",
+        html: res
+      };
+      console.log(res);
+      components.push(component);
+      showChanges();
+    });
+
+    $(document).on('click', '.save-editor-changes', function() { // Save current state of the editor components
+      $(".save-webpage-alert").show();
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           console.log(this.responseText);
-        }};
-        var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php"
-        console.log(url);
-        xhttp.open("POST",url,true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        var webpage_id = "<?php echo $_GET['website']; ?> ";
-        if(!isNaN(webpage_id)) {
-          xhttp.send("COMMAND=SAVE-EDITOR&WEBPAGE=" + webpage_id + "&COMPONENTS=" + encodeURI(JSON.stringify(components)));
-        } 
-
-        setTimeout(function(){
-          $(".save-webpage-alert").hide();
-        }, 5000);
-      })
-	  
-	        $(document).on('click', '.text-edit-button', function(){
-        let text =  $('#editText').val();
-        $('#editTextModal').modal('hide')
-        components[index] = text;
-        showChanges();
-      })
-
-          
-
-      // Function to render changes
-      function showChanges() {
-        $('#editor-user-page').empty()
-        if (components.length == 1) {
-          $('#editor-user-page').removeClass("invisible").addClass("visible");
         }
-        for (let i = 0; i < components.length; i++) {
-			
-			var theComponent = "";
-
-			theComponent += components[i].head1 +components[i].index + components[i].head2 +components[i].content + components[i].tail;
- //theComponent.concat(components[i].head1 , components[i].index , components[i].head2, components[i].content, components[i].tail);
-			console.log("test"+theComponent);
-
-          $('#editor-user-page').append(theComponent)
-          //$('#editor-user-page').append(components[i])
-        }
-		
+      };
+      var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php"
+      console.log(url);
+      xhttp.open("POST", url, true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      var webpage_id = "<?php echo $_GET['website']; ?> ";
+      if (!isNaN(webpage_id)) {
+        xhttp.send("COMMAND=SAVE-EDITOR&WEBPAGE=" + webpage_id + "&COMPONENTS=" + encodeURI(JSON.stringify(components)));
       }
-	  
-	  //drag and drop stuff
+      setTimeout(function() {
+        $(".save-webpage-alert").hide();
+      }, 5000);
+    })
+
+    $(document).on('click', '.image-add-button', function() { // Add image component
+      $('#addImageModal').modal('hide')
+
+      var component = {
+        type: "image",
+        header: "img",
+        content: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F12%2F2016%2F11%2FGettyImages-155781839-2000.jpg"
+      };
+
+      components.push(component);
+      showChanges();
+
+    })
+
+    $(document).on('change', '#imageFile', function() {
+      var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php";
+      var properties = document.getElementById("imageFile").files[0];
+      //  $.post(url,{COMMAND: 'PIC_UPLOAD'},function(data,status) {
+      //    console.log(data);
+      //  });
+      var form_data = new FormData();
+      form_data.append("file", properties);
+      form_data.append("COMMAND", "PIC_UPLOAD");
+
+
+      $.ajax({
+        url: url,
+        method: "POST",
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+        success: function(data) {
+          $('#addImageModal').modal('hide')
+          console.log(data);
+          var component = {
+            type: "image",
+            header: "img",
+            content: "<?php echo $config['home-file-path']; ?>/" + data
+            };
+
+          components.push(component);
+          showChanges();
+        }
+      });
+    })
+
+    $(document).on('click', '.text-edit-button', function() {
+      let text = $('#editText').val();
+      $('#editTextModal').modal('hide')
+      components[index].content = text;
+      showChanges();
+    })
+
+    $(document).on('click', '.image-edit-button', function() {
+      $('#editTextModal').modal('hide')
+      showChanges();
+    })
+
+
+    //Function to output text component html code
+    function textComponentOutput(component) {
+      var res = "";
+      //component.head1 + component.index + component.head2 + component.content + components.tail
+      res += "<p class=" + component.header + " " + "onclick ='editText(" + component.index + ")'>" + component.content + "</p>";
+      return res;
+    }
+
+    // Function to output image component html code
+    function imageComponentOutput(component) {
+      var res = "";
+      res += "<img src=\"" + component.content + "\" onclick =\"editImage(" + component.index + ")\" height=\"300\"  alt=\"description\" >";
+      return res;
+    }
+
+    //Function to output paragraph component html code
+    function paragraphComponentOutput(component) {
+      return component.html;
+    }
+
+
+    // Function to render changes
+    function showChanges() {
+      $('#editor-user-page').empty()
+      if (components.length == 1) {
+        $('#editor-user-page').removeClass("invisible").addClass("visible");
+      }
+      for (let i = 0; i < components.length; i++) {
+        switch (components[i].type) {
+          case 'text':
+            $('#editor-user-page').append(textComponentOutput(components[i]));
+            break;
+          case 'image':
+            $('#editor-user-page').append(imageComponentOutput(components[i]));
+            break;
+          case 'paragraph':
+            console.log(paragraphComponentOutput(components[i]));
+            $('#editor-user-page').append(paragraphComponentOutput(components[i]));
+            break;
+        }
+
+      }
+
+    }
+
+    //drag and drop stuff
     function allowDrop(ev) {
       ev.preventDefault();
     }
 
-    function drag(ev) {
-      ev.dataTransfer.setData("text", ev.target.id);
+    function dragText(ev) {
+      ev.dataTransfer.setData("component", "text");
+    }
+
+    function dragImage(ev) {
+      ev.dataTransfer.setData("component", "image");
+    }
+
+    function dragParagraph(ev) {
+      ev.dataTransfer.setData("component","paragraph");
     }
 
     function drop(ev) {
       ev.preventDefault();
-      $('#addTextModal').modal('show')
+      var component = ev.dataTransfer.getData("component")
+      if (component == "text") {
+        $('#addTextModal').modal('show')
+      } else if (component == "image") {
+        $('#addImageModal').modal('show')
+      } else if (component == "paragraph") {
+        $('#addParagraphModal').modal('show');
+      }
     }
-        
+
     function editText(i) {
       index = i;
       $('#editTextModal').modal('show')
     }
 
-    function deleteElement(){
+    function editImage(i) {
+      index = i;
+      $('#editImageModal').modal('show')
+    }
+
+    function deleteElement() {
       $('#editor-user-page').empty()
       if (components.length == 1) {
         $('#editor-user-page').removeClass("invisible").addClass("visible");
       }
       components.splice(index, 1);
-showChanges();
+      showChanges();
       index = components.length;
     }
-	  
-	  
 
-</script>
+    $(document).on('click', '.preview-editor', function() {
+      const new_page = $('#editor-user-page').html();
+      var strWindowFeatures = "dependent=yes,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
+
+      let myWindow = window.open("view-webpage.html", "newWindow", strWindowFeatures);
+
+      myWindow.onload = function() {
+        myWindow.document.getElementById('main-body').innerHTML = new_page;
+      }
+
+    })
+  </script>
 </head>
+
 <body>
 
-<!-- Nav Bar -->
-<?php include 'navbar.php' ?>
+  <!-- Nav Bar -->
+  <?php include 'navbar.php' ?>
 
 
 
-<!-- Editor -->
-<div class="row">
+  <!-- Editor -->
+  <div class="row">
     <!-- Side bar -->
     <div class="col" id="sidebar">
       <ul class="list-group" id="sidebarList">
-        <li class="list-group-item list-group-item-action" id="text-sidebar-button" data-toggle="modal" data-target="#textModal" draggable="true" ondragstart="drag(event)">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragText(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-          <span>Text</span>
-          
-          <i data-feather="align-justify"></i>
+            <span>Text</span>
+
+            <i data-feather="align-justify"></i>
           </div>
         </li>
-		
-        <li class="list-group-item list-group-item-action">
+
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragImage(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-          <span>Image</span>
-          
-          <i data-feather="image"></i>
-          </div>
-        </li>
-		
-        <li class="list-group-item list-group-item-action">
-          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-          <span>Link</span>
-          
-          <i data-feather="link"></i>
+            <span>Image</span>
+
+            <i data-feather="image"></i>
           </div>
         </li>
         <li class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-          <span>List</span>
-          
-          <i data-feather="list"></i>
+            <span>Grid</span>
+
+            <i data-feather="grid"></i>
+          </div>
+        </li>
+
+        <li class="list-group-item list-group-item-action">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Link</span>
+
+            <i data-feather="link"></i>
           </div>
         </li>
         <li class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-          <span>Media</span>
-          
-          <i data-feather="film"></i>
+            <span>List</span>
+
+            <i data-feather="list"></i>
           </div>
         </li>
         <li class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-          <span>Layout</span>
-          
-          <i data-feather="layout"></i>
+            <span>Media</span>
+
+            <i data-feather="film"></i>
           </div>
         </li>
         <li class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-          <span>Grid</span>
-          
-          <i data-feather="grid"></i>
+            <span>Layout</span>
+
+            <i data-feather="layout"></i>
           </div>
         </li>
         <li class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-          <span>Size</span>
-          
-          <i data-feather="maximize"></i>
+            <span>Size</span>
+
+            <i data-feather="maximize"></i>
           </div>
         </li>
         <li class="list-group-item list-group-item-action">
@@ -243,13 +357,19 @@ showChanges();
             <i data-feather="plus"></i>
           </div>
         </li>
+        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" draggable="true" ondragstart="dragParagraph(event)">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Paragraph</span>
+            <i data-feather="align-left"></i>
+          </div>
+        </li>
       </ul>
     </div>
 
     <!-- Editor -->
     <div class="col-10">
 
-      <div class="d-flex justify-content-between mt-2 mr-4 pb-2 border-bottom"> 
+      <div class="d-flex justify-content-between mt-2 mr-4 pb-2 border-bottom">
         <div>
           <button type="button" class="btn btn-outline-info mr-2">Themes</button>
           <button type="button" class="btn btn-outline-info mr-2">Help</button>
@@ -258,22 +378,20 @@ showChanges();
         <div>
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
           <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save</button>
-          <button type="button" class="btn btn-outline-info">Preview</button>
+          <button type="button" class="btn btn-outline-info preview-editor">Preview</button>
         </div>
-        
+
       </div>
       <div class="alert alert-success save-webpage-alert mr-4" role="alert">
         Webpage changes saved.
       </div>
       <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" ondrop="drop(event)" ondragover="allowDrop(event)">
-      
+
       </div>
-      
+
     </div>
 
-
-
-
+    <!-- Text Modal -->
     <div class="modal fade" id="addTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -289,6 +407,16 @@ showChanges();
                 <label for="userText">Text:</label>
                 <input type="text" class="form-control" id="userText">
               </div>
+              <div class="form-group">
+                <label for="hType">Select Header:</label>
+                <select class="form-control" id="hType">
+                  <option class="display-3" value="display-3">Title</option>
+                  <option class="h3" value="h3">Subtitle</option>
+                  <option class="p" value="p">Body</option>
+                  <option class="text-muted" value="text-muted">Muted</option>
+                  <option class="text-monospace" value="text-monospace">Monospaced</option>
+                </select>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -297,6 +425,42 @@ showChanges();
         </div>
       </div>
     </div>
+    <!-- Paragraph modal -->
+    <div class="modal fade" id="addParagraphModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Please enter Paragraph content</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="editor">
+              <p>This is some sample content.</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary paragraph-enter-button">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        let editor;
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                removePlugins: ['Image', 'EasyImage', 'CKFinder', "ImageCaption", "ImageStyle", "ImageToolbar", "ImageUpload", "MediaEmbed", "Table", "TableToolbar"],
+                // toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote']
+            })
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    </script>
 
     <div class="modal fade" id="editTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -308,15 +472,14 @@ showChanges();
             </button>
           </div>
           <div class="modal-body">
-		  
-		             <form>
+            <form>
               <div class="form-group">
                 <label for="userText">Text:</label>
                 <input type="text" class="form-control" id="editText">
               </div>
             </form>
-		  
-              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+
+            <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
 
           </div>
           <div class="modal-footer">
@@ -326,18 +489,47 @@ showChanges();
       </div>
     </div>
 
-  </div>
+    <!-- Image modal -->
+    <div class="modal fade" id="addImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">Image URL (optional)</label>
+                <input type="text" class="form-control" id="addImageURL">
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="imageFile" name="file">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary image-add-button" data-dismiss="modal" aria-label="Close">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
-  <script>
+
+
+    <script>
       feather.replace() // For icons
-  </script>
+    </script>
 
 
 
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
+
 </html>

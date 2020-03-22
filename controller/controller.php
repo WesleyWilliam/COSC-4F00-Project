@@ -61,27 +61,21 @@ try {
         //Uploads an image
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'PIC_UPLOAD') {
         $target_dir = "uploads/images/";
-        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+        $target_file = $target_dir . basename($_FILES["file"]["name"]);
         // Check if image file is a actual image or fake image
-        $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+        $check = getimagesize($_FILES["file"]["tmp_name"]);
         if($check === false) {
-            $_SESSION['UPLOAD_MSG'] = "Not an image";
-            redirect("view/file-upload.php");
-            die();
+            echo "Not an image";
             //Check if file is bigger than 5 MB
-        } elseif ($_FILES["fileToUpload"]["size"] > 5000000) {
-            $_SESSION['UPLOAD_MSG'] = "File is too big (over 5MB)";
-            redirect("view/file-upload.php");
-            die();
+        } elseif ($_FILES["file"]["size"] > 5000000) {
+            echo "File is too big (over 5MB)";
         } else {
-            $new_filename = $model->storeImage(basename($_FILES["fileToUpload"]["name"]));
-            echo $target_dir . $new_filename ;
-            if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], '../' . $target_dir . $new_filename)) {
-                redirect('uploads/images/' . $new_filename);
+            $new_filename = $model->storeImage(basename($_FILES["file"]["name"]));
+            echo $target_dir  ;
+            if (move_uploaded_file($_FILES["file"]["tmp_name"], '../' . $target_dir . $new_filename)) {
+                echo $new_filename;
             } else {
-                $_SESSION['UPLOAD_MSG'] = "Sorry, there was an error uploading your file.";
-                //redirect("view/file-upload.php");
-                //die();
+                echo "Sorry, there was an error uploading your file.";
             }
             
         }
@@ -175,9 +169,12 @@ try {
             redirect("view/account.php");
             die();
         }
-    } 
-    //Should put something here in case the if statement doesn't catch it
-    echo "Something went wrong, proceed to panic";
+    } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
+        $model->logout();
+        redirect('view/login.php');
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
+        echo $model->saveComponents($_POST['WEBPAGE'],$_POST['COMPONENTS']);
+    }
 } catch (SessionNotFound $e) {
     redirect('view/login.php');
 }

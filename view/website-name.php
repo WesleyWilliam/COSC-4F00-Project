@@ -11,9 +11,11 @@
 </head>
 <body>
 <?php
-include('../model/model.php');
+require('../model/model.php');
+require('../utilities/utilities.php');
 $config = require('../config/config.php');
 $model = new Model();
+
 if (!isset($_SESSION)) {
     session_start();
 }
@@ -49,8 +51,17 @@ if (!empty($_SESSION['WEBSITE_MSG'])) {
 
   <h4 class="mt-5 text-muted text-left">Your existing webpages</h4>
   <div class="list-group">
-    <?php foreach ($model->listWebsites() as $website) {
-      echo '<a href="' . $config['home-file-path'] . '" class="list-group-item list-group-item-action">' . $website->name . '</a>' ;
+    <?php 
+    $websitelst = null;
+    try {
+      $websitelst = $model->listWebsites();
+    } catch(SessionNotFound $e) {
+      redirect('view/login.php');
+      die();
+    }
+    foreach ($websitelst as $website) {
+      echo '<a href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . '" class="list-group-item list-group-item-action">' . $website->name . '</a>' ;
+      
     } ?>
 
   </div>
