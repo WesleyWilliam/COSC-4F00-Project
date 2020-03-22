@@ -133,6 +133,19 @@ class Model {
         $websites = R::findAll('websites',' user_id = ? ',[$user->id]);
         return $websites;
     }
+
+    public function listAllWebsites() {
+        $user = $this -> getUser();
+        $websites = R::findAll('websites');
+        return $websites;
+    }
+
+    public function listAllUsers() {
+        $user = $this -> getUser();
+        $users = R::findAll('users');
+        return $users;
+    }
+
     //To send to someone if they forget their password
     public function recoverCode($email) {
         $user = R::findOne('users',' email Like ? ',[$email]);
