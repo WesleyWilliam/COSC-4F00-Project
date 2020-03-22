@@ -57,7 +57,7 @@
           </span></h1>
           <h1 class="display-5 align-middle"> Simply drag, drop, and build your very own websites!</h1>
           <div class="mx-auto " style="padding-top: 25px;">
-          <a class="btn btn-info btn-lg"  href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Start Now</a>
+          <a class="btn btn-primary btn-lg"  href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Start Now</a>
           </div>
         </div>
 
