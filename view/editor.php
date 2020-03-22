@@ -53,6 +53,7 @@
   <script>
     var str = <?php echo json_encode($component); ?>;
     var components = JSON.parse(str);
+    var editor = null;
     var index; //this index is used to keep track of which element is currently selected on the page
 
     $('#editor-user-page').hide();
@@ -63,34 +64,53 @@
     });
 
 
-    $(document).on('click', '.text-enter-button', function() { // Save changes of Text component
-      let text = $('#userText').val();
-      let header = $('#hType').val();
-
-      $('#addTextModal').modal('hide')
-
+    function addTextComponent() {
       var component = {
-        index: components.length,
         type: "text",
-        header: header,
-        content: text
+        header: "display-3",
+        content: "this is content"
       };
 
       components.push(component);
       showChanges();
-    });
+    };
 
-    $(document).on('click','.paragraph-enter-button', function() {
-      let res = editor.getData();
-      $('#addParagraphModal').modal('hide');
+    
+    function addMediaComponent() {
+
+      var component = {
+        type: "media",
+        header: "media",
+        content: "https://www.youtube.com/embed/kJQP7kiw5Fk"
+      };
+
+components.push(component);
+showChanges();
+};
+
+   
+
+    function addImageComponent() {
+
+      var component = {
+        type: "image",
+        header: "img",
+        content: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F12%2F2016%2F11%2FGettyImages-155781839-2000.jpg"
+      };
+
+      components.push(component);
+      showChanges();
+
+    }
+
+    function addParagraphComponent() {
       var component = {
         type: "paragraph",
-        html: res
-      };
-      console.log(res);
+        html: "<p>Content<\/p>"
+      }
       components.push(component);
       showChanges();
-    });
+    }
 
     $(document).on('click', '.save-editor-changes', function() { // Save current state of the editor components
       $(".save-webpage-alert").show();
@@ -113,19 +133,7 @@
       }, 5000);
     })
 
-    $(document).on('click', '.image-add-button', function() { // Add image component
-      $('#addImageModal').modal('hide')
 
-      var component = {
-        type: "image",
-        header: "img",
-        content: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F12%2F2016%2F11%2FGettyImages-155781839-2000.jpg"
-      };
-
-      components.push(component);
-      showChanges();
-
-    })
 
     $(document).on('change', '#imageFile', function() {
       var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php";
@@ -152,7 +160,7 @@
             type: "image",
             header: "img",
             content: "<?php echo $config['home-file-path']; ?>/" + data
-            };
+          };
 
           components.push(component);
           showChanges();
@@ -164,33 +172,61 @@
       let text = $('#editText').val();
       $('#editTextModal').modal('hide')
       components[index].content = text;
+      components[index].header = $("#hType").val();
       showChanges();
     })
 
     $(document).on('click', '.image-edit-button', function() {
-      $('#editTextModal').modal('hide')
+      let text = $('#addImageURL').val();
+      $('#editImageModal').modal('hide')
+      components[index].content = text;
+
+      showChanges();
+    });
+
+    $(document).on('click', '.paragraph-edit-button', function() {
+      let res = editor.getData();
+      $('#editParagraphModal').modal('hide');
+      console.log(index);
+      components[index].html = editor.getData();
+      showChanges();
+    });
+
+
+    $(document).on('click', '.media-edit-button', function() {
+      let text = $('#editMediaURL').val();
+      $('#editMediaModal').modal('hide')
+      text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
+      components[index].content = text;
+
       showChanges();
     })
 
-
     //Function to output text component html code
-    function textComponentOutput(component) {
+    function textComponentOutput(component, index) {
       var res = "";
       //component.head1 + component.index + component.head2 + component.content + components.tail
-      res += "<p class=" + component.header + " " + "onclick ='editText(" + component.index + ")'>" + component.content + "</p>";
+      res += "<p class=" + component.header + " " + "onclick ='editText(" + index + ")'>" + component.content + "</p>";
       return res;
     }
 
     // Function to output image component html code
-    function imageComponentOutput(component) {
+    function imageComponentOutput(component, index) {
       var res = "";
-      res += "<img src=\"" + component.content + "\" onclick =\"editImage(" + component.index + ")\" height=\"300\"  alt=\"description\" >";
+      res += "<img src=\"" + component.content + "\" onclick =\"editImage(" + index + ")\" height=\"300\"  alt=\"description\" >";
+      return res;
+    }
+
+    // Function to output media component html code
+    function mediaComponentOutput(component, index) {
+      var res = "";
+      res += "<div onclick ='editMedia(" + index + ")'> <iframe width='560' height='315' src="+component.content +" frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
       return res;
     }
 
     //Function to output paragraph component html code
-    function paragraphComponentOutput(component) {
-      return component.html;
+    function paragraphComponentOutput(component, index) {
+      return "<div onclick=\"editParagraph(" + index + ")\">" + component.html + "</div>";
     }
 
 
@@ -203,19 +239,19 @@
       for (let i = 0; i < components.length; i++) {
         switch (components[i].type) {
           case 'text':
-            $('#editor-user-page').append(textComponentOutput(components[i]));
+            $('#editor-user-page').append(textComponentOutput(components[i], i));
             break;
           case 'image':
-            $('#editor-user-page').append(imageComponentOutput(components[i]));
+            $('#editor-user-page').append(imageComponentOutput(components[i], i));
+            break;
+          case 'media':
+            $('#editor-user-page').append(mediaComponentOutput(components[i], i));
             break;
           case 'paragraph':
-            console.log(paragraphComponentOutput(components[i]));
-            $('#editor-user-page').append(paragraphComponentOutput(components[i]));
+            $('#editor-user-page').append(paragraphComponentOutput(components[i],i));
             break;
         }
-
       }
-
     }
 
     //drag and drop stuff
@@ -232,29 +268,50 @@
     }
 
     function dragParagraph(ev) {
-      ev.dataTransfer.setData("component","paragraph");
+      ev.dataTransfer.setData("component", "paragraph");
+    }
+
+    function dragMedia(ev) {
+      ev.dataTransfer.setData("component", "media");
     }
 
     function drop(ev) {
       ev.preventDefault();
-      var component = ev.dataTransfer.getData("component")
+      var component = ev.dataTransfer.getData("component");
+      console.log(component);
       if (component == "text") {
-        $('#addTextModal').modal('show')
+        addTextComponent();
       } else if (component == "image") {
-        $('#addImageModal').modal('show')
+        addImageComponent();
       } else if (component == "paragraph") {
-        $('#addParagraphModal').modal('show');
+        addParagraphComponent();
+      } else if (component == "media") {
+        addMediaComponent();
       }
     }
 
     function editText(i) {
       index = i;
-      $('#editTextModal').modal('show')
+      $('#editTextModal').modal('show');
+      $('#editText').val(components[i].content);
     }
 
     function editImage(i) {
       index = i;
-      $('#editImageModal').modal('show')
+      $('#editImageModal').modal('show');
+
+    }
+
+    function editParagraph(i) {
+      index = i;
+      editor.setData(components[i].html);
+      $('#editParagraphModal').modal('show');
+    }
+    
+    function editMedia(i) {
+      index = i;
+      $('#editMediaModal').modal('show');
+
     }
 
     function deleteElement() {
@@ -330,7 +387,7 @@
             <i data-feather="list"></i>
           </div>
         </li>
-        <li class="list-group-item list-group-item-action">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragMedia(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Media</span>
 
@@ -391,43 +448,17 @@
 
     </div>
 
-    <!-- Text Modal -->
-    <div class="modal fade" id="addTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Please enter text content</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="userText">Text:</label>
-                <input type="text" class="form-control" id="userText">
-              </div>
-              <div class="form-group">
-                <label for="hType">Select Header:</label>
-                <select class="form-control" id="hType">
-                  <option class="display-3" value="display-3">Title</option>
-                  <option class="h3" value="h3">Subtitle</option>
-                  <option class="p" value="p">Body</option>
-                  <option class="text-muted" value="text-muted">Muted</option>
-                  <option class="text-monospace" value="text-monospace">Monospaced</option>
-                </select>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary text-enter-button">Save</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Ensures the link in CKEditor works -->
+    <style>
+      :root {
+        --ck-z-default: 100;
+        --ck-z-modal: calc(var(--ck-z-default) + 999);
+      }
+    </style>
+
     <!-- Paragraph modal -->
-    <div class="modal fade" id="addParagraphModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal fade" id="editParagraphModal" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Please enter Paragraph content</h5>
@@ -441,27 +472,27 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary paragraph-enter-button">Save</button>
+            <button type="button" class="btn btn-primary paragraph-edit-button">Save</button>
           </div>
         </div>
       </div>
     </div>
 
     <script>
-        let editor;
-        ClassicEditor
-            .create(document.querySelector('#editor'), {
-                removePlugins: ['Image', 'EasyImage', 'CKFinder', "ImageCaption", "ImageStyle", "ImageToolbar", "ImageUpload", "MediaEmbed", "Table", "TableToolbar"],
-                // toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote']
-            })
-            .then(newEditor => {
-                editor = newEditor;
-            })
-            .catch(error => {
-                console.log(error);
-            });
+      ClassicEditor
+        .create(document.querySelector('#editor'), {
+          removePlugins: ['Image', 'EasyImage', 'CKFinder', "ImageCaption", "ImageStyle", "ImageToolbar", "ImageUpload", "MediaEmbed"],
+          // toolbar: ['bold', 'italic', 'bulletedList', 'numberedList', 'blockQuote']
+        })
+        .then(newEditor => {
+          editor = newEditor;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     </script>
 
+    <!-- EditText modal -->
     <div class="modal fade" id="editTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -478,23 +509,63 @@
                 <input type="text" class="form-control" id="editText">
               </div>
             </form>
-
-            <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary text-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            <div class="form-group">
+              <label for="hType">Select Header:</label>
+              <select class="form-control" id="hType">
+                <option class="display-3" value="display-3">Title</option>
+                <option class="h3" value="h3">Subtitle</option>
+                <option class="p" value="p">Body</option>
+                <option class="text-muted" value="text-muted">Muted</option>
+                <option class="text-monospace" value="text-monospace">Monospaced</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary text-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Image modal -->
-    <div class="modal fade" id="addImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    
+
+      <!-- EditImage modal-->
+      <div class="modal fade" id="editImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body"> 
+              <form>
+                <div class="form-group">
+                  <label for="userText">Image URL (optional)</label>
+                  <input type="text" class="form-control" id="addImageURL">
+                </div>
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="imageFile" name="file">
+                  <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+              </form> 
+            </div> 
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary image-edit-button" data-dismiss="modal" aria-label="Close">Save</button>            
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- EditMedia modal -->
+
+    <div class="modal fade" id="editMediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Media</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -502,34 +573,34 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
-                <label for="userText">Image URL (optional)</label>
-                <input type="text" class="form-control" id="addImageURL">
-              </div>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="imageFile" name="file">
-                <label class="custom-file-label" for="customFile">Choose file</label>
+                <label for="userText">URL:</label>
+                <input type="text" class="form-control" id="editMediaURL" >
               </div>
             </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary image-add-button" data-dismiss="modal" aria-label="Close">Save</button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary media-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
           </div>
         </div>
       </div>
+
     </div>
 
 
 
 
-    <script>
-      feather.replace() // For icons
-    </script>
+
+
+      <script>
+        feather.replace() // For icons
+      </script>
 
 
 
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 
 </html>

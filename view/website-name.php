@@ -10,16 +10,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-<?php
-require('../model/model.php');
-require('../utilities/utilities.php');
-$config = require('../config/config.php');
-$model = new Model();
 
-if (!isset($_SESSION)) {
-    session_start();
-}
-?>
+<!-- Nav Bar -->
+<?php include 'navbar.php' ?>
 
 <!-- If there is a message, show message to user -->
 <?php 
@@ -30,9 +23,6 @@ if (!empty($_SESSION['WEBSITE_MSG'])) {
 }
 ?>
 
-
-<!-- Nav Bar -->
-<?php include 'navbar.php' ?>
 
 
 <div class="container">
