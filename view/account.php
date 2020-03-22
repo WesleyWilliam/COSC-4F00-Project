@@ -21,7 +21,7 @@ include('../utilities/utilities.php');
 $config = require('../config/config.php');
 $model = new Model();
 if (!isset($_SESSION)) {
-    echo "you are not logged in";
+    session_start();
 }
 try{
     $user = $model -> getUser();
@@ -67,11 +67,11 @@ try{
                         <div class="col">
                             <!-- If there is a message, show message to user -->
                             <?php 
-                                if (!empty($_SESSION['UPDATEACCOUNT'])) {
+                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
                                     echo "<div class=\"alert alert-warning\" role=\"alert\">";
                                     echo $_SESSION['UPDATEACCOUNT'];
                                     echo "</div>";
-                                    $_SESSION['UPDATEACCOUNT'] = '';
+                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
                                 } else {
                                     echo "<div><p> </p></div>";
                                 }
@@ -144,11 +144,11 @@ try{
                         <div class="col">
                             <!-- If there is a message, show message to user -->
                             <?php 
-                                if (!empty($_SESSION['UPDATEACCOUNT'])) {
+                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
                                     echo "<div class=\"alert alert-warning\" role=\"alert\">";
-                                    echo $_SESSION['UPDATEACCOUNT'];
+                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
                                     echo "</div>";
-                                    $_SESSION['UPDATEACCOUNT'] = '';
+                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
                                 } else {
                                     echo "<div><p> </p></div>";
                                 }
@@ -187,11 +187,11 @@ try{
                         <div class="col">
                             <!-- If there is a message, show message to user -->
                             <?php 
-                                if (!empty($_SESSION['UPDATEACCOUNT'])) {
+                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
                                     echo "<div class=\"alert alert-warning\" role=\"alert\">";
-                                    echo $_SESSION['UPDATEACCOUNT'];
+                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
                                     echo "</div>";
-                                    $_SESSION['UPDATEACCOUNT'] = '';
+                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
                                 } else {
                                     echo "<div><p> </p></div>";
                                 }
@@ -258,11 +258,11 @@ try{
                         <div class="col">
                             <!-- If there is a message, show message to user -->
                             <?php 
-                                if (!empty($_SESSION['UPDATEACCOUNT'])) {
+                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
                                     echo "<div class=\"alert alert-warning\" role=\"alert\">";
-                                    echo $_SESSION['UPDATEACCOUNT'];
+                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
                                     echo "</div>";
-                                    $_SESSION['UPDATEACCOUNT'] = '';
+                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
                                 } else {
                                     echo "<div><p> </p></div>";
                                 }
@@ -291,11 +291,11 @@ try{
                         <div class="col">
                             <!-- If there is a message, show message to user -->
                             <?php 
-                                if (!empty($_SESSION['UPDATEACCOUNT'])) {
+                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
                                     echo "<div class=\"alert alert-warning\" role=\"alert\">";
-                                    echo $_SESSION['UPDATEACCOUNT'];
+                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
                                     echo "</div>";
-                                    $_SESSION['UPDATEACCOUNT'] = '';
+                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
                                 } else {
                                     echo "<div><p> </p></div>";
                                 }
