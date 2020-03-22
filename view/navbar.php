@@ -1,7 +1,7 @@
 
 <?php
 
-  if ($page == 'signup'){
+  if (isset($page) && $page == 'signup'){
 
     include('../model/model.php');
     $config = require('../config/config.php');
