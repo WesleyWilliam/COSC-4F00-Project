@@ -139,6 +139,36 @@ try {
             $_SESSION['RECOVEREMAIL_MSG'] = 'Message sent, check your email and junk folder';
             redirect('view/recover-email.php');
         }
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPROFILE'){
+        if (!empty($_POST['EMAIL'])){
+            $res = $model->updateAccountPreferences($_POST['FNAME'],$_POST['LNAME'],$_POST['DOB'],$_POST['PHONE'],$_POST['EMAIL']);
+            if ($res == "SUCCESS") {
+                $_SESSION['UPDATEACCOUNT'] = 'Account has been updated';
+                redirect("view/account.php");
+                die();
+            } else {
+                $_SESSION['UPDATEACCOUNT'] = 'Email Unavailable';
+                redirect("view/account.php");
+                die();
+            }
+        } 
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPRIVACY'){
+
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPAYMENT'){
+
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATESUBSCRIPTIONS'){
+
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'DELETEACCOUNT'){
+        $res = $model->deleteAccount();
+        if ($res == "SUCCESS") {
+            $_SESSION['LOGIN_MSG'] = 'Account has been deleted';
+            redirect("view/login.php");
+            die();
+        } else {
+            $_SESSION['UPDATEACCOUNT'] = 'Email Unavailable';
+            redirect("view/account.php");
+            die();
+        }
     } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
         $model->logout();
         redirect('view/login.php');

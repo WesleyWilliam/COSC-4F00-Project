@@ -1,4 +1,7 @@
 #!/usr/bin/php-cgi
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,18 +17,35 @@
 
 <?php
 include('../model/model.php');
+include('../utilities/utilities.php');
 $config = require('../config/config.php');
 $model = new Model();
 if (!isset($_SESSION)) {
     session_start();
 }
+try{
+    $user = $model -> getUser();
+    if (empty($user -> firstname)){
+        $name = $user -> username;
+    }
+    else {
+        $name = $user -> firstname;
+    }
+} catch (SessionNotFound $e) {
+    redirect('view/login.php');
+}
+
+
 ?>
     <!-- Nav Bar -->
     <?php include 'navbar.php' ?>
 
+
+
     <!--Title-->
     <div class="border-bottom mr-5 ml-5">
-        <h1 class="display-4 text-center pb-3">Hello: Eduardo</h1>
+        <h1 class="display-4 text-center pb-3">Hello <?php echo $name; ?>!</h1>
+        <p class="text-center">Here you can change your account infomation</p>
     </div>
 
 
@@ -43,89 +63,258 @@ if (!isset($_SESSION)) {
         <div class="col-9">
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                    <div class ="containter">
-                        <div class="row">
-                            <div class="col">
-
-                                <p>First Name: </p>
-                                <p>Last Name: </p>
-                                <p>Date Of Birth: </p>
-                                <p>Phone Number: </p>
-                                <p>Email: </p>
-                            </div>
-                            <div class="col">
-                                <p>Eddy</p>
-                                <p>Gee</p>
-                                <p>July 20/1994</p>
-                                <p>(905) 359-3007</p>
-                                <p>eduardosemail@gmail.com</p>
-                            </div>
+                    <div class="row">
+                        <div class="col">
+                            <!-- If there is a message, show message to user -->
+                            <?php 
+                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
+                                    echo "<div class=\"alert alert-warning\" role=\"alert\">";
+                                    echo $_SESSION['UPDATEACCOUNT'];
+                                    echo "</div>";
+                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
+                                } else {
+                                    echo "<div><p> </p></div>";
+                                }
+                            ?>
                         </div>
                     </div>
+                    <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+                        <div class="row">
+                            <div class="col-2">
+                                <p>First Name: </p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="firstname" name="FNAME" placeholder="Enter first name" value="<?php echo $user -> firstname; ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Last Name:</p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="lastname" name="LNAME" placeholder="Enter last name" value="<?php echo $user -> lastname; ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Date Of Birth:</p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="date" class="form-control" id="dob" name="DOB" placeholder="Enter date of birth" value="<?php echo $user -> dob; ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Phone Number: </p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="tel"  class="form-control" id="phone" name="PHONE" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="xxx-xxx-xxxx" value="<?php echo $user -> phonenumber; ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Email*: </p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="email" class="form-control" id="email" name="EMAIL" required placeholder="Enter your Email address" value="<?php echo $user -> email; ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                            </div>
+                            <div class="col-3">
+                                <input type="hidden" name="COMMAND" value="UPDATEPROFILE">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="tab-pane fade" id="v-pills-privacy" role="tabpanel" aria-labelledby="v-pills-privacy-tab">
-                <div class ="containter">
-                        <div class="row">
-                            <div class="col">
-                                <p>Blocked Users: </p>
-                            </div>
-                            <div class="col">
-                                <p>No-one</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <p>Permissions to view account:</p>
-                            </div>
-                            <div class="col">
-                                <p>No-one</p>
-                            </div>
+                    <div class="row">
+                        <div class="col">
+                            <!-- If there is a message, show message to user -->
+                            <?php 
+                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
+                                    echo "<div class=\"alert alert-warning\" role=\"alert\">";
+                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
+                                    echo "</div>";
+                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
+                                } else {
+                                    echo "<div><p> </p></div>";
+                                }
+                            ?>
                         </div>
                     </div>
+                    <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Permissions to view account: </p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <select id="cars" class="form-control">
+                                        <option value="ALL">Everyone</option>
+                                        <option value="FRIENDS">Friends</option>
+                                        <option value="ME">Only Me</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Blocked Users:</p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <p>No-One</p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="tab-pane fade" id="v-pills-payment" role="tabpanel" aria-labelledby="v-pills-payment-tab">
-                <div class ="containter">
-                        <div class="row">
-                            <div class="col">
-                                <p>Credit card number: </p>
-                                <p>Experation Date: </p>
-                                <p>CVV: </p>
-                                <p>Type: </p>
-                            </div>
-                            <div class="col">
-                                <p>8223 2012 2302 9291</p>
-                                <p>12/22</p>
-                                <p>029</p>
-                                <p>Master Card</p>
-                            </div>
+                    <div class="row">
+                        <div class="col">
+                            <!-- If there is a message, show message to user -->
+                            <?php 
+                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
+                                    echo "<div class=\"alert alert-warning\" role=\"alert\">";
+                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
+                                    echo "</div>";
+                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
+                                } else {
+                                    echo "<div><p> </p></div>";
+                                }
+                            ?>
                         </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="v-pills-subscriptions" role="tabpanel" aria-labelledby="v-pills-subscriptions-tab">
-                <div class ="containter">
+                    <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
                         <div class="row">
-                            <div class="col">
-                                <p>Subscriptions:</p>
+                            <div class="col-2">
+                                <p>Credit card number: </p>
                             </div>
-                            <div class="col">
-                                <p>None</p>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="tel" inputmode="numeric" class="form-control" pattern="[0-9\s]{13,19}" autocomplete="cc-number"  maxlength="19" id="ccn" name="CREDIT" placeholder="xxxx xxxx xxxx xxxx" value="8223 2012 2302 9291">
+                                </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Experation Date:</p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="month" class="form-control" id="experation" name="EXPERATION" placeholder="experation" value="2020-03">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>CVV:</p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="tel" inputmode="numeric" class="form-control" pattern="[0-9]{3}" autocomplete="cvv-number" maxlength="3" id="cvv" name="CVV" placeholder="xxx" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Type: </p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <select id="cars" class="form-control">
+                                        <option value="MC">Master Card</option>
+                                        <option value="VISA">Visa</option>
+                                        <option value="PP">Pay Pal</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2">
+                            </div>
+                            <div class="col-3">
+                                <input type="hidden" name="COMMAND" value="UPDATEPAYMENT">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="v-pills-subscriptions" role="tabpanel" aria-labelledby="v-pills-subscriptions-tab">
+                    <div class="row">
+                        <div class="col">
+                            <!-- If there is a message, show message to user -->
+                            <?php 
+                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
+                                    echo "<div class=\"alert alert-warning\" role=\"alert\">";
+                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
+                                    echo "</div>";
+                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
+                                } else {
+                                    echo "<div><p> </p></div>";
+                                }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <p>Subscriptions: </p>
+                        </div>
+                        <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <select id="cars" class="form-control">
+                                        <option value="PREM">Premium</option>
+                                        <option value="BASIC">Basic</option>
+                                        <option value="FREE">Free</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                <div class ="containter">
-                        <div class="row">
-                            <div class="col">
-                                <p>Delete Account: </p>
-                                <p>Metadata: </p>
-                            </div>
-                            <div class="col">
-                                <p>Button to delete</p>
-                                <p>Button to show data</p>
-                            </div>
+                    <div class="row">
+                        <div class="col">
+                            <!-- If there is a message, show message to user -->
+                            <?php 
+                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
+                                    echo "<div class=\"alert alert-warning\" role=\"alert\">";
+                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
+                                    echo "</div>";
+                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
+                                } else {
+                                    echo "<div><p> </p></div>";
+                                }
+                            ?>
                         </div>
                     </div>
+                    <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+                        <div class="row">
+                            <div class="col-2">
+                                <p>Delete Account: </p>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <input type="hidden" name="COMMAND" value="DELETEACCOUNT">
+                                    <button type="submit" class="btn btn-primary">Delete Permanently</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
