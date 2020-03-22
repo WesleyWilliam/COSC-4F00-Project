@@ -55,6 +55,7 @@ class Model {
             $user->password = password_hash($password, PASSWORD_BCRYPT);
             $user->email = $email;
             $user->session = '';
+            $user->permission = '';
             R::store($user);
             //Store it in the database, Redbean sets up everything
             return "SUCCESS";

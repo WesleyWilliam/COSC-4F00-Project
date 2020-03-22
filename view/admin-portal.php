@@ -26,6 +26,10 @@
     echo $_SESSION['LOGIN_MSG'];
     echo "</div>";
   }
+
+  if ($model->getUser()->permission != 'ADMIN') {
+    redirect("view/login.php");
+  }
   ?>
 
   <div class="container">
