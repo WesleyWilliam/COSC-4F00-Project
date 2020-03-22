@@ -8,8 +8,8 @@ class Model {
     private $config;
 
     public function __construct() {
-        require '../lib/rb-postgres.php';
-		require '../lib/password.php';
+        require_once '../lib/rb-postgres.php';
+		require_once '../lib/password.php';
         if (!isset($_SESSION)) {
             session_start();
         }
@@ -32,7 +32,7 @@ class Model {
         $hash = $user -> password;
         if (isset($user) && password_verify($password, $hash)) {
             $user -> session = session_id();
-            r::store($user);
+            R::store($user);
             $_SESSION["loggedinvar"] = "true";
             return "SUCCESS";
         } else {
@@ -203,4 +203,3 @@ class Model {
     
     
 }
-?>

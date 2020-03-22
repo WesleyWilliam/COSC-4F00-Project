@@ -1,9 +1,7 @@
 #!/usr/bin/php-cgi
-<?php
-    session_start();
-?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -11,43 +9,35 @@
 
     <!-- Including bootstrap CSS files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
 </head>
+
 <body>
 
-<?php
-include('../model/model.php');
-include('../utilities/utilities.php');
-$config = require('../config/config.php');
-$model = new Model();
-if (!isset($_SESSION)) {
-    session_start();
-}
-try{
-    $user = $model -> getUser();
-    if (empty($user -> firstname)){
-        $name = $user -> username;
-    }
-    else {
-        $name = $user -> firstname;
-    }
-} catch (SessionNotFound $e) {
-    redirect('view/login.php');
-}
+    <!--Requirements -->
+    <?php require_once '../utilities/requirements.php' ?>
 
-
-?>
     <!-- Nav Bar -->
     <?php include 'navbar.php' ?>
 
-
+    <?php
+    try {
+        $user = $model->getUser();
+        if (empty($user->firstname)) {
+            $name = $user->username;
+        } else {
+            $name = $user->firstname;
+        }
+    } catch (SessionNotFound $e) {
+        redirect('view/login.php');
+        die();
+    }
+    ?>
 
     <!--Title-->
     <div class="border-bottom mr-5 ml-5">
         <h1 class="display-4 text-center pb-3">Hello <?php echo $name; ?>!</h1>
         <p class="text-center">Here you can change your account infomation</p>
     </div>
-
 
     <!-- Nav -->
     <div class="row">
@@ -66,15 +56,15 @@ try{
                     <div class="row">
                         <div class="col">
                             <!-- If there is a message, show message to user -->
-                            <?php 
-                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
-                                    echo "<div class=\"alert alert-warning\" role=\"alert\">";
-                                    echo $_SESSION['UPDATEACCOUNT'];
-                                    echo "</div>";
-                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
-                                } else {
-                                    echo "<div><p> </p></div>";
-                                }
+                            <?php
+                            if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
+                                echo "<div class=\"alert alert-warning\" role=\"alert\">";
+                                echo $_SESSION['UPDATEACCOUNT'];
+                                echo "</div>";
+                                $_SESSION['UPDATEACCOUNT_MSG'] = '';
+                            } else {
+                                echo "<div><p> </p></div>";
+                            }
                             ?>
                         </div>
                     </div>
@@ -85,7 +75,7 @@ try{
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="firstname" name="FNAME" placeholder="Enter first name" value="<?php echo $user -> firstname; ?>">
+                                    <input type="text" class="form-control" id="firstname" name="FNAME" placeholder="Enter first name" value="<?php echo $user->firstname; ?>">
                                 </div>
                             </div>
                         </div>
@@ -95,7 +85,7 @@ try{
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="lastname" name="LNAME" placeholder="Enter last name" value="<?php echo $user -> lastname; ?>">
+                                    <input type="text" class="form-control" id="lastname" name="LNAME" placeholder="Enter last name" value="<?php echo $user->lastname; ?>">
                                 </div>
                             </div>
                         </div>
@@ -105,7 +95,7 @@ try{
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <input type="date" class="form-control" id="dob" name="DOB" placeholder="Enter date of birth" value="<?php echo $user -> dob; ?>">
+                                    <input type="date" class="form-control" id="dob" name="DOB" placeholder="Enter date of birth" value="<?php echo $user->dob; ?>">
                                 </div>
                             </div>
                         </div>
@@ -115,7 +105,7 @@ try{
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <input type="tel"  class="form-control" id="phone" name="PHONE" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="xxx-xxx-xxxx" value="<?php echo $user -> phonenumber; ?>">
+                                    <input type="tel" class="form-control" id="phone" name="PHONE" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="xxx-xxx-xxxx" value="<?php echo $user->phonenumber; ?>">
                                 </div>
                             </div>
                         </div>
@@ -125,7 +115,7 @@ try{
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <input type="email" class="form-control" id="email" name="EMAIL" required placeholder="Enter your Email address" value="<?php echo $user -> email; ?>">
+                                    <input type="email" class="form-control" id="email" name="EMAIL" required placeholder="Enter your Email address" value="<?php echo $user->email; ?>">
                                 </div>
                             </div>
                         </div>
@@ -143,15 +133,15 @@ try{
                     <div class="row">
                         <div class="col">
                             <!-- If there is a message, show message to user -->
-                            <?php 
-                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
-                                    echo "<div class=\"alert alert-warning\" role=\"alert\">";
-                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
-                                    echo "</div>";
-                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
-                                } else {
-                                    echo "<div><p> </p></div>";
-                                }
+                            <?php
+                            if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
+                                echo "<div class=\"alert alert-warning\" role=\"alert\">";
+                                echo $_SESSION['UPDATEACCOUNT_MSG'];
+                                echo "</div>";
+                                $_SESSION['UPDATEACCOUNT_MSG'] = '';
+                            } else {
+                                echo "<div><p> </p></div>";
+                            }
                             ?>
                         </div>
                     </div>
@@ -186,15 +176,15 @@ try{
                     <div class="row">
                         <div class="col">
                             <!-- If there is a message, show message to user -->
-                            <?php 
-                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
-                                    echo "<div class=\"alert alert-warning\" role=\"alert\">";
-                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
-                                    echo "</div>";
-                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
-                                } else {
-                                    echo "<div><p> </p></div>";
-                                }
+                            <?php
+                            if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
+                                echo "<div class=\"alert alert-warning\" role=\"alert\">";
+                                echo $_SESSION['UPDATEACCOUNT_MSG'];
+                                echo "</div>";
+                                $_SESSION['UPDATEACCOUNT_MSG'] = '';
+                            } else {
+                                echo "<div><p> </p></div>";
+                            }
                             ?>
                         </div>
                     </div>
@@ -205,7 +195,7 @@ try{
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <input type="tel" inputmode="numeric" class="form-control" pattern="[0-9\s]{13,19}" autocomplete="cc-number"  maxlength="19" id="ccn" name="CREDIT" placeholder="xxxx xxxx xxxx xxxx" value="8223 2012 2302 9291">
+                                    <input type="tel" inputmode="numeric" class="form-control" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" id="ccn" name="CREDIT" placeholder="xxxx xxxx xxxx xxxx" value="8223 2012 2302 9291">
                                 </div>
                             </div>
                         </div>
@@ -257,15 +247,15 @@ try{
                     <div class="row">
                         <div class="col">
                             <!-- If there is a message, show message to user -->
-                            <?php 
-                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
-                                    echo "<div class=\"alert alert-warning\" role=\"alert\">";
-                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
-                                    echo "</div>";
-                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
-                                } else {
-                                    echo "<div><p> </p></div>";
-                                }
+                            <?php
+                            if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
+                                echo "<div class=\"alert alert-warning\" role=\"alert\">";
+                                echo $_SESSION['UPDATEACCOUNT_MSG'];
+                                echo "</div>";
+                                $_SESSION['UPDATEACCOUNT_MSG'] = '';
+                            } else {
+                                echo "<div><p> </p></div>";
+                            }
                             ?>
                         </div>
                     </div>
@@ -290,15 +280,15 @@ try{
                     <div class="row">
                         <div class="col">
                             <!-- If there is a message, show message to user -->
-                            <?php 
-                                if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
-                                    echo "<div class=\"alert alert-warning\" role=\"alert\">";
-                                    echo $_SESSION['UPDATEACCOUNT_MSG'];
-                                    echo "</div>";
-                                    $_SESSION['UPDATEACCOUNT_MSG'] = '';
-                                } else {
-                                    echo "<div><p> </p></div>";
-                                }
+                            <?php
+                            if (!empty($_SESSION['UPDATEACCOUNT_MSG'])) {
+                                echo "<div class=\"alert alert-warning\" role=\"alert\">";
+                                echo $_SESSION['UPDATEACCOUNT_MSG'];
+                                echo "</div>";
+                                $_SESSION['UPDATEACCOUNT_MSG'] = '';
+                            } else {
+                                echo "<div><p> </p></div>";
+                            }
                             ?>
                         </div>
                     </div>
@@ -323,17 +313,15 @@ try{
     <!--Footer-->
     <footer id="sticky-footer" class="py-4 bg-dark text-white-50 fixed-bottom">
         <div class="container text-center">
-        <small>Copyright &copy; Brix.ca</small>
+            <small>Copyright &copy; Brix.ca</small>
         </div>
     </footer>
-  
-  
 
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 </body>
+
 </html>
