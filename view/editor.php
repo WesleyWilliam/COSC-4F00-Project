@@ -449,6 +449,7 @@
             </div>
           </div>
           <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
             <button type="button" class="btn btn-primary paragraph-edit-button">Save</button>
           </div>
         </div>
