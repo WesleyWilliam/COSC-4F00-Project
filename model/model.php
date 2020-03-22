@@ -23,7 +23,7 @@ class Model {
         $user = NULL;
         try {
             $user = $this->getUser();
-            return "SUCCESS";
+            return $user;
         } catch(SessionNotFound $e) {
             //Do nothing
         }
@@ -34,7 +34,7 @@ class Model {
             $user -> session = session_id();
             R::store($user);
             $_SESSION["loggedinvar"] = "true";
-            return "SUCCESS";
+            return $user;
         } else {
             return 'NOTFOUND';
         }

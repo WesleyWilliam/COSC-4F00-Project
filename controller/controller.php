@@ -26,7 +26,12 @@ try {
             redirect("view/login.php");
             die();
         } else {
-            redirect("view/website-name.php");
+            if ($res->permission == 'ADMIN') {
+                redirect("view/admin-portal.php");
+                die();
+            } else {
+                redirect("view/website-name.php");
+            }
         }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SIGNUP') {
 
