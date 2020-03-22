@@ -9,27 +9,24 @@
 
   <!-- Local CSS -->
   <style>
-
   </style>
 
   <!-- Including bootstrap CSS files -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
   <!-- Icons -->
   <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
   <!-- Jquery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
   <!-- CKEditor -->
   <script src="https://cdn.ckeditor.com/ckeditor5/17.0.0/classic/ckeditor.js"></script>
+
+  <!--Requirements -->
+  <?php require_once '../utilities/requirements.php' ?>
+
   <?php
-  require_once('../model/model.php');
-  include('../utilities/utilities.php');
-  $config = require('../config/config.php');
-  $model = new Model();
-  if (!isset($_SESSION)) {
-    session_start();
-  }
-
-
   try {
     $component = NULL;
     if (isset($_GET['website'])) {
@@ -57,12 +54,10 @@
     var index; //this index is used to keep track of which element is currently selected on the page
 
     $('#editor-user-page').hide();
-
     $(document).ready(function() {
       showChanges();
       $(".save-webpage-alert").hide();
     });
-
 
     function addTextComponent() {
       var component = {
@@ -70,37 +65,28 @@
         header: "display-3",
         content: "this is content"
       };
-
       components.push(component);
       showChanges();
     };
 
-    
     function addMediaComponent() {
-
       var component = {
         type: "media",
         header: "media",
         content: "https://www.youtube.com/embed/kJQP7kiw5Fk"
       };
-
-components.push(component);
-showChanges();
-};
-
-   
+      components.push(component);
+      showChanges();
+    };
 
     function addImageComponent() {
-
       var component = {
         type: "image",
         header: "img",
         content: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F12%2F2016%2F11%2FGettyImages-155781839-2000.jpg"
       };
-
       components.push(component);
       showChanges();
-
     }
 
     function addParagraphComponent() {
@@ -145,7 +131,6 @@ showChanges();
       form_data.append("file", properties);
       form_data.append("COMMAND", "PIC_UPLOAD");
 
-
       $.ajax({
         url: url,
         method: "POST",
@@ -161,7 +146,6 @@ showChanges();
             header: "img",
             content: "<?php echo $config['home-file-path']; ?>/" + data
           };
-
           components.push(component);
           showChanges();
         }
@@ -198,7 +182,6 @@ showChanges();
       $('#editMediaModal').modal('hide')
       text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
       components[index].content = text;
-
       showChanges();
     })
 
@@ -220,7 +203,7 @@ showChanges();
     // Function to output media component html code
     function mediaComponentOutput(component, index) {
       var res = "";
-      res += "<div onclick ='editMedia(" + index + ")'> <iframe width='560' height='315' src="+component.content +" frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+      res += "<div onclick ='editMedia(" + index + ")'> <iframe width='560' height='315' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
       return res;
     }
 
@@ -248,7 +231,7 @@ showChanges();
             $('#editor-user-page').append(mediaComponentOutput(components[i], i));
             break;
           case 'paragraph':
-            $('#editor-user-page').append(paragraphComponentOutput(components[i],i));
+            $('#editor-user-page').append(paragraphComponentOutput(components[i], i));
             break;
         }
       }
@@ -307,7 +290,7 @@ showChanges();
       editor.setData(components[i].html);
       $('#editParagraphModal').modal('show');
     }
-    
+
     function editMedia(i) {
       index = i;
       $('#editMediaModal').modal('show');
@@ -342,8 +325,6 @@ showChanges();
 
   <!-- Nav Bar -->
   <?php include 'navbar.php' ?>
-
-
 
   <!-- Editor -->
   <div class="row">
@@ -425,7 +406,6 @@ showChanges();
 
     <!-- Editor -->
     <div class="col-10">
-
       <div class="d-flex justify-content-between mt-2 mr-4 pb-2 border-bottom">
         <div>
           <button type="button" class="btn btn-outline-info mr-2">Themes</button>
@@ -437,15 +417,12 @@ showChanges();
           <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save</button>
           <button type="button" class="btn btn-outline-info preview-editor">Preview</button>
         </div>
-
       </div>
       <div class="alert alert-success save-webpage-alert mr-4" role="alert">
         Webpage changes saved.
       </div>
       <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" ondrop="drop(event)" ondragover="allowDrop(event)">
-
       </div>
-
     </div>
 
     <!-- Ensures the link in CKEditor works -->
@@ -528,39 +505,37 @@ showChanges();
       </div>
     </div>
 
-    
-
-      <!-- EditImage modal-->
-      <div class="modal fade" id="editImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body"> 
-              <form>
-                <div class="form-group">
-                  <label for="userText">Image URL (optional)</label>
-                  <input type="text" class="form-control" id="addImageURL">
-                </div>
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" id="imageFile" name="file">
-                  <label class="custom-file-label" for="customFile">Choose file</label>
-                </div>
-              </form> 
-            </div> 
-            <div class="modal-footer">
+    <!-- EditImage modal-->
+    <div class="modal fade" id="editImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">Image URL (optional)</label>
+                <input type="text" class="form-control" id="addImageURL">
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="imageFile" name="file">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
             <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
-              <button type="button" class="btn btn-primary image-edit-button" data-dismiss="modal" aria-label="Close">Save</button>            
+            <button type="button" class="btn btn-primary image-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
           </div>
         </div>
       </div>
-      </div>
-      <!-- EditMedia modal -->
+    </div>
 
+    <!-- EditMedia modal -->
     <div class="modal fade" id="editMediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -574,7 +549,7 @@ showChanges();
             <form>
               <div class="form-group">
                 <label for="userText">URL:</label>
-                <input type="text" class="form-control" id="editMediaURL" >
+                <input type="text" class="form-control" id="editMediaURL">
               </div>
             </form>
             <div class="modal-footer">
@@ -584,23 +559,15 @@ showChanges();
           </div>
         </div>
       </div>
-
     </div>
 
+    <script>
+      feather.replace() // For icons
+    </script>
 
-
-
-
-
-      <script>
-        feather.replace() // For icons
-      </script>
-
-
-
-      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 
 </html>
