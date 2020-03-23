@@ -139,14 +139,8 @@
         cache: false,
         processData: false,
         success: function(data) {
-          $('#addImageModal').modal('hide')
-          console.log(data);
-          var component = {
-            type: "image",
-            header: "img",
-            content: "<?php echo $config['home-file-path']; ?>/" + data
-          };
-          components.push(component);
+          $('#editImageModal').modal('hide')
+          components[index].content = "<?php echo $config['home-file-path']; ?>/" + data;
           showChanges();
         }
       });
