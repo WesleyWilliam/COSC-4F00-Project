@@ -36,24 +36,35 @@
 
         <!-- See whether user is logged in or not -->
         <?php
-        if (!empty($_SESSION['loggedinvar'])) {
-          echo "<div style=\"padding-left: 30px;\">";
-          echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"";
-          echo  $config['home-file-path'];
-          echo "/view/website-name.php\">My Webpages</a></li>";
-          echo "</div>";
-          echo "<div style=\"padding-left: 30px;\">";
-          echo "<a class=\"btn btn-outline-danger my-2 my-sm-0\" href=\"";
-          echo  $config['home-file-path'];
-          echo "/controller/controller.php?COMMAND=LOGOUT\">Logout</a>";
-          echo "</div>";
-        } else {
-          echo "<div style=\"padding-left: 30px;\">";
-          echo "<a class=\"btn btn-outline-danger my-2 my-sm-0\" href=\"";
-          echo  $config['home-file-path'];
-          echo "/view/login.php\">Login</a>";
-          echo "</div>";
-        }
+          if (!empty($_SESSION['loggedinvar'])) {
+            echo "<div style=\"padding-left: 30px;\">";
+            echo "<li class=\"nav-item";
+            if ($page == 'websites') echo ' active';
+            echo "\"><a class=\"nav-link\" href=\"";
+            echo  $config['home-file-path'];
+            echo "/view/website-name.php\">My Webpages</a></li>";
+            echo "</div>";
+
+            echo "<div style=\"padding-left: 30px;\">";
+            echo "<li class=\"nav-item";
+            if ($page == 'account') echo ' active';
+            echo "\"><a class=\"nav-link\" href=\"";
+            echo  $config['home-file-path'];
+            echo "/view/account.php\">Account</a></li>";
+            echo "</div>";
+
+            echo "<div style=\"padding-left: 30px;\">";
+            echo "<a class=\"btn btn-outline-danger my-2 my-sm-0\" href=\"";
+            echo  $config['home-file-path'];
+            echo "/controller/controller.php?COMMAND=LOGOUT\">Logout</a>";
+            echo "</div>";
+          } else {
+            echo "<div style=\"padding-left: 30px;\">";
+            echo "<a class=\"btn btn-outline-danger my-2 my-sm-0\" href=\"";
+            echo  $config['home-file-path'];
+            echo "/view/login.php\">Login</a>";
+            echo "</div>";
+          }
         ?>
       </ul>
     </div>
