@@ -17,7 +17,10 @@
     <?php require_once '../utilities/requirements.php' ?>
 
     <!-- Nav Bar -->
-    <?php include 'navbar.php' ?>
+    <?php 
+    $page = 'account';
+    include 'navbar.php' 
+    ?>
 
     <?php
     try {
