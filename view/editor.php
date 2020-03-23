@@ -63,7 +63,7 @@
       var component = {
         type: "text",
         header: "display-3",
-        content: "this is content"
+        content: "Click to edit text"
       };
       components.push(component);
       showChanges();
@@ -73,7 +73,7 @@
       var component = {
         type: "media",
         header: "media",
-        content: "https://www.youtube.com/embed/kJQP7kiw5Fk"
+        content: "https://www.youtube.com/embed/8PNO9unyE-I"
       };
       components.push(component);
       showChanges();
@@ -83,7 +83,7 @@
       var component = {
         type: "image",
         header: "img",
-        content: "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F12%2F2016%2F11%2FGettyImages-155781839-2000.jpg"
+        content: "https://i.imgflip.com/3trije.jpg"
       };
       components.push(component);
       showChanges();
@@ -92,7 +92,7 @@
     function addParagraphComponent() {
       var component = {
         type: "paragraph",
-        html: "<p>Content<\/p>"
+        html: "<p>Click to edit paragraph<\/p>"
       }
       components.push(component);
       showChanges();
