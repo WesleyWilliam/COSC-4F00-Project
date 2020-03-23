@@ -35,7 +35,6 @@
         <div class="container" id="banner-text">
             <h1 class="display-4">Support</h1>
             <p class="lead">The help you need to get started.</p>
-            <a class="btn btn-success btn-lg" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Start Now</a>
         </div>
     </div>
 
