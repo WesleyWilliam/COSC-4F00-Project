@@ -16,7 +16,10 @@
   <?php require_once '../utilities/requirements.php' ?>
 
   <!-- Nav Bar -->
-  <?php include 'navbar.php' ?>
+  <?php 
+  $page = 'websites';
+  include 'navbar.php' 
+  ?>
 
   <!-- If there is a message, show message to user -->
   <?php
