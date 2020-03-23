@@ -402,7 +402,7 @@
     <div class="col-10">
       <div class="d-flex justify-content-between mt-2 mr-4 pb-2 border-bottom">
         <div>
-          <button type="button" class="btn btn-outline-info mr-2">Themes</button>
+          <a role="button" href="<?php echo $config['home-file-path']; ?>/view/themes.php" class="btn btn-outline-info mr-2 btn-link">Themes</a>
           <button type="button" class="btn btn-outline-info mr-2">Help</button>
           <button type="button" class="btn btn-outline-info">Edit</button>
         </div>
