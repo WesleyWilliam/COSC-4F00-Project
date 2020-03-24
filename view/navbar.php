@@ -60,7 +60,7 @@
             echo "</div>";
           } else {
             echo "<div style=\"padding-left: 30px;\">";
-            echo "<a class=\"btn btn-outline-danger my-2 my-sm-0\" href=\"";
+            echo "<a class=\"btn btn-outline-success my-2 my-sm-0\" href=\"";
             echo  $config['home-file-path'];
             echo "/view/login.php\">Login</a>";
             echo "</div>";
