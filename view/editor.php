@@ -107,7 +107,6 @@
         }
       };
       var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php"
-      console.log(url);
       xhttp.open("POST", url, true);
       xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       var webpage_id = "<?php echo $_GET['website']; ?> ";
@@ -138,10 +137,13 @@
         contentType: false,
         cache: false,
         processData: false,
-        success: function(data) {
+        success: function(data,error) {
+          console.log(data);
+          console.log(error);
           $('#editImageModal').modal('hide')
           components[index].content = "<?php echo $config['home-file-path']; ?>/" + data;
           showChanges();
+          $('input[type="file"]').val(null);
         }
       });
     })
@@ -165,7 +167,6 @@
     $(document).on('click', '.paragraph-edit-button', function() {
       let res = editor.getData();
       $('#editParagraphModal').modal('hide');
-      console.log(index);
       components[index].html = editor.getData();
       showChanges();
     });
@@ -255,7 +256,6 @@
     function drop(ev) {
       ev.preventDefault();
       var component = ev.dataTransfer.getData("component");
-      console.log(component);
       if (component == "text") {
         addTextComponent();
       } else if (component == "image") {
