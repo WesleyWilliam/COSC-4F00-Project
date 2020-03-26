@@ -53,6 +53,23 @@
     var editor = null;
     var index; //this index is used to keep track of which element is currently selected on the page
 
+    var entityMap = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+      '/': '&#x2F;',
+      '`': '&#x60;',
+      '=': '&#x3D;'
+    };
+
+    function escapeHtml(string) {
+      return String(string).replace(/[&<>"'`=\/]/g, function(s) {
+        return entityMap[s];
+      });
+    }
+
     $('#editor-user-page').hide();
     $(document).ready(function() {
       showChanges();
@@ -183,8 +200,7 @@
     //Function to output text component html code
     function textComponentOutput(component, index) {
       var res = "";
-      //component.head1 + component.index + component.head2 + component.content + components.tail
-      res += "<p class=" + component.header + " " + "onclick ='editText(" + index + ")'>" + component.content + "</p>";
+      res += "<p class=" + component.header + " " + "onclick ='editText(" + index + ")'>" + escapeHtml(component.content) + "</p>";
       return res;
     }
 
