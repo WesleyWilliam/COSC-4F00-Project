@@ -25,7 +25,7 @@
   <?php
   if (!empty($_SESSION['WEBSITE_MSG'])) {
     echo "<div class=\"alert alert-warning\" role=\"alert\">";
-    echo $_SESSION['LOGIN_MSG'];
+    echo $_SESSION['WEBSITE_MSG'];
     echo "</div>";
   }
   ?>

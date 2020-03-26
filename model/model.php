@@ -31,9 +31,7 @@ class Model {
         $user = R::findOne('users',' username LIKE ?',[$username]);
         $hash = $user -> password;
         if (isset($user) && password_verify($password, $hash)) {
-            $user -> session = session_id();
-            R::store($user);
-            $_SESSION["loggedinvar"] = "true";
+            $_SESSION["USER_ID"] = $user->id;
             return "SUCCESS";
         } else {
             return 'NOTFOUND';
@@ -73,11 +71,10 @@ class Model {
 
     public function getUser() {
         //Good query to index
-        $res = R::findOne('users', ' session Like ? ', [session_id()]);
-        if (!isset($res)) {
+        if (!isset($_SESSION['USER_ID'])) {
             throw new SessionNotFound();
         }
-        return $res;
+        return R::load('users',$_SESSION['USER_ID']);
     }
   
     public function addWebsite($name) {
@@ -94,10 +91,7 @@ class Model {
     }
 
     public function logout () {
-        $user = $this->getUser();
-        $user -> session = '';
-        R::store($user);
-        $_SESSION["loggedinvar"] = "";
+        unset($_SESSION['USER_ID']);
         return "SUCCESS";
     }
 
