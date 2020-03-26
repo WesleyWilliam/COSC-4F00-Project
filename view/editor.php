@@ -91,7 +91,7 @@
 
         <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragMedia(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-            <span>Video</span>
+            <span>Embedded Content</span>
 
             <i data-feather="film"></i>
           </div>
@@ -149,7 +149,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Please enter Paragraph content</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Rich Text</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -222,7 +222,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Text</h5>
+            <h5 class="modal-title" id="exampleModalLabel">HTML Block</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -230,8 +230,10 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
-                <label for="userText">Text:</label>
-                <input type="text" class="form-control" id="editHTML">
+                <label for="userText">Code:</label>
+                <textarea class="form-control" id="editHTML" rows="4" cols="50">
+                "Code goes here"
+                 </textarea>
               </div>
             </form>
 
@@ -258,7 +260,7 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
-                <label for="userText">Image URL (optional)</label>
+                <label for="addImageURL">Image URL (optional)</label>
                 <input type="text" class="form-control" id="addImageURL">
               </div>
               <div class="custom-file">
@@ -280,7 +282,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Media</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Embedded Content</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -288,8 +290,13 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
-                <label for="userText">URL:</label>
+                <label for="editMediaUrl">URL:</label>
                 <input type="text" class="form-control" id="editMediaURL">
+                <label for="editMediaHeight">Height:</label>
+                <input type="number" class="form-control" id="editMediaHeight">
+                <label for="editMediaWidth">Width:</label>
+                <input type="number" class="form-control" id="editMediaWidth">
+
               </div>
             </form>
             <div class="modal-footer">

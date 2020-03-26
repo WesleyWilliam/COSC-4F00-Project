@@ -22,7 +22,8 @@ var str = <?php echo json_encode($component); ?>;
     function addMediaComponent() {
       var component = {
         type: "media",
-        header: "media",
+        height: 315,
+        width: 560,
         content: "https://www.youtube.com/embed/8PNO9unyE-I"
       };
       components.push(component);
@@ -134,9 +135,14 @@ var str = <?php echo json_encode($component); ?>;
 
     $(document).on('click', '.media-edit-button', function() {
       let text = $('#editMediaURL').val();
+      let height = $('#editMediaHeight').val();
+      let width = $('#editMediaWidth').val();
+
       $('#editMediaModal').modal('hide')
       text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
       components[index].content = text;
+      components[index].height = height;
+      components[index].width = width;
       showChanges();
     })
 
@@ -165,7 +171,7 @@ var str = <?php echo json_encode($component); ?>;
     // Function to output media component html code
     function mediaComponentOutput(component, index) {
       var res = "";
-      res += "<div onclick ='editMedia(" + index + ")'> <iframe width='560' height='315' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+      res += "<div onclick ='editMedia(" + index + ")'> <iframe width='"+component.width+"' height='"+component.height+"' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
       return res;
     }
 
@@ -258,6 +264,8 @@ var str = <?php echo json_encode($component); ?>;
     function editImage(i) {
       index = i;
       $('#editImageModal').modal('show');
+      $('#addImageURL').val(components[i].content);
+
 
     }
 
@@ -270,12 +278,16 @@ var str = <?php echo json_encode($component); ?>;
     function editMedia(i) {
       index = i;
       $('#editMediaModal').modal('show');
-
+      $('#editMediaURL').val(components[i].content);
+      $('#editMediaWidth').val(components[i].width);
+      $('#editMediaHeight').val(components[i].height);
     }
 
     function editHTML(i) {
       index = i;
       $('#editHTMLModal').modal('show');
+      $('#editHTML').val(components[i].content);
+
 
     }
 
