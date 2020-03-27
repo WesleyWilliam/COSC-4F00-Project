@@ -200,6 +200,14 @@ class Model {
         R::trash( $user );
         return "SUCCESS";
     }
+
+    public function sendContact($email,$name,$msg) {
+        $contact = R::dispense('contact');
+        $contact -> email = $email;
+        $contact -> name = $name;
+        $contact -> msg = $msg;
+        R::store($contact);
+    }
     
     
 }
