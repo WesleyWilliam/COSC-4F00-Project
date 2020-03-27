@@ -206,6 +206,7 @@ class Model {
         $contact -> email = $email;
         $contact -> name = $name;
         $contact -> msg = $msg;
+        $contact -> time = time();
         R::store($contact);
     }
     
