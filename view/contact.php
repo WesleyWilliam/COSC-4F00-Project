@@ -22,32 +22,32 @@
 
   <!-- If there is a message, show message to user -->
   <?php
-  if (!empty($_POST['CONTACT_MSG'])) {
+  if (!empty($_SESSION['CONTACT_MSG'])) {
     echo "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">";
     echo '<button type="button" class="close" data-dismiss="alert">&times;</button>';
-    echo $_POST['CONTACT_MSG'];
+    echo $_SESSION['CONTACT_MSG'];
     echo "</div>";
   }
   ?>
 
   <!-- Contact form -->
-  <form class="ml-4" action="#" method="POST">
+  <form class="ml-4" action="<?php echo $config['home-file-path']; ?>/controller/controller.php" method="POST">
     <div class="w-25 p-3">
-      <label for="emailInput">Email address</label>
-      <input type="email" class="form-control" id="emailInput" placeholder="Enter email">
+      <label for="emailInput" required>Email address</label>
+      <input type="email" class="form-control" id="emailInput" placeholder="Enter email" name="EMAIL">
     </div>
     <div class="w-25 p-3">
       <label for="nameInput">Name</label>
-      <input type="text" class="form-control" id="nameInput" placeholder="Enter your full name">
+      <input type="text" class="form-control" id="nameInput" name="FULLNAME" placeholder="Enter your full name">
     </div>
     <div class="w-50 p-3">
       <label for="messageInput">Message</label>
-      <textarea type="text" class="form-control" id="messageInput" placeholder="Enter message" rows="5"></textarea>
+      <textarea type="text" class="form-control" id="messageInput" name="MSG" placeholder="Enter message" rows="5"></textarea>
     </div>
     <div class="w-100 p-3">
       <button type="submit" class="btn btn-primary mb-2">Send</button>
     </div>
-    <input type="hidden" name="CONTACT_MSG" value="Message sent!">
+    <input type="hidden" name="COMMAND" value="CONTACT">
   </form>
 
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
