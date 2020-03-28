@@ -9,6 +9,18 @@
 
   <!-- Local CSS -->
   <style>
+
+div.component:hover {
+  background-color: yellow;
+}
+
+.highlight {
+            border: 1px solid red;
+            font-weight: bold;
+            font-size: 45px;
+            background-color: #333333;
+         }
+
   </style>
 
   <!-- Including bootstrap CSS files -->
@@ -19,6 +31,9 @@
 
   <!-- Jquery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- jquery ui -->
+  <script src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
   <!-- CKEditor -->
   <script src="https://cdn.ckeditor.com/ckeditor5/17.0.0/classic/ckeditor.js"></script>
@@ -66,7 +81,7 @@
     <!-- Side bar -->
     <div class="col" id="sidebar" >
       <ul class="list-group" id="sidebarList" style="position:fixed; width:15%;">
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragText(event)">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addText(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Text</span>
 
@@ -74,7 +89,7 @@
           </div>
         </li>
 
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragImage(event)">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addImage(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Image</span>
 
@@ -89,7 +104,7 @@
           </div>
         </li>
 
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="dragMedia(event)">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addMedia(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Embedded Content</span>
 
@@ -99,14 +114,14 @@
 
 
 
-        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" draggable="true" ondragstart="dragParagraph(event)">
+        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" draggable="true" ondragstart="addParagraph(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Rich Text</span>
             <i data-feather="align-left"></i>
           </div>
         </li>
 
-        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" draggable="true" ondragstart="dragHTML(event)">
+        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" draggable="true" ondragstart="addHTML(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>HTML Block</span>
             <i data-feather="code"></i>
@@ -132,7 +147,7 @@
       <div class="alert alert-success save-webpage-alert mr-4" role="alert">
         Webpage changes saved.
       </div>
-      <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" ondrop="drop(event, this)" ondragover="allowDrop(event)" >
       </div>
     </div>
 

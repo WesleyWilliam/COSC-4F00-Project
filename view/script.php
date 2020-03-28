@@ -1,5 +1,6 @@
 var str = <?php echo json_encode($component); ?>;
     var components = JSON.parse(str);
+    var sortedIDs;
     var editor = null;
     var index; //this index is used to keep track of which element is currently selected on the page
 
@@ -8,6 +9,45 @@ var str = <?php echo json_encode($component); ?>;
       showChanges();
       $(".save-webpage-alert").hide();
     });
+
+$(function(){
+  var startingItem;
+
+
+    $('#editor-user-page').sortable({
+  
+      start: function(e,ui){
+    sortedIDs = $( "#editor-user-page").sortable( "toArray" );
+startingItem = ui.item.attr("id");
+console.log("start: " +  startingItem);
+    
+  },
+  
+  stop: function(e,ui){
+    sortedIDs = $( "#editor-user-page").sortable( "toArray" );
+    var stoppingItem = ui.item.index();
+    console.log("stop: " + stoppingItem);
+    var temp = components.splice(startingItem,1);
+    components.splice(stoppingItem, 0, temp[0]);
+showChanges();
+  }
+}); //when sorting stops, the sortedIDs are updated
+
+
+
+
+
+
+
+
+}); //used to make the elements on the page draggable/sortable
+
+
+
+
+
+
+
 
     function addTextComponent() {
       var component = {
@@ -157,42 +197,45 @@ var str = <?php echo json_encode($component); ?>;
     function textComponentOutput(component, index) {
       var res = "";
       //component.head1 + component.index + component.head2 + component.content + components.tail
-      res += "<p class=" + component.header + " " + "onclick ='editText(" + index + ")'  draggable='true' ondragstart='dragText(event)'  >" + component.content + "</p>";
+      res += " <div id='"+index+"' class='component' onclick ='editText(" + index + ")'  draggable='true' ondragstart='dragText(event)' ><p class=" + component.header +   ">" + component.content + "</p></div>";
       return res;
     }
 
     // Function to output image component html code
     function imageComponentOutput(component, index) {
       var res = "";
-      res += "<img src=\"" + component.content + "\" onclick =\"editImage(" + index + ")\" height=\"300\"  alt=\"description\" >";
+      res += "<div id='"+index+"' class='component' onclick ='editImage(" + index + ")'  draggable='true' ondragstart='dragImage(event)' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
       return res;
     }
 
     // Function to output media component html code
     function mediaComponentOutput(component, index) {
       var res = "";
-      res += "<div onclick ='editMedia(" + index + ")'> <iframe width='"+component.width+"' height='"+component.height+"' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+      res += "<div id='"+index+"' class='component' onclick ='editMedia(" + index + ")' draggable='true' ondragstart='dragMedia(event)'> <iframe width='"+component.width+"' height='"+component.height+"' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
       return res;
     }
 
     //Function to output paragraph component html code
     function paragraphComponentOutput(component, index) {
-      return "<div onclick=\"editParagraph(" + index + ")\">" + component.html + "</div>";
+      return "<div id='"+index+"' class='component' onclick=\"editParagraph(" + index + ")\" draggable='true' ondragstart='dragParagraph(event)'>" + component.html + "</div>";
     }
 
     //Function to output HTML component 
     function HTMLComponentOutput(component, index) {
-      return "<div onclick=\"editHTML(" + index + ")\">" + component.content + "</div>";
+      return "<div id='"+index+"' class='component' onclick=\"editHTML(" + index + ")\" draggable='true' ondragstart='dragHTML(event)'>" + component.content + "</div>";
     }
 
     // Function to render changes
     function showChanges() {
 
 
+
       $('#editor-user-page').empty()
       if (components.length == 1) {
         $('#editor-user-page').removeClass("invisible").addClass("visible");
       }
+
+
       for (let i = 0; i < components.length; i++) {
         switch (components[i].type) {
           case 'text':
@@ -212,47 +255,86 @@ var str = <?php echo json_encode($component); ?>;
             break;
         }
       }
+
     }
+
 
     //drag and drop stuff
     function allowDrop(ev) {
       ev.preventDefault();
     }
 
+    function addText(ev) {
+      ev.dataTransfer.setData("component", "newtext");
+    }
+
     function dragText(ev) {
-      ev.dataTransfer.setData("component", "text");
+      ev.dataTransfer.setData("component", ev.target.id);
+    }
+
+    function addImage(ev) {
+      ev.dataTransfer.setData("component", "newimage");
     }
 
     function dragImage(ev) {
-      ev.dataTransfer.setData("component", "image");
+      ev.dataTransfer.setData("component", ev.target.id);
+    }
+
+    function addParagraph(ev) {
+      ev.dataTransfer.setData("component", "newparagraph");
     }
 
     function dragParagraph(ev) {
-      ev.dataTransfer.setData("component", "paragraph");
+      ev.dataTransfer.setData("component", ev.target.id);
+    }
+
+    function addMedia(ev) {
+      ev.dataTransfer.setData("component", "newmedia");
     }
 
     function dragMedia(ev) {
-      ev.dataTransfer.setData("component", "media");
+      ev.dataTransfer.setData("component", ev.target.id);
+    }
+
+    function addHTML(ev) {
+      ev.dataTransfer.setData("component", "newhtml");
     }
 
     function dragHTML(ev) {
-      ev.dataTransfer.setData("component", "html");
+      ev.dataTransfer.setData("component", ev.target.id);
     }
 
-    function drop(ev) {
+    function drop(ev, target) {
       ev.preventDefault();
       var component = ev.dataTransfer.getData("component");
-      if (component == "text") {
+      console.log("component "+component);
+      if (component == "newtext") {
         addTextComponent();
-      } else if (component == "image") {
+      } else if (component == "newimage") {
         addImageComponent();
-      } else if (component == "paragraph") {
+      } else if (component == "newparagraph") {
         addParagraphComponent();
-      } else if (component == "media") {
+      } else if (component == "newmedia") {
         addMediaComponent();
-      } else if (component == "html") {
+      } else if (component == "newhtml") {
         addHTMLComponent();
+      } else {
+    //var data = ev.dataTransfer.getData("component");
+    //let temp = JSON.parse(JSON.stringify(components[data]));
+    //components.splice(data,1);
+    //target.append(document.getElementById(data)); //dont want to append to end of editor, need to append inbetween the child before and after the target area
+    //console.log("target: " +JSON.stringify(target));
+    //components.splice(target.id,0,temp);
+    //console.log("components: " +JSON.stringify(components));
+
+//showChanges();
       }
+
+
+
+
+
+
     }
 
     function editText(i) {
