@@ -34,16 +34,52 @@ showChanges();
 }); //when sorting stops, the sortedIDs are updated
 
 
+$("#sidebarList > li").draggable({
+revert :true,
+revertDuration: 0
 
+
+}); //make sidebar draggable
+
+
+$("#editor-user-page").droppable({
+
+drop: function (e, ui) {
+  var dropped = ui.draggable.attr("id");
+  console.log("dropped: " + dropped);
+
+  switch (dropped) {
+          case 'text-sidebar-button':
+            addTextComponent();
+            break;
+          case 'image-sidebar-button':
+            addImageComponent();
+            break;
+          case 'embeddedcontent-sidebar-button':
+            addMediaComponent();
+            break;
+          case 'paragraph-sidebar-button':
+            addParagraphComponent();
+            break;
+            case 'html-sidebar-button':
+              addHTMLComponent();
+            break;
+            case 'grid-sidebar-button':
+              addGridComponent();
+            break;
+        } 
+
+
+
+}
+
+}); //make editor droppable
 
 
 
 
 
 }); //used to make the elements on the page draggable/sortable
-
-
-
 
 
 
@@ -98,6 +134,75 @@ showChanges();
       components.push(component);
       showChanges();
     }
+
+    function addGridComponent() {
+      var component = {
+        type: "grid",
+        columns: 2,
+        gridComponents: [makeTextComponent(), makeTextComponent()]
+      }
+      console.log("the grid: " + JSON.stringify(component));
+      components.push(component);
+      showChanges();
+    }
+
+
+    function makeTextComponent() {
+      var component = {
+        type: "text",
+        header: "display-3",
+        content: "Click to edit text"
+      };
+return component;
+    };
+
+    function makeMediaComponent() {
+      var component = {
+        type: "media",
+        height: 315,
+        width: 560,
+        content: "https://www.youtube.com/embed/8PNO9unyE-I"
+      };
+      return component;
+    };
+
+    function makeHTMLComponent() {
+        var component = {
+        type: "html",
+        content: "<p> Click to edit code </p>"
+      };
+      return component;
+
+    };
+
+    function makeImageComponent() {
+      var component = {
+        type: "image",
+        header: "img",
+        content: "https://i.imgflip.com/3trije.jpg"
+      };
+      return component;
+    }
+
+    function makeParagraphComponent() {
+      var component = {
+        type: "paragraph",
+        html: "<p>Click to edit paragraph<\/p>"
+      }
+      return component;
+    }
+
+    function makeGridComponent() {
+      var component = {
+        type: "grid",
+        columns: 2,
+        gridComponents: [makeTextComponent(), makeTextComponent()]
+      }
+      return component;
+    }
+
+
+
 
     $(document).on('click', '.save-editor-changes', function() { // Save current state of the editor components
       $(".save-webpage-alert").show();
@@ -193,6 +298,13 @@ showChanges();
       showChanges();
     })
 
+    $(document).on('click', '.grid-edit-button', function() {
+      let code = $('#gridColumns').val();
+      $('#editGridModal').modal('hide')
+      components[index].grids = code;
+      showChanges();
+    })
+
     //Function to output text component html code
     function textComponentOutput(component, index) {
       var res = "";
@@ -225,6 +337,44 @@ showChanges();
       return "<div id='"+index+"' class='component' onclick=\"editHTML(" + index + ")\" draggable='true' ondragstart='dragHTML(event)'>" + component.content + "</div>";
     }
 
+    //Function to output grid component 
+    function gridComponentOutput(component, index) {
+      var res = "";
+      res += "<div id='"+index+"' class='component' onclick ='editGrid(" + index + ")'  draggable='true' ondragstart='dragGrid(event)'>";
+
+for (var i=0; i<component.columns; i++){
+  res+="<div class='column' ondrop='drop(event, this)' ondragover='allowDrop(event)'>" ;
+      res += getOutput(component.gridComponents[i], i);
+      res+="</div>";
+}
+
+ res +=   "</div>";
+      return res;
+       }
+
+       function getOutput(component, index){
+        switch (component.type) {
+          case 'text':
+            return textComponentOutput(component, index);
+            break;
+          case 'image':
+            return imageComponentOutput(component, index);
+            break;
+          case 'media':
+            return mediaComponentOutput(component, index);
+            break;
+          case 'paragraph':
+            return paragraphComponentOutput(component, index);
+            break;
+            case 'html':
+              return HTMLComponentOutput(component, index);
+            break;
+            case 'grid':
+              return"";
+            break;
+        } 
+       }
+
     // Function to render changes
     function showChanges() {
 
@@ -253,6 +403,9 @@ showChanges();
             case 'html':
             $('#editor-user-page').append(HTMLComponentOutput(components[i], i));
             break;
+            case 'grid':
+            $('#editor-user-page').append(gridComponentOutput(components[i], i));
+            break;
         }
       }
 
@@ -268,40 +421,34 @@ showChanges();
       ev.dataTransfer.setData("component", "newtext");
     }
 
-    function dragText(ev) {
-      ev.dataTransfer.setData("component", ev.target.id);
-    }
+
 
     function addImage(ev) {
       ev.dataTransfer.setData("component", "newimage");
     }
 
-    function dragImage(ev) {
-      ev.dataTransfer.setData("component", ev.target.id);
-    }
+ 
 
     function addParagraph(ev) {
       ev.dataTransfer.setData("component", "newparagraph");
     }
 
-    function dragParagraph(ev) {
-      ev.dataTransfer.setData("component", ev.target.id);
-    }
+
 
     function addMedia(ev) {
       ev.dataTransfer.setData("component", "newmedia");
     }
 
-    function dragMedia(ev) {
-      ev.dataTransfer.setData("component", ev.target.id);
-    }
+
 
     function addHTML(ev) {
       ev.dataTransfer.setData("component", "newhtml");
     }
 
-    function dragHTML(ev) {
-      ev.dataTransfer.setData("component", ev.target.id);
+
+
+    function addGrid(ev) {
+      ev.dataTransfer.setData("component", "newgrid");
     }
 
     function drop(ev, target) {
@@ -318,16 +465,13 @@ showChanges();
         addMediaComponent();
       } else if (component == "newhtml") {
         addHTMLComponent();
-      } else {
-    //var data = ev.dataTransfer.getData("component");
-    //let temp = JSON.parse(JSON.stringify(components[data]));
-    //components.splice(data,1);
-    //target.append(document.getElementById(data)); //dont want to append to end of editor, need to append inbetween the child before and after the target area
-    //console.log("target: " +JSON.stringify(target));
-    //components.splice(target.id,0,temp);
-    //console.log("components: " +JSON.stringify(components));
+      } else if (component == "newgrid") {
+        addGridComponent();
+      } 
+      
+      
+      else {
 
-//showChanges();
       }
 
 
@@ -369,6 +513,13 @@ showChanges();
       index = i;
       $('#editHTMLModal').modal('show');
       $('#editHTML').val(components[i].content);
+
+    }
+
+    function editGrid(i) {
+      index = i;
+      $('#editGridModal').modal('show');
+      $('#gridColumns').val(components[i].columns);
 
 
     }

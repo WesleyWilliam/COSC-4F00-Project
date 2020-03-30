@@ -10,16 +10,16 @@
   <!-- Local CSS -->
   <style>
 
+/*components turn yellow on hover. Should be changed to reflect the style of the website, just wanted to add the feature*/
 div.component:hover {
   background-color: yellow;
 }
 
-.highlight {
-            border: 1px solid red;
-            font-weight: bold;
-            font-size: 45px;
-            background-color: #333333;
-         }
+/*used for grid*/
+.column {
+  float: left;
+  width: 50%;
+}
 
   </style>
 
@@ -78,10 +78,11 @@ div.component:hover {
 
   <!-- Editor -->
   <div class="row">
+
     <!-- Side bar -->
     <div class="col" id="sidebar" >
       <ul class="list-group" id="sidebarList" style="position:fixed; width:15%;">
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addText(event)">
+        <li id="text-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Text</span>
 
@@ -89,14 +90,15 @@ div.component:hover {
           </div>
         </li>
 
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addImage(event)">
+        <li id="image-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Image</span>
 
             <i data-feather="image"></i>
           </div>
         </li>
-        <li class="list-group-item list-group-item-action">
+
+        <li id="grid-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Grid</span>
 
@@ -104,7 +106,7 @@ div.component:hover {
           </div>
         </li>
 
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addMedia(event)">
+        <li id="embeddedcontent-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Embedded Content</span>
 
@@ -114,14 +116,14 @@ div.component:hover {
 
 
 
-        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" draggable="true" ondragstart="addParagraph(event)">
+        <li id="paragraph-sidebar-button" class="list-group-item list-group-item-action paragraph-sidebar" >
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Rich Text</span>
             <i data-feather="align-left"></i>
           </div>
         </li>
 
-        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" draggable="true" ondragstart="addHTML(event)">
+        <li id="html-sidebar-button" li class="list-group-item list-group-item-action html-sidebar" >
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>HTML Block</span>
             <i data-feather="code"></i>
@@ -147,7 +149,7 @@ div.component:hover {
       <div class="alert alert-success save-webpage-alert mr-4" role="alert">
         Webpage changes saved.
       </div>
-      <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" ondrop="drop(event, this)" ondragover="allowDrop(event)" >
+      <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" >
       </div>
     </div>
 
@@ -311,6 +313,33 @@ div.component:hover {
                 <input type="number" class="form-control" id="editMediaHeight">
                 <label for="editMediaWidth">Width:</label>
                 <input type="number" class="form-control" id="editMediaWidth">
+
+              </div>
+            </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary media-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- EditGrid modal -->
+        <div class="modal fade" id="editGridModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Grid</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="gridColumns">Columns:</label>
+                <input type="number" class="form-control" id="gridColumns">
 
               </div>
             </form>
