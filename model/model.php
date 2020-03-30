@@ -52,7 +52,6 @@ class Model {
             $user->username = $username;
             $user->password = password_hash($password, PASSWORD_BCRYPT);
             $user->email = $email;
-            $user->session = '';
             R::store($user);
             //Store it in the database, Redbean sets up everything
             return "SUCCESS";
@@ -83,10 +82,10 @@ class Model {
             return "ALREADYEXISTS";
         } else {
             $website = R::dispense('websites');
-            $website -> user = $user;
             $website -> name = $name;
             $website -> components = '[]';
-            return R::store($website);
+            $user-> xownWebsitesList[] = $website;
+            return R::store($user);
         }
     }
 
@@ -94,11 +93,11 @@ class Model {
         unset($_SESSION['USER_ID']);
         return "SUCCESS";
     }
-
+    
     public function getComponents($website) {
         $user = $this -> getUser();
         $site = R::load('websites',$website);
-        if ($user->id === $site->user_id) {
+        if ($user->id === $site->users_id) {
             return $site->components;
         } else {
             return "WRONGUSER";
@@ -107,7 +106,7 @@ class Model {
 
     public function saveComponents($website, $components) {
         $website = R::load('websites',$website);
-        if ($website->user_id === $this->getUser()->id) {
+        if ($website->users_id === $this->getUser()->id) {
             $website -> components = $components;
             R::store($website);
             return "SUCCESS";
@@ -124,12 +123,10 @@ class Model {
 
     public function listWebsites() {
         $user = $this -> getUser();
-        $websites = R::findAll('websites',' user_id = ? ',[$user->id]);
-        return $websites;
+        return $user->websitesList;
     }
 
     public function listAllWebsites() {
-        $user = $this -> getUser();
         $websites = R::findAll('websites');
         return $websites;
     }
