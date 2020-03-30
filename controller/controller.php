@@ -155,6 +155,7 @@ try {
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATESUBSCRIPTIONS') {
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'DELETEACCOUNT') {
         $res = $model->deleteAccount();
+        $model->logout();
         if ($res == "SUCCESS") {
             $_SESSION['LOGIN_MSG'] = 'Account has been deleted';
             redirect("view/login.php");
