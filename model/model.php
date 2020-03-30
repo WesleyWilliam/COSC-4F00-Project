@@ -123,7 +123,7 @@ class Model {
 
     public function listWebsites() {
         $user = $this -> getUser();
-        return $user->websitesList;
+        return $user->ownWebsitesList;
     }
 
     public function listAllWebsites() {
