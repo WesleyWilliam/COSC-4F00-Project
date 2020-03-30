@@ -93,7 +93,7 @@ class Model {
         unset($_SESSION['USER_ID']);
         return "SUCCESS";
     }
-    //Needs to change
+    
     public function getComponents($website) {
         $user = $this -> getUser();
         $site = R::load('websites',$website);
