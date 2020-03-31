@@ -200,6 +200,13 @@ class Model {
         $contact -> time = time();
         R::store($contact);
     }
+
+    public function setUniques() {
+        R::exec('ALTER TABLE Users ADD UNIQUE (USERNAME);');
+        R::exec('ALTER TABLE Users ADD UNIQUE (EMAIL);');
+        R::exec('ALTER TABLE Users ADD UNIQUE (SESSION);');
+        R::exec('ALTER TABLE Websites ADD UNIQUE (NAME,USERS_ID)');
+    }
     
     
 }

@@ -181,6 +181,9 @@ try {
             redirect('view/contact.php');
             die();
         }
+    } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND']=='UNIQUE') {
+        $model->setUniques();
+        echo "Unique set in tables";
     }
 } catch (SessionNotFound $e) {
     redirect('view/login.php');
