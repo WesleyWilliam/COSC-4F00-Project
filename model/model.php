@@ -31,9 +31,7 @@ class Model {
         $user = R::findOne('users',' username LIKE ?',[$username]);
         $hash = $user -> password;
         if (isset($user) && password_verify($password, $hash)) {
-            $user -> session = session_id();
-            R::store($user);
-            $_SESSION["loggedinvar"] = "true";
+            $_SESSION["USER_ID"] = $user->id;
             return "SUCCESS";
         } else {
             return 'NOTFOUND';
@@ -54,7 +52,6 @@ class Model {
             $user->username = $username;
             $user->password = password_hash($password, PASSWORD_BCRYPT);
             $user->email = $email;
-            $user->session = '';
             R::store($user);
             //Store it in the database, Redbean sets up everything
             return "SUCCESS";
@@ -73,11 +70,10 @@ class Model {
 
     public function getUser() {
         //Good query to index
-        $res = R::findOne('users', ' session Like ? ', [session_id()]);
-        if (!isset($res)) {
+        if (!isset($_SESSION['USER_ID'])) {
             throw new SessionNotFound();
         }
-        return $res;
+        return R::load('users',$_SESSION['USER_ID']);
     }
   
     public function addWebsite($name) {
@@ -86,25 +82,22 @@ class Model {
             return "ALREADYEXISTS";
         } else {
             $website = R::dispense('websites');
-            $website -> user = $user;
             $website -> name = $name;
             $website -> components = '[]';
-            return R::store($website);
+            $user-> xownWebsitesList[] = $website;
+            return R::store($user);
         }
     }
 
     public function logout () {
-        $user = $this->getUser();
-        $user -> session = '';
-        R::store($user);
-        $_SESSION["loggedinvar"] = "";
+        unset($_SESSION['USER_ID']);
         return "SUCCESS";
     }
-
+    
     public function getComponents($website) {
         $user = $this -> getUser();
         $site = R::load('websites',$website);
-        if ($user->id === $site->user_id) {
+        if ($user->id === $site->users_id) {
             return $site->components;
         } else {
             return "WRONGUSER";
@@ -113,7 +106,7 @@ class Model {
 
     public function saveComponents($website, $components) {
         $website = R::load('websites',$website);
-        if ($website->user_id === $this->getUser()->id) {
+        if ($website->users_id === $this->getUser()->id) {
             $website -> components = $components;
             R::store($website);
             return "SUCCESS";
@@ -130,12 +123,10 @@ class Model {
 
     public function listWebsites() {
         $user = $this -> getUser();
-        $websites = R::findAll('websites',' user_id = ? ',[$user->id]);
-        return $websites;
+        return $user->ownWebsitesList;
     }
 
     public function listAllWebsites() {
-        $user = $this -> getUser();
         $websites = R::findAll('websites');
         return $websites;
     }
@@ -199,6 +190,22 @@ class Model {
         $user = $this -> getUser();
         R::trash( $user );
         return "SUCCESS";
+    }
+
+    public function sendContact($email,$name,$msg) {
+        $contact = R::dispense('contact');
+        $contact -> email = $email;
+        $contact -> name = $name;
+        $contact -> msg = $msg;
+        $contact -> time = time();
+        R::store($contact);
+    }
+
+    public function setUniques() {
+        R::exec('ALTER TABLE Users ADD UNIQUE (USERNAME);');
+        R::exec('ALTER TABLE Users ADD UNIQUE (EMAIL);');
+        R::exec('ALTER TABLE Users ADD UNIQUE (SESSION);');
+        R::exec('ALTER TABLE Websites ADD UNIQUE (NAME,USERS_ID)');
     }
     
     

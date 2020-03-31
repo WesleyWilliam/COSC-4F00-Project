@@ -36,7 +36,7 @@
 
         <!-- See whether user is logged in or not -->
         <?php
-          if (!empty($_SESSION['loggedinvar'])) {
+          if (!empty($_SESSION['USER_ID'])) {
             echo "<div style=\"padding-left: 30px;\">";
             echo "<li class=\"nav-item";
             if ($page == 'websites') echo ' active';

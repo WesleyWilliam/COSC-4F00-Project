@@ -10,6 +10,7 @@ try {
     $_SESSION['UPLOAD_MSG'] = '';
     $_SESSION['RECOVEREMAIL_MSG'] = '';
     $_SESSION['RECOVERPWD_MSG'] = '';
+    $_SESSION['CONTACT_MSG'] = '';
 
     //Everytime the front end sends a post request, it requires a 'COMMAND' request to specify what you are asking for
     if (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'LOGIN') {
@@ -154,6 +155,7 @@ try {
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATESUBSCRIPTIONS') {
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'DELETEACCOUNT') {
         $res = $model->deleteAccount();
+        $model->logout();
         if ($res == "SUCCESS") {
             $_SESSION['LOGIN_MSG'] = 'Account has been deleted';
             redirect("view/login.php");
@@ -168,6 +170,20 @@ try {
         redirect('view/login.php');
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
         echo $model->saveComponents($_POST['WEBPAGE'], $_POST['COMPONENTS']);
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'CONTACT') {
+        if (empty($_POST['EMAIL'])) {
+            $_SESSION['CONTACT_MSG'] = "Enter email address";
+            redirect('view/contact.php');
+            die();
+        } else {
+            $model->sendContact($_POST['EMAIL'],isset($_POST['FULLNAME'])? $_POST['FULLNAME']:'',isset($_POST['MSG'])?$_POST['MSG']:'');
+            $_SESSION['CONTACT_MSG'] = 'Message sent';
+            redirect('view/contact.php');
+            die();
+        }
+    } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND']=='UNIQUE') {
+        $model->setUniques();
+        echo "Unique set in tables";
     }
 } catch (SessionNotFound $e) {
     redirect('view/login.php');
