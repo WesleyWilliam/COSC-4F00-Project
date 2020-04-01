@@ -15,21 +15,22 @@ $(function(){
 
 
     $('#editor-user-page').sortable({
+
+      axis : "y",
   
       start: function(e,ui){
     sortedIDs = $( "#editor-user-page").sortable( "toArray" );
-startingItem = ui.item.attr("id");
-console.log("start: " +  startingItem);
-    
+    startingItem = ui.item.index();
   },
   
   stop: function(e,ui){
     sortedIDs = $( "#editor-user-page").sortable( "toArray" );
     var stoppingItem = ui.item.index();
-    console.log("stop: " + stoppingItem);
     var temp = components.splice(startingItem,1);
     components.splice(stoppingItem, 0, temp[0]);
 showChanges();
+
+
   }
 }); //when sorting stops, the sortedIDs are updated
 
@@ -46,7 +47,7 @@ $("#editor-user-page").droppable({
 
 drop: function (e, ui) {
   var dropped = ui.draggable.attr("id");
-  console.log("dropped: " + dropped);
+
 
   switch (dropped) {
           case 'text-sidebar-button':
@@ -77,9 +78,54 @@ drop: function (e, ui) {
 
 
 
+  $(document).on("click", ".component" , function() {
+console.log("id " + $(this).attr("id"));
+        var id = $(this).attr("id");
+        var type = components[id].type;
+
+index = id;
+        switch (type) {
+          case 'text':
+            $('#editTextModal').modal('show');
+      $('#editText').val(components[id].content);
+                  break;
+
+          case 'image':
+            $('#editImageModal').modal('show');
+      $('#addImageURL').val(components[id].content);
+                  break;
+
+          case 'media':
+            $('#editMediaModal').modal('show');
+      $('#editMediaURL').val(components[id].content);
+      $('#editMediaWidth').val(components[id].width);
+      $('#editMediaHeight').val(components[id].height);
+                  break;
+
+          case 'paragraph':
+            editor.setData(components[id].html);
+      $('#editParagraphModal').modal('show');
+                  break;
+
+            case 'html':
+              $('#editHTMLModal').modal('show');
+      $('#editHTML').val(components[id].content);
+                  break;
+
+            case 'grid':
+              $('#editGridModal').modal('show');
+      $('#gridColumns').val(components[id].columns);
+                  break;
+        } 
 
 
-}); //used to make the elements on the page draggable/sortable
+        
+        });
+
+
+
+
+}); //used to make the elements on the page draggable, sortable, droppable, editable
 
 
 
@@ -141,8 +187,15 @@ drop: function (e, ui) {
         columns: 2,
         gridComponents: [makeTextComponent(), makeTextComponent()]
       }
-      console.log("the grid: " + JSON.stringify(component));
+
+
+
       components.push(component);
+
+      for (var i=0; i<component.columns; i++){
+  components[components.length-1].gridComponents[i].id = components.length+" gridComponent: " + i;
+}
+
       showChanges();
     }
 
@@ -309,38 +362,38 @@ return component;
     function textComponentOutput(component, index) {
       var res = "";
       //component.head1 + component.index + component.head2 + component.content + components.tail
-      res += " <div id='"+index+"' class='component' onclick ='editText(" + index + ")'  draggable='true' ondragstart='dragText(event)' ><p class=" + component.header +   ">" + component.content + "</p></div>";
+      res += " <div id='"+index+"' class='component'  draggable='true' ><p class=" + component.header +   ">" + component.content + "</p></div>";
       return res;
     }
 
     // Function to output image component html code
     function imageComponentOutput(component, index) {
       var res = "";
-      res += "<div id='"+index+"' class='component' onclick ='editImage(" + index + ")'  draggable='true' ondragstart='dragImage(event)' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
+      res += "<div id='"+index+"' class='component'  draggable='true' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
       return res;
     }
 
     // Function to output media component html code
     function mediaComponentOutput(component, index) {
       var res = "";
-      res += "<div id='"+index+"' class='component' onclick ='editMedia(" + index + ")' draggable='true' ondragstart='dragMedia(event)'> <iframe width='"+component.width+"' height='"+component.height+"' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+      res += "<div id='"+index+"' class='component'  draggable='true' > <iframe width='"+component.width+"' height='"+component.height+"' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
       return res;
     }
 
     //Function to output paragraph component html code
     function paragraphComponentOutput(component, index) {
-      return "<div id='"+index+"' class='component' onclick=\"editParagraph(" + index + ")\" draggable='true' ondragstart='dragParagraph(event)'>" + component.html + "</div>";
+      return "<div id='"+index+"' class='component' draggable='true'>" + component.html + "</div>";
     }
 
     //Function to output HTML component 
     function HTMLComponentOutput(component, index) {
-      return "<div id='"+index+"' class='component' onclick=\"editHTML(" + index + ")\" draggable='true' ondragstart='dragHTML(event)'>" + component.content + "</div>";
+      return "<div id='"+index+"' class='component' draggable='true'>" + component.content + "</div>";
     }
 
     //Function to output grid component 
     function gridComponentOutput(component, index) {
       var res = "";
-      res += "<div id='"+index+"' class='component' onclick ='editGrid(" + index + ")'  draggable='true' ondragstart='dragGrid(event)'>";
+      res += "<div id='"+index+"' class='component'   draggable='true'>";
 
 for (var i=0; i<component.columns; i++){
   res+="<div class='column' ondrop='drop(event, this)' ondragover='allowDrop(event)'>" ;
@@ -370,7 +423,8 @@ for (var i=0; i<component.columns; i++){
               return HTMLComponentOutput(component, index);
             break;
             case 'grid':
-              return"";
+              return  gridComponentOutput(component, index);
+;
             break;
         } 
        }
@@ -412,117 +466,7 @@ for (var i=0; i<component.columns; i++){
     }
 
 
-    //drag and drop stuff
-    function allowDrop(ev) {
-      ev.preventDefault();
-    }
 
-    function addText(ev) {
-      ev.dataTransfer.setData("component", "newtext");
-    }
-
-
-
-    function addImage(ev) {
-      ev.dataTransfer.setData("component", "newimage");
-    }
-
- 
-
-    function addParagraph(ev) {
-      ev.dataTransfer.setData("component", "newparagraph");
-    }
-
-
-
-    function addMedia(ev) {
-      ev.dataTransfer.setData("component", "newmedia");
-    }
-
-
-
-    function addHTML(ev) {
-      ev.dataTransfer.setData("component", "newhtml");
-    }
-
-
-
-    function addGrid(ev) {
-      ev.dataTransfer.setData("component", "newgrid");
-    }
-
-    function drop(ev, target) {
-      ev.preventDefault();
-      var component = ev.dataTransfer.getData("component");
-      console.log("component "+component);
-      if (component == "newtext") {
-        addTextComponent();
-      } else if (component == "newimage") {
-        addImageComponent();
-      } else if (component == "newparagraph") {
-        addParagraphComponent();
-      } else if (component == "newmedia") {
-        addMediaComponent();
-      } else if (component == "newhtml") {
-        addHTMLComponent();
-      } else if (component == "newgrid") {
-        addGridComponent();
-      } 
-      
-      
-      else {
-
-      }
-
-
-
-
-
-
-    }
-
-    function editText(i) {
-      index = i;
-      $('#editTextModal').modal('show');
-      $('#editText').val(components[i].content);
-    }
-
-    function editImage(i) {
-      index = i;
-      $('#editImageModal').modal('show');
-      $('#addImageURL').val(components[i].content);
-
-
-    }
-
-    function editParagraph(i) {
-      index = i;
-      editor.setData(components[i].html);
-      $('#editParagraphModal').modal('show');
-    }
-
-    function editMedia(i) {
-      index = i;
-      $('#editMediaModal').modal('show');
-      $('#editMediaURL').val(components[i].content);
-      $('#editMediaWidth').val(components[i].width);
-      $('#editMediaHeight').val(components[i].height);
-    }
-
-    function editHTML(i) {
-      index = i;
-      $('#editHTMLModal').modal('show');
-      $('#editHTML').val(components[i].content);
-
-    }
-
-    function editGrid(i) {
-      index = i;
-      $('#editGridModal').modal('show');
-      $('#gridColumns').val(components[i].columns);
-
-
-    }
 
     function deleteElement() {
       $('#editor-user-page').empty()
