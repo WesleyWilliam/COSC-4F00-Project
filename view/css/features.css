@@ -1,0 +1,16 @@
+.jumbotron-fluid {
+    background-color: #03a9f4;
+}
+
+#banner-text {
+    color: white;
+}
+
+.drag-pic{
+    height: 100vh;
+    min-height: 500px;
+    background-image: url("../img/drag-site-pic.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
