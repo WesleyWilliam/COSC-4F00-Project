@@ -1,0 +1,24 @@
+
+.jumbotron-fluid {
+    background-color: #e4f3ff;
+}
+
+#banner-text {
+    color: black;
+}
+
+.card{
+    border: none;
+}
+
+#starter{
+    background-color: #b8da90;
+}
+
+#basic{
+    background-color: #69d8e6;
+}
+
+#pro{
+    background-color: #ffb64a;
+}
