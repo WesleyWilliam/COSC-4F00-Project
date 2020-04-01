@@ -85,7 +85,8 @@ class Model {
             $website -> name = $name;
             $website -> components = '[]';
             $user-> xownWebsitesList[] = $website;
-            return R::store($user);
+            R::store($user);
+            return $website->id;
         }
     }
 
