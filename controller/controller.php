@@ -155,6 +155,7 @@ try {
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATESUBSCRIPTIONS') {
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'DELETEACCOUNT') {
         $res = $model->deleteAccount();
+        $model->logout();
         if ($res == "SUCCESS") {
             $_SESSION['LOGIN_MSG'] = 'Account has been deleted';
             redirect("view/login.php");
@@ -180,6 +181,9 @@ try {
             redirect('view/contact.php');
             die();
         }
+    } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND']=='UNIQUE') {
+        $model->setUniques();
+        echo "Unique set in tables";
     }
 } catch (SessionNotFound $e) {
     redirect('view/login.php');
