@@ -2,7 +2,6 @@ var str = <?php echo json_encode($component); ?>;
 var webpages = JSON.parse(str);
 var currentWebpage = 'homepage';
 var components = webpages[currentWebpage];
-console.log(components);
 var sortedIDs;
 var editor = null;
 var index; //this index is used to keep track of which element is currently selected on the page
@@ -362,6 +361,23 @@ $(document).on('click', '.grid-edit-button', function () {
   $('#editGridModal').modal('hide')
   components[index].grids = code;
   showChanges();
+})
+
+$(document).on('click','.add-webpage-button',function () {
+  $('#addWebpageModal').modal('show');
+})
+
+$(document).on('click','#save-webpage-button',function () {
+  webpages[currentWebpage] = components;
+  currentWebpage = $('#webpageText').val();
+  if (typeof webpages[currentWebpage] == 'undefined') {
+    webpages[currentWebpage] = [];
+  }
+  components = webpages[currentWebpage];
+
+  showChanges();
+  
+  $('#addWebpageModal').modal('hide');
 })
 
 //Function to output text component html code
