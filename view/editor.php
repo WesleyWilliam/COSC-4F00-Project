@@ -45,7 +45,7 @@ div.component:hover {
   try {
     $component = NULL;
     if (isset($_GET['website'])) {
-      $component = $model->getComponents($_GET['website']);
+      $component = $model->getWebsites($_GET['website']);
       if ($component == "WRONGUSER") {
         echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
         die();

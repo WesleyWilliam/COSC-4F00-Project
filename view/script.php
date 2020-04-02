@@ -1,4 +1,4 @@
-var str = <? php echo json_encode($component); ?>;
+var str = <?php echo json_encode($component); ?>;
 var components = JSON.parse(str);
 var sortedIDs;
 var editor = null;
@@ -268,9 +268,9 @@ $(document).on('click', '.save-editor-changes', function () { // Save current st
   var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php"
   xhttp.open("POST", url, true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  var webpage_id = "<?php echo $_GET['website']; ?> ";
-  if (!isNaN(webpage_id)) {
-    xhttp.send("COMMAND=SAVE-EDITOR&WEBPAGE=" + webpage_id + "&COMPONENTS=" + encodeURI(JSON.stringify(components)));
+  var website_id = "<?php echo $_GET['website']; ?> ";
+  if (!isNaN(website_id)) {
+    xhttp.send("COMMAND=SAVE-EDITOR&WEBSITE=" + website_id + "&WEBPAGES=" + encodeURI(JSON.stringify(components)));
   }
   setTimeout(function () {
     $(".save-webpage-alert").hide();
