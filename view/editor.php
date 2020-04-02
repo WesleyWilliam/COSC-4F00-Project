@@ -45,11 +45,13 @@ div.component:hover {
   try {
     $component = NULL;
     if (isset($_GET['website'])) {
-      $component = $model->getComponents($_GET['website']);
-      if ($component == "WRONGUSER") {
+      $website = $model->getWebsite($_GET['website']);
+      if ($website == "WRONGUSER") {
         echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
         die();
       }
+      $component = reset($website->xownWebpagesList)->components;
+      
     } else {
       //Later on well make this go to the first website for your user
       echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
@@ -73,8 +75,13 @@ div.component:hover {
 
 <body>
 
+
   <!-- Nav Bar -->
   <?php include 'navbar.php' ?>
+
+  <?php foreach ($website->xownWebpagesList as $webpage) {
+    echo '<button>' . $webpage->name .'</button>';
+  } ?>
 
   <!-- Editor -->
   <div class="row">

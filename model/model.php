@@ -83,8 +83,11 @@ class Model {
         } else {
             $website = R::dispense('websites');
             $website -> name = $name;
-            $website -> components = '[]';
             $user-> xownWebsitesList[] = $website;
+            $webpage = R::dispense('webpages');
+            $webpage -> components = '[]';
+            $webpage -> name = 'homepage';
+            $website -> xownWebpagesList[] = $webpage;
             R::store($user);
             return $website->id;
         }
@@ -95,11 +98,11 @@ class Model {
         return "SUCCESS";
     }
     
-    public function getComponents($website) {
-        $user = $this -> getUser();
-        $site = R::load('websites',$website);
-        if ($user->id === $site->users_id) {
-            return $site->components;
+    public function getWebsite($website) {
+        $user = $this->getUser();
+        $website = R::load('websites',$website);
+        if ($website->users == $user) {
+            return $website;
         } else {
             return "WRONGUSER";
         }
@@ -203,9 +206,10 @@ class Model {
     }
 
     public function setUniques() {
-        R::exec('ALTER TABLE Users ADD UNIQUE (USERNAME);');
-        R::exec('ALTER TABLE Users ADD UNIQUE (EMAIL);');
-        R::exec('ALTER TABLE Websites ADD UNIQUE (NAME,USERS_ID)');
+        echo R::exec('ALTER TABLE Users ADD UNIQUE (USERNAME);');
+        echo R::exec('ALTER TABLE Users ADD UNIQUE (EMAIL);');
+        echo R::exec('ALTER TABLE Websites ADD UNIQUE (NAME,USERS_ID);');
+        echo R::exec('ALTER TABLE Webpages ADD UNIQUE (NAME,websites_id);');
     }
     
     

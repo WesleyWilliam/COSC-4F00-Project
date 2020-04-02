@@ -51,7 +51,7 @@
       </div>
     </form>
 
-    <h4 class="mt-5 text-muted text-left">Your existing webpages</h4>
+    <h4 class="mt-5 text-muted text-left">Your existing websites</h4>
     <div class="list-group">
       <?php
       foreach ($websitelst as $website) {

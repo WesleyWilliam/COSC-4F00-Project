@@ -1,4 +1,5 @@
-var str = <? php echo json_encode($component); ?>;
+
+var str = <?php echo json_encode($component); ?>;
 var components = JSON.parse(str);
 var sortedIDs;
 var editor = null;
