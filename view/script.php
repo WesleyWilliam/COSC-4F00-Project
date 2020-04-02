@@ -1,5 +1,8 @@
 var str = <?php echo json_encode($component); ?>;
-var components = JSON.parse(str);
+var webpages = JSON.parse(str);
+var currentWebpage = 'homepage';
+var components = webpages[currentWebpage];
+console.log(components);
 var sortedIDs;
 var editor = null;
 var index; //this index is used to keep track of which element is currently selected on the page
@@ -258,6 +261,7 @@ function makeGridComponent() {
 
 
 $(document).on('click', '.save-editor-changes', function () { // Save current state of the editor components
+  webpages[currentWebpage] = components;
   $(".save-webpage-alert").show();
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
@@ -270,7 +274,7 @@ $(document).on('click', '.save-editor-changes', function () { // Save current st
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   var website_id = "<?php echo $_GET['website']; ?> ";
   if (!isNaN(website_id)) {
-    xhttp.send("COMMAND=SAVE-EDITOR&WEBSITE=" + website_id + "&WEBPAGES=" + encodeURI(JSON.stringify(components)));
+    xhttp.send("COMMAND=SAVE-EDITOR&WEBSITE=" + website_id + "&WEBPAGES=" + encodeURI(JSON.stringify(webpages)));
   }
   setTimeout(function () {
     $(".save-webpage-alert").hide();
