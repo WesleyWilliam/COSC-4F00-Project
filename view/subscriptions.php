@@ -26,7 +26,7 @@
     <!-- Banner -->
     <div class="jumbotron jumbotron-fluid">
         <div class="container" id="banner-text">
-            <h1 class="display-4">Get more for your site with these premium plans.</h1>
+            <h1 class="display-4">Get more for your site with these premium plans:</h1>
             <p class="lead"></p>
         </div>
     </div>
@@ -70,7 +70,7 @@
                         <li>Email support</li>
                         <li>Help center access</li>
                     </ul>
-                    <a type="button" class="btn btn-lg btn-block btn-outline-primary" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Sign up for free</a>
+                    <a type="button" class="btn btn-lg btn-block btn-primary" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Sign up for free</a>
                 </div>
             </div>
             <div class="card mb-4 shadow mb-5 bg-white rounded">
