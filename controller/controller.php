@@ -94,7 +94,7 @@ try {
         redirect('view/login.php');
         die();
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
-        echo $model->saveComponents($_POST['WEBPAGE'], $_POST['COMPONENTS']);
+        echo $model->saveWebsites($_POST['WEBSITE'], $_POST['WEBPAGES']);
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'RECOVERPWD') {
         $_SESSION['RECOVERPWD_MSG'] = '';
         if ($_POST['PWD'] != $_POST['PWD2']) {
@@ -169,7 +169,7 @@ try {
         $model->logout();
         redirect('view/login.php');
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
-        echo $model->saveComponents($_POST['WEBPAGE'], $_POST['COMPONENTS']);
+        echo $model->saveWebsites($_POST['WEBPAGE'], $_POST['COMPONENTS']);
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'CONTACT') {
         if (empty($_POST['EMAIL'])) {
             $_SESSION['CONTACT_MSG'] = "Enter email address";
