@@ -60,6 +60,17 @@ function addHTMLComponent() {
   showChanges();
 }
 
+function addGridComponent() {
+  var component = {
+    type: "grid",
+    content: "",
+    rows: 3,
+    columns: 3
+  };
+  components.push(component);
+  showChanges();
+}
+
 function addImageComponent() {
   var component = {
     type: "image",
@@ -78,63 +89,6 @@ function addParagraphComponent() {
   components.push(component);
   showChanges();
 }
-
-$(document).on("click", ".save-editor-changes", function() {
-  // Save current state of the editor components
-  $(".save-webpage-alert").show();
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      console.log(this.responseText);
-    }
-  };
-  var url =
-    "<?php echo $config['home-file-path']; ?>/controller/controller.php";
-  xhttp.open("POST", url, true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  var webpage_id = "<?php echo $_GET['website']; ?> ";
-  if (!isNaN(webpage_id)) {
-    xhttp.send(
-      "COMMAND=SAVE-EDITOR&WEBPAGE=" +
-        webpage_id +
-        "&COMPONENTS=" +
-        encodeURI(JSON.stringify(components))
-    );
-  }
-  setTimeout(function() {
-    $(".save-webpage-alert").hide();
-  }, 5000);
-});
-
-$(document).on("change", "#imageFile", function() {
-  var url =
-    "<?php echo $config['home-file-path']; ?>/controller/controller.php";
-  var properties = document.getElementById("imageFile").files[0];
-  //  $.post(url,{COMMAND: 'PIC_UPLOAD'},function(data,status) {
-  //    console.log(data);
-  //  });
-  var form_data = new FormData();
-  form_data.append("file", properties);
-  form_data.append("COMMAND", "PIC_UPLOAD");
-
-  $.ajax({
-    url: url,
-    method: "POST",
-    data: form_data,
-    contentType: false,
-    cache: false,
-    processData: false,
-    success: function(data, error) {
-      console.log(data);
-      console.log(error);
-      $("#editImageModal").modal("hide");
-      components[index].content =
-        "<?php echo $config['home-file-path']; ?>/" + data;
-      showChanges();
-      $('input[type="file"]').val(null);
-    }
-  });
-});
 
 $(document).on("click", ".text-edit-button", function() {
   let text = $("#editText").val();
@@ -307,6 +261,10 @@ function dragImage(ev) {
   ev.dataTransfer.setData("component", ev.target.id);
 }
 
+function addGrid(ev) {
+  ev.dataTransfer.setData("component", "newgrid");
+}
+
 function addParagraph(ev) {
   ev.dataTransfer.setData("component", "newparagraph");
 }
@@ -344,6 +302,8 @@ function drop(ev, target) {
   } else if (component == "newmedia") {
     addMediaComponent();
   } else if (component == "newhtml") {
+    addHTMLComponent();
+  } else if (component == "newgrid") {
     addHTMLComponent();
   } else {
     //var data = ev.dataTransfer.getData("component");
