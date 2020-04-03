@@ -60,13 +60,11 @@ div.component:hover {
     die();
   }
   ?>
-
-  <!-- Javascript code -->
   <script>
-    
-  <?php include('script.php') ?>
- 
+  var str = <?php echo json_encode($component); ?>;
   </script>
+  <!-- Javascript code -->
+  <script src="script-editor.js"></script>
     
 
 </head>
@@ -96,7 +94,7 @@ div.component:hover {
             <i data-feather="image"></i>
           </div>
         </li>
-        <li class="list-group-item list-group-item-action">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addImage(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Grid</span>
 
