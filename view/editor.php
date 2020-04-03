@@ -60,13 +60,9 @@ div.component:hover {
     die();
   }
   ?>
-
-  <!-- Javascript code -->
-  <script>
-    
-  <?php include('script.php') ?>
- 
-  </script>
+  <script><?php include 'script-editor.php' ?></script> <!-- For JS that makes PHP calls -->
+  
+  <script src="script-editor.js"></script> <!-- For all other JS -->
     
 
 </head>
@@ -97,8 +93,8 @@ div.component:hover {
             <i data-feather="image"></i>
           </div>
         </li>
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addImage(event)">
 
-        <li id="grid-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Grid</span>
 
