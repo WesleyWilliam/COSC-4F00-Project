@@ -62,9 +62,9 @@ div.component:hover {
   ?>
 
   <!-- Javascript code -->
-  <script>
+  <script src="script-editor.js">
     
-  <?php include('script.php') ?>
+  
  
   </script>
     
