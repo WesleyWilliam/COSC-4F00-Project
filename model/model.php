@@ -83,7 +83,7 @@ class Model {
         } else {
             $website = R::dispense('websites');
             $website -> name = $name;
-            $website -> components = '[]';
+            $website -> webpages = '{"homepage": []}';
             $user-> xownWebsitesList[] = $website;
             R::store($user);
             return $website->id;
@@ -95,20 +95,20 @@ class Model {
         return "SUCCESS";
     }
     
-    public function getComponents($website) {
+    public function getWebsites($website) {
         $user = $this -> getUser();
         $site = R::load('websites',$website);
         if ($user->id === $site->users_id) {
-            return $site->components;
+            return $site->webpages;
         } else {
             return "WRONGUSER";
         }
     }
 
-    public function saveComponents($website, $components) {
+    public function saveWebsites($website, $components) {
         $website = R::load('websites',$website);
         if ($website->users_id === $this->getUser()->id) {
-            $website -> components = $components;
+            $website -> webpages = $components;
             R::store($website);
             return "SUCCESS";
         } else {
