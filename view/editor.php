@@ -60,11 +60,9 @@ div.component:hover {
     die();
   }
   ?>
-  <script>
-  var str = <?php echo json_encode($component); ?>;
-  </script>
-  <!-- Javascript code -->
-  <script src="script-editor.js"></script>
+  <script><?php include 'script-editor.php' ?></script> <!-- For JS that makes PHP calls -->
+  
+  <script src="script-editor.js"></script> <!-- For all other JS -->
     
 
 </head>
