@@ -92,7 +92,7 @@ div.component:hover {
             <i data-feather="image"></i>
           </div>
         </li>
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addImage(event)">
+        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addGrid(event)">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Grid</span>
 
@@ -283,6 +283,44 @@ div.component:hover {
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
             <button type="button" class="btn btn-primary image-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Edit grid -->
+    <div class="modal fade" id="editGridModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Grid</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="hType">Number of columns:</label>
+              <select class="form-control" id="editGridCol">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary grid-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
           </div>
         </div>
       </div>

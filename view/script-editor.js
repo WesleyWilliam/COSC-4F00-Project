@@ -106,6 +106,13 @@ $(document).on("click", ".image-edit-button", function() {
   showChanges();
 });
 
+$(document).on("click", ".grid-edit-button", function() {
+  let columns = $("#editGridCol").val();
+  $("#editGridModal").modal("hide");
+  components[index].columns = columns;
+  showChanges();
+});
+
 $(document).on("click", ".paragraph-edit-button", function() {
   let res = editor.getData();
   $("#editParagraphModal").modal("hide");
@@ -140,7 +147,7 @@ function textComponentOutput(component, index) {
   res +=
     " <div id='" +
     index +
-    "' class='component' onclick ='editText(" +
+    "' class='component text-center mb-4' onclick ='editText(" +
     index +
     ")'  draggable='true' ondragstart='dragText(event)' ><p class=" +
     component.header +
@@ -156,7 +163,7 @@ function imageComponentOutput(component, index) {
   res +=
     "<div id='" +
     index +
-    "' class='component' onclick ='editImage(" +
+    "' class='component mb-4' onclick ='editImage(" +
     index +
     ")'  draggable='true' ondragstart='dragImage(event)' ><img src=\"" +
     component.content +
@@ -179,6 +186,24 @@ function mediaComponentOutput(component, index) {
     "' src=" +
     component.content +
     " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+  return res;
+}
+
+// Function to output grid component html code
+function gridComponentOutput(component, index) {
+  var res = "";
+  res +=
+    "<div id='" +
+    index +
+    "' class='component mb-4' onclick ='editGrid(" +
+    index +
+    ")' draggable='true' ondragstart='dragGrid(event)'><div class='row'>";
+
+  for (x = 0; x < component.columns; x++) {
+    res += "<div class='col bg-info text-white'>column</div>";
+  }
+
+  res += "</div>";
   return res;
 }
 
@@ -228,6 +253,9 @@ function showChanges() {
       case "media":
         $("#editor-user-page").append(mediaComponentOutput(components[i], i));
         break;
+      case "grid":
+        $("#editor-user-page").append(gridComponentOutput(components[i], i));
+        break;
       case "paragraph":
         $("#editor-user-page").append(
           paragraphComponentOutput(components[i], i)
@@ -263,6 +291,10 @@ function dragImage(ev) {
 
 function addGrid(ev) {
   ev.dataTransfer.setData("component", "newgrid");
+}
+
+function dragGrid(ev) {
+  ev.dataTransfer.setData("grid", ev.target.id);
 }
 
 function addParagraph(ev) {
@@ -304,7 +336,7 @@ function drop(ev, target) {
   } else if (component == "newhtml") {
     addHTMLComponent();
   } else if (component == "newgrid") {
-    addHTMLComponent();
+    addGridComponent();
   } else {
     //var data = ev.dataTransfer.getData("component");
     //let temp = JSON.parse(JSON.stringify(components[data]));
@@ -327,6 +359,12 @@ function editImage(i) {
   index = i;
   $("#editImageModal").modal("show");
   $("#addImageURL").val(components[i].content);
+}
+
+function editGrid(i) {
+  index = i;
+  $("#editGridModal").modal("show");
+  $("#editGridCol").val(components[i].columns);
 }
 
 function editParagraph(i) {
