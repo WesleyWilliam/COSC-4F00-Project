@@ -409,7 +409,7 @@ function paragraphComponentOutput(component, index) {
 
 //Function to output HTML component 
 function HTMLComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component' draggable='true'>" + component.content + "</div>";
+  return "<div id='" + index + "' class='component' draggable='true'><iframe id='iframe' srcdoc='" + component.content + "' sandbox></iframe></div>";
 }
 
 //Function to output grid component 
