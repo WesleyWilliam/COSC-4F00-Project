@@ -5,6 +5,8 @@ var components = webpages[currentWebpage];
 var sortedIDs;
 var editor = null;
 var index; //this index is used to keep track of which element is currently selected on the page
+var indexGrid; //this index is used to keep track of which grid element is currently selected on the page
+var preventModal = false;
 
 $('#editor-user-page').hide();
 $(document).ready(function () {
@@ -81,6 +83,10 @@ $(function () {
 
 
   $(document).on("click", ".component", function () {
+    if (preventModal) {
+      preventModal = false;
+      return;
+    }
     console.log("id " + $(this).attr("id"));
     var id = $(this).attr("id");
     var type = components[id].type;
@@ -187,8 +193,8 @@ function addGridComponent() {
   var component = {
     type: "grid",
     content: "",
-    rows: 3,
-    columns: 3
+    columns: 4,
+    gridContent: []
   };
   components.push(component);
   showChanges();
@@ -198,7 +204,7 @@ function addGridComponent() {
 function makeTextComponent() {
   var component = {
     type: "text",
-    header: "display-3",
+    header: "h3",
     content: "Click to edit text"
   };
   return component;
@@ -240,12 +246,11 @@ function makeParagraphComponent() {
   return component;
 }
 
-function makeGridComponent() {
+function makeBlankComponent() { // Used for grid
   var component = {
-    type: "grid",
-    columns: 2,
-    gridComponents: [makeTextComponent(), makeTextComponent()]
-  }
+    type: "blank",
+    content: ""
+  };
   return component;
 }
 
@@ -313,6 +318,14 @@ $(document).on('click', '.text-edit-button', function () {
   showChanges();
 })
 
+$(document).on('click', '.text-edit-grid-button', function () {
+  let text = $('#editTextGrid').val();
+  $('#editTextModalGrid').modal('hide')
+  components[index].gridContent[indexGrid].content = text;
+  components[index].gridContent[indexGrid].header = $("#hTypeGrid").val();
+  showChanges();
+})
+
 $(document).on('click', '.image-edit-button', function () {
   let text = $('#addImageURL').val();
   $('#editImageModal').modal('hide')
@@ -320,6 +333,13 @@ $(document).on('click', '.image-edit-button', function () {
 
   showChanges();
 });
+
+$(document).on('click', '.image-edit-grid-button', function () {
+  let url = $('#addImageURLGrid').val();
+  $('#editImageModalGrid').modal('hide')
+  components[index].gridContent[indexGrid].content = url;
+  showChanges();
+})
 
 $(document).on('click', '.paragraph-edit-button', function () {
   let res = editor.getData();
@@ -353,6 +373,7 @@ $(document).on("click", ".grid-edit-button", function() {
   let columns = $("#editGridCol").val();
   $("#editGridModal").modal("hide");
   components[index].columns = columns;
+  components[index].gridContent = [];
   showChanges();
 });
 
@@ -365,6 +386,88 @@ $(document).on('click','#save-webpage-button',function () {
   $('#addWebpageModal').modal('hide');
 })
 
+
+$(document).on("click", ".text-component-grid", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  index = idBoth[0];
+  indexGrid = idBoth[1];
+
+  $('#editTextModalGrid').modal('show');
+  $('#editTextGrid').val(components[idBoth[0]].gridContent[idBoth[1]].content);
+  $("#hTypeGrid").val(components[idBoth[0]].gridContent[idBoth[1]].header);
+  
+});
+
+$(document).on("click", ".image-component-grid", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  index = idBoth[0];
+  indexGrid = idBoth[1];
+
+  $('#editImageModalGrid').modal('show');
+  $('#addImageURLGrid').val(components[idBoth[0]].gridContent[idBoth[1]].content);
+});
+
+$(document).on("click", ".grid-text-add", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  addTextGrid(idBoth[1], idBoth[0]);
+  
+
+});
+
+$(document).on("click", ".grid-image-add", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  addImageGrid(idBoth[1], idBoth[0]);
+  
+
+});
+
+$(document).on("click", ".grid-blank-add", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  addBlankGrid(idBoth[1], idBoth[0]);
+  
+
+});
+
+
+function addTextGrid(gridIndex, componentIndex) {
+  var comp = components[componentIndex]
+  comp.gridContent[gridIndex] = makeTextComponent()
+  showChanges();
+}
+
+
+function addImageGrid(gridIndex, componentIndex) {
+  var comp = components[componentIndex]
+  comp.gridContent[gridIndex] = makeImageComponent()
+  showChanges();
+}
+
+function addBlankGrid(gridIndex, componentIndex) {
+  var comp = components[componentIndex]
+  comp.gridContent[gridIndex] = makeBlankComponent()
+  showChanges();
+}
+
 //Function to output text component html code
 function textComponentOutput(component, index) {
   var res = "";
@@ -373,10 +476,23 @@ function textComponentOutput(component, index) {
   return res;
 }
 
+function textComponentOutputGrid(component, gridIndex, compIndex) {
+  var res = "";
+  //component.head1 + component.index + component.head2 + component.content + components.tail
+  res += " <div id='" + compIndex + "-" + gridIndex + "' class='mb-4 text-component-grid' ><p class=" + component.header + ">" + component.content + "</p></div>";
+  return res;
+}
+
 // Function to output image component html code
 function imageComponentOutput(component, index) {
   var res = "";
   res += "<div id='" + index + "' class='component mb-4'  draggable='true' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
+  return res;
+}
+
+function imageComponentOutputGrid(component, gridIndex, compIndex) {
+  var res = "";
+  res += "<div  id='" + compIndex + "-" + gridIndex + "' class='mb-4 image-component-grid' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
   return res;
 }
 
@@ -403,12 +519,29 @@ function gridComponentOutput(component, index) {
   res +=
     "<div id='" +
     index +
-    "' class='component mb-4' onclick ='editGrid(" +
-    index +
-    ")' draggable='true' ondragstart='dragGrid(event)'><div class='row'>";
+    "' class='component mb-4' draggable='true' ondragstart='dragGrid(event)'><div class='row'>";
 
-  for (x = 0; x < component.columns; x++) {
-    res += "<div class='col bg-info text-white'>column</div>";
+  for (x = 0; x < component.columns; x++) { // For each column
+    res += "<div class='col bd-highlight d-flex align-items-center'>"
+    if (component.gridContent[x] == null) {
+      res += "<div class=\"dropdown\">" +
+        "<button class=\"btn btn-success dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
+          "Add column item" +
+        "</button>" +
+        "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">" +
+          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-text-add\" href=\"#\">Text</a>" +
+          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-image-add\" href=\"#\">Image</a>" +
+          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-blank-add\" href=\"#\">Blank</a>" +
+        "</div>" +
+      "</div>";
+    } else if (component.gridContent[x].type == "text")
+      res += textComponentOutputGrid(component.gridContent[x], x ,index)
+    else if (component.gridContent[x].type == "image")
+      res += imageComponentOutputGrid(component.gridContent[x], x, index)
+    else if (component.gridContent[x].type == "blank")
+      res += ""
+    
+    res += "</div>";
   }
 
   res += "</div>";
