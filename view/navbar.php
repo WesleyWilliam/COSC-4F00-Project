@@ -1,5 +1,5 @@
 <!-- Nav Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-light static-top" id="top-navbar">
   <div class="container-fluid">
     <a class="navbar-brand" href="welcome.php">
       <img src="img/brix-logo.png" style="width: 100px;" alt="">

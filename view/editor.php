@@ -61,11 +61,9 @@
 
   <!-- Javascript code -->
   <script>
-    
-  <?php include('script.php') ?>
- 
+    <?php include('script.php') ?>
   </script>
-    
+
 
 </head>
 
@@ -133,21 +131,24 @@
 
     <!-- Editor -->
     <div class="col-10">
-      <div class="d-flex justify-content-between mt-2 mr-4 pb-2 border-bottom">
-        <div>
-          <a role="button" href="<?php echo $config['home-file-path']; ?>/view/themes.php" class="btn btn-outline-info mr-2 btn-link">Themes</a>
-          <button type="button" class="btn btn-outline-info mr-2">Help</button>
-          <button type="button" class="btn btn-outline-info">Edit</button>
-          <button type="button" class="btn btn-outline-info add-webpage-button">Add Webpage</button>
-        </div>
-        <div>
-          <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
-          <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save all</button>
-          <button type="button" class="btn btn-outline-info preview-editor">Preview</button>
+      <div id="editor-buttons-bar">
+        <div class="d-flex justify-content-between mt-2 mr-4 pb-2 border-bottom">
+          <div>
+            <a role="button" href="<?php echo $config['home-file-path']; ?>/view/themes.php" class="btn btn-outline-info mr-2 btn-link">Themes</a>
+            <button type="button" class="btn btn-outline-info mr-2">Help</button>
+            <button type="button" class="btn btn-outline-info">Edit</button>
+            <button type="button" class="btn btn-outline-info add-webpage-button">Add Webpage</button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
+            <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save all</button>
+            <button type="button" class="btn btn-outline-info preview-editor">Preview</button>
+          </div>
         </div>
       </div>
+
       <!-- Webpages Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" id="webpage-nav">
         <a class="navbar-brand" href="#">Webpages</a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto" id="webpages-nav-list">
@@ -400,7 +401,7 @@
       </div>
     </div>
 
-  
+
 
     <!-- Edit grid -->
     <div class="modal fade" id="editGridModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
