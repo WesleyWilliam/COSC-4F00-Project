@@ -52,7 +52,6 @@ class Model {
             $user->username = $username;
             $user->password = password_hash($password, PASSWORD_BCRYPT);
             $user->email = $email;
-            $user->level = "Member";
             R::store($user);
             //Store it in the database, Redbean sets up everything
             return "SUCCESS";
@@ -134,6 +133,7 @@ class Model {
     }
 
     public function listAllUsers() {
+        $user = $this -> getUser();
         $users = R::findAll('users');
         return $users;
     }
@@ -181,54 +181,15 @@ class Model {
             $user -> dob = $dob;
             $user -> phonenumber = $phone;
             $user -> email = $email;
-            R::store($user);
+            r::store($user);
             return "SUCCESS";
         } else {
             return 'EMAILEXISTS';
         }
     }
-
-    public function updateUserAccess($level) {
-        $user = $this -> getUser();
-        $user -> level = $level;
-        R::store($user);
-        return "SUCCESS";
-    }
-
-    public function updateAccountPayment($cNum, $eDate, $cvvNum, $Type) {
-        $user = $this -> getUser();
-        $user -> cardnumber = $cNum;
-        $user -> expdate = $eDate;
-        $user -> cvvnum = $cvvNum;
-        $user -> type = $Type;
-        R::store($user);
-        return "SUCCESS";
-    }
-
-    public function updateAccountSubscription($sub) {
-        $user = $this -> getUser();
-        $user -> subcription = $$sub;
-        R::store($user);
-        return "SUCCESS";
-    }
-
-    public function updateAccountPrivacy($vPerm, $blocked) {
-        $user = $this -> getUser();
-        $user -> view_permissions = $vPerm;
-        $user -> blocked = $blocked;
-        R::store($user);
-        return "SUCCESS";
-    }
-
     public function deleteAccount() {
         $user = $this -> getUser();
         R::trash( $user );
-        return "SUCCESS";
-    }
-
-    public function deleteWebsite($website) {
-        $user = $this -> getUser();
-        R::trash('websites',$website);
         return "SUCCESS";
     }
 
