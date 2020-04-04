@@ -115,8 +115,8 @@ $(function () {
         break;
 
       case 'grid':
-        $('#editGridModal').modal('show');
-        $('#gridColumns').val(components[id].columns);
+        $("#editGridModal").modal("show");
+        $("#editGridCol").val(components[id].columns);
         break;
     }
 
@@ -186,18 +186,11 @@ function addParagraphComponent() {
 function addGridComponent() {
   var component = {
     type: "grid",
-    columns: 2,
-    gridComponents: [nil, nil]
-  }
-
-
-
+    content: "",
+    rows: 3,
+    columns: 3
+  };
   components.push(component);
-
-  for (var i = 0; i < component.columns; i++) {
-    components[components.length - 1].gridComponents[i].id = components.length + " gridComponent: " + i;
-  }
-
   showChanges();
 }
 
@@ -356,12 +349,12 @@ $(document).on('click', '.html-edit-button', function () {
   showChanges();
 })
 
-$(document).on('click', '.grid-edit-button', function () {
-  let code = $('#gridColumns').val();
-  $('#editGridModal').modal('hide')
-  components[index].grids = code;
+$(document).on("click", ".grid-edit-button", function() {
+  let columns = $("#editGridCol").val();
+  $("#editGridModal").modal("hide");
+  components[index].columns = columns;
   showChanges();
-})
+});
 
 $(document).on('click','.add-webpage-button',function () {
   $('#addWebpageModal').modal('show');
@@ -384,21 +377,21 @@ $(document).on('click','#save-webpage-button',function () {
 function textComponentOutput(component, index) {
   var res = "";
   //component.head1 + component.index + component.head2 + component.content + components.tail
-  res += " <div id='" + index + "' class='component'  draggable='true' ><p class=" + component.header + ">" + component.content + "</p></div>";
+  res += " <div id='" + index + "' class='component mb-4'  draggable='true' ><p class=" + component.header + ">" + component.content + "</p></div>";
   return res;
 }
 
 // Function to output image component html code
 function imageComponentOutput(component, index) {
   var res = "";
-  res += "<div id='" + index + "' class='component'  draggable='true' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
+  res += "<div id='" + index + "' class='component mb-4'  draggable='true' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
   return res;
 }
 
 // Function to output media component html code
 function mediaComponentOutput(component, index) {
   var res = "";
-  res += "<div id='" + index + "' class='component'  draggable='true' > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+  res += "<div id='" + index + "' class='component mb-4'  draggable='true' > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
   return res;
 }
 
@@ -409,18 +402,21 @@ function paragraphComponentOutput(component, index) {
 
 //Function to output HTML component 
 function HTMLComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component' draggable='true'><iframe id='iframe' srcdoc='" + component.content + "' sandbox></iframe></div>";
+  return "<div id='" + index + "' class='component mb-4' draggable='true'><iframe id='iframe' srcdoc='" + component.content + "' sandbox></iframe></div>";
 }
 
-//Function to output grid component 
+// Function to output grid component html code
 function gridComponentOutput(component, index) {
   var res = "";
-  res += "<div id='" + index + "' class='component'   draggable='true'>";
+  res +=
+    "<div id='" +
+    index +
+    "' class='component mb-4' onclick ='editGrid(" +
+    index +
+    ")' draggable='true' ondragstart='dragGrid(event)'><div class='row'>";
 
-  for (var i = 0; i < component.columns; i++) {
-    res += "<div class='column' ondrop='drop(event, this)' ondragover='allowDrop(event)'>";
-    res += getOutput(component.gridComponents[i], i);
-    res += "</div>";
+  for (x = 0; x < component.columns; x++) {
+    res += "<div class='col bg-info text-white'>column</div>";
   }
 
   res += "</div>";
