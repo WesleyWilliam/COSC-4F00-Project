@@ -58,12 +58,8 @@
     die();
   }
   ?>
-
-  <!-- Javascript code -->
-  <script>
-    <?php include('script.php') ?>
-  </script>
-
+  <script><?php include 'script.php' ?></script> 
+    
 
 </head>
 
@@ -93,8 +89,8 @@
             <i data-feather="image"></i>
           </div>
         </li>
-
         <li id="grid-sidebar-button" class="list-group-item list-group-item-action">
+
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Grid</span>
 
@@ -334,7 +330,9 @@
       </div>
     </div>
 
-    <!-- EditGrid modal -->
+  
+
+    <!-- Edit grid -->
     <div class="modal fade" id="editGridModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -345,21 +343,32 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="gridColumns">Columns:</label>
-                <input type="number" class="form-control" id="gridColumns">
-
-              </div>
-            </form>
+            <div class="form-group">
+              <label for="editGridCol">Number of columns:</label>
+              <select class="form-control" id="editGridCol">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
-              <button type="button" class="btn btn-primary media-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+              <button type="button" class="btn btn-primary grid-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
 
     <!-- Add Webpage Modal -->
     <div class="modal fade" id="addWebpageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
