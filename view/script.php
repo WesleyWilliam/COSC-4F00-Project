@@ -368,15 +368,7 @@ $(document).on('click','.add-webpage-button',function () {
 })
 
 $(document).on('click','#save-webpage-button',function () {
-  webpages[currentWebpage] = components;
-  currentWebpage = $('#webpageText').val();
-  if (typeof webpages[currentWebpage] == 'undefined') {
-    webpages[currentWebpage] = [];
-  }
-  components = webpages[currentWebpage];
-
-  showChanges();
-  
+  changeWebpage($('#webpageText').val());
   $('#addWebpageModal').modal('hide');
 })
 
@@ -510,4 +502,34 @@ $(document).on('click', '.preview-editor', function () {
     myWindow.document.getElementById('main-body').innerHTML = new_page;
   }
 
+})
+
+function changeWebpage(name) {
+  webpages[currentWebpage] = components;
+  currentWebpage = name;
+  if (typeof webpages[currentWebpage] == 'undefined') {
+    webpages[currentWebpage] = [];
+  }
+  components = webpages[currentWebpage];
+  displayWebpages();
+  showChanges();
+}
+
+function displayWebpages() {
+  $('#webpages-nav-list').empty();
+  Object.keys(webpages).forEach(function(value,index) {
+    var isCurrent = false;
+    if (value === currentWebpage) {
+      isCurrent = true;
+    }
+    var htmlText = '<li class="nav-item active"><a onclick="changeWebpage(\'' 
+    + value + '\')" class="nav-link">' + (isCurrent?'<b>':'') + value + (isCurrent?'</b>':'') + '</a></li>';
+    $('#webpages-nav-list').append(htmlText);
+  });
+  var finalEl = '<li class="nav-item active"><a class="nav-link add-webpage-button">+</a></li>'; 
+  $('#webpages-nav-list').append(finalEl);
+}
+
+$('#webpages-nav-list').ready(function(){
+  displayWebpages();
 })
