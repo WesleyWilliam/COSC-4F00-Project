@@ -58,7 +58,13 @@
     die();
   }
   ?>
-  <script><?php include 'script.php' ?></script> 
+
+  <!-- Javascript code -->
+  <script>
+    
+  <?php include('script.php') ?>
+ 
+  </script>
     
 
 </head>
