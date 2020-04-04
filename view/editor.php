@@ -239,6 +239,41 @@
       </div>
     </div>
 
+    <!-- EditText modal for grid-->
+    <div class="modal fade" id="editTextModalGrid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Text</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">Text:</label>
+                <input type="text" class="form-control" id="editTextGrid">
+              </div>
+            </form>
+            <div class="form-group">
+              <label for="hTypeGrid">Select Header:</label>
+              <select class="form-control" id="hTypeGrid">
+                <option class="display-3" value="display-3">Title</option>
+                <option class="h3" value="h3">Subtitle</option>
+                <option class="p" value="p">Body</option>
+                <option class="text-muted" value="text-muted">Muted</option>
+                <option class="text-monospace" value="text-monospace">Monospaced</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary text-edit-grid-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- EditHTML modal -->
     <div class="modal fade" id="editHTMLModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -294,6 +329,35 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
             <button type="button" class="btn btn-primary image-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EditImage modal for grid-->
+    <div class="modal fade" id="editImageModalGrid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="addImageURL">Image URL (optional)</label>
+                <input type="text" class="form-control" id="addImageURLGrid">
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="imageFileGrid" name="file">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary image-edit-grid-button" data-dismiss="modal" aria-label="Close">Save</button>
           </div>
         </div>
       </div>

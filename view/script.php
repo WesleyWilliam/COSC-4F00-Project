@@ -5,6 +5,7 @@ var components = webpages[currentWebpage];
 var sortedIDs;
 var editor = null;
 var index; //this index is used to keep track of which element is currently selected on the page
+var indexGrid; //this index is used to keep track of which grid element is currently selected on the page
 var preventModal = false;
 
 $('#editor-user-page').hide();
@@ -317,6 +318,14 @@ $(document).on('click', '.text-edit-button', function () {
   showChanges();
 })
 
+$(document).on('click', '.text-edit-grid-button', function () {
+  let text = $('#editTextGrid').val();
+  $('#editTextModalGrid').modal('hide')
+  components[index].gridContent[indexGrid].content = text;
+  components[index].gridContent[indexGrid].header = $("#hTypeGrid").val();
+  showChanges();
+})
+
 $(document).on('click', '.image-edit-button', function () {
   let text = $('#addImageURL').val();
   $('#editImageModal').modal('hide')
@@ -324,6 +333,13 @@ $(document).on('click', '.image-edit-button', function () {
 
   showChanges();
 });
+
+$(document).on('click', '.image-edit-grid-button', function () {
+  let url = $('#addImageURLGrid').val();
+  $('#editImageModalGrid').modal('hide')
+  components[index].gridContent[indexGrid].content = url;
+  showChanges();
+})
 
 $(document).on('click', '.paragraph-edit-button', function () {
   let res = editor.getData();
@@ -370,6 +386,34 @@ $(document).on('click','#save-webpage-button',function () {
   $('#addWebpageModal').modal('hide');
 })
 
+
+$(document).on("click", ".text-component-grid", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  index = idBoth[0];
+  indexGrid = idBoth[1];
+
+  $('#editTextModalGrid').modal('show');
+  $('#editTextGrid').val(components[idBoth[0]].gridContent[idBoth[1]].content);
+  $("#hTypeGrid").val(components[idBoth[0]].gridContent[idBoth[1]].header);
+  
+});
+
+$(document).on("click", ".image-component-grid", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  index = idBoth[0];
+  indexGrid = idBoth[1];
+
+  $('#editImageModalGrid').modal('show');
+  $('#addImageURLGrid').val(components[idBoth[0]].gridContent[idBoth[1]].content);
+});
 
 $(document).on("click", ".grid-text-add", function () {
   preventModal = true; // To prevent parent component click listener from triggering.
@@ -432,10 +476,10 @@ function textComponentOutput(component, index) {
   return res;
 }
 
-function textComponentOutputGrid(component, gridIndex) {
+function textComponentOutputGrid(component, gridIndex, compIndex) {
   var res = "";
   //component.head1 + component.index + component.head2 + component.content + components.tail
-  res += " <div class='mb-4' ><p class=" + component.header + ">" + component.content + "</p></div>";
+  res += " <div id='" + compIndex + "-" + gridIndex + "' class='mb-4 text-component-grid' ><p class=" + component.header + ">" + component.content + "</p></div>";
   return res;
 }
 
@@ -446,9 +490,9 @@ function imageComponentOutput(component, index) {
   return res;
 }
 
-function imageComponentOutputGrid(component, index) {
+function imageComponentOutputGrid(component, gridIndex, compIndex) {
   var res = "";
-  res += "<div class='mb-4' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
+  res += "<div  id='" + compIndex + "-" + gridIndex + "' class='mb-4 image-component-grid' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
   return res;
 }
 
@@ -491,9 +535,9 @@ function gridComponentOutput(component, index) {
         "</div>" +
       "</div>";
     } else if (component.gridContent[x].type == "text")
-      res += textComponentOutputGrid(component.gridContent[x], x)
+      res += textComponentOutputGrid(component.gridContent[x], x ,index)
     else if (component.gridContent[x].type == "image")
-      res += imageComponentOutputGrid(component.gridContent[x], x)
+      res += imageComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "blank")
       res += ""
     
