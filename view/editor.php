@@ -9,18 +9,16 @@
 
   <!-- Local CSS -->
   <style>
+    /*components turn yellow on hover. Should be changed to reflect the style of the website, just wanted to add the feature*/
+    div.component:hover {
+      background-color: yellow;
+    }
 
-/*components turn yellow on hover. Should be changed to reflect the style of the website, just wanted to add the feature*/
-div.component:hover {
-  background-color: yellow;
-}
-
-/*used for grid*/
-.column {
-  float: left;
-  width: 50%;
-}
-
+    /*used for grid*/
+    .column {
+      float: left;
+      width: 50%;
+    }
   </style>
 
   <!-- Including bootstrap CSS files -->
@@ -32,8 +30,8 @@ div.component:hover {
   <!-- Jquery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<!-- jquery ui -->
-  <script src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- jquery ui -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
   <!-- CKEditor -->
   <script src="https://cdn.ckeditor.com/ckeditor5/17.0.0/classic/ckeditor.js"></script>
@@ -80,7 +78,7 @@ div.component:hover {
   <div class="row">
 
     <!-- Side bar -->
-    <div class="col" id="sidebar" >
+    <div class="col" id="sidebar">
       <ul class="list-group" id="sidebarList" style="position:fixed; width:15%;">
         <li id="text-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
@@ -97,12 +95,8 @@ div.component:hover {
             <i data-feather="image"></i>
           </div>
         </li>
-<<<<<<< HEAD
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addImage(event)">
+        <li id="grid-sidebar-button" class="list-group-item list-group-item-action">
 
-=======
-        <li class="list-group-item list-group-item-action">
->>>>>>> 0ffbe64b7def9b2c854d31f3d80fdf4a5b2711db
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Grid</span>
 
@@ -120,14 +114,14 @@ div.component:hover {
 
 
 
-        <li id="paragraph-sidebar-button" class="list-group-item list-group-item-action paragraph-sidebar" >
+        <li id="paragraph-sidebar-button" class="list-group-item list-group-item-action paragraph-sidebar">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Rich Text</span>
             <i data-feather="align-left"></i>
           </div>
         </li>
 
-        <li id="html-sidebar-button" li class="list-group-item list-group-item-action html-sidebar" >
+        <li id="html-sidebar-button" li class="list-group-item list-group-item-action html-sidebar">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>HTML Block</span>
             <i data-feather="code"></i>
@@ -144,18 +138,29 @@ div.component:hover {
           <a role="button" href="<?php echo $config['home-file-path']; ?>/view/themes.php" class="btn btn-outline-info mr-2 btn-link">Themes</a>
           <button type="button" class="btn btn-outline-info mr-2">Help</button>
           <button type="button" class="btn btn-outline-info">Edit</button>
-          <button onclick= type="button" class="btn btn-outline-info add-webpage-button">Add Webpage</button>
+          <button type="button" class="btn btn-outline-info add-webpage-button">Add Webpage</button>
         </div>
         <div>
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
-          <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save</button>
+          <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save all</button>
           <button type="button" class="btn btn-outline-info preview-editor">Preview</button>
         </div>
       </div>
+      <!-- Webpages Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Webpages</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto" id="webpages-nav-list">
+            <li class="nav-item active">
+              <!-- <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a> -->
+            </li>
+          </ul>
+        </div>
+      </nav>
       <div class="alert alert-success save-webpage-alert mr-4" role="alert">
         Webpage changes saved.
       </div>
-      <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" >
+      <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page">
       </div>
     </div>
 
@@ -240,6 +245,41 @@ div.component:hover {
       </div>
     </div>
 
+    <!-- EditText modal for grid-->
+    <div class="modal fade" id="editTextModalGrid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Text</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">Text:</label>
+                <input type="text" class="form-control" id="editTextGrid">
+              </div>
+            </form>
+            <div class="form-group">
+              <label for="hTypeGrid">Select Header:</label>
+              <select class="form-control" id="hTypeGrid">
+                <option class="display-3" value="display-3">Title</option>
+                <option class="h3" value="h3">Subtitle</option>
+                <option class="p" value="p">Body</option>
+                <option class="text-muted" value="text-muted">Muted</option>
+                <option class="text-monospace" value="text-monospace">Monospaced</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary text-edit-grid-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- EditHTML modal -->
     <div class="modal fade" id="editHTMLModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -300,6 +340,35 @@ div.component:hover {
       </div>
     </div>
 
+    <!-- EditImage modal for grid-->
+    <div class="modal fade" id="editImageModalGrid" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Image</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="addImageURL">Image URL (optional)</label>
+                <input type="text" class="form-control" id="addImageURLGrid">
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="imageFileGrid" name="file">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary image-edit-grid-button" data-dismiss="modal" aria-label="Close">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- EditMedia modal -->
     <div class="modal fade" id="editMediaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -331,8 +400,10 @@ div.component:hover {
       </div>
     </div>
 
-        <!-- EditGrid modal -->
-        <div class="modal fade" id="editGridModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  
+
+    <!-- Edit grid -->
+    <div class="modal fade" id="editGridModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -342,21 +413,32 @@ div.component:hover {
             </button>
           </div>
           <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="gridColumns">Columns:</label>
-                <input type="number" class="form-control" id="gridColumns">
-
-              </div>
-            </form>
+            <div class="form-group">
+              <label for="editGridCol">Number of columns:</label>
+              <select class="form-control" id="editGridCol">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
-              <button type="button" class="btn btn-primary media-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+              <button type="button" class="btn btn-primary grid-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
 
     <!-- Add Webpage Modal -->
     <div class="modal fade" id="addWebpageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -370,7 +452,7 @@ div.component:hover {
           </div>
           <div class="modal-body">
             <form>
-            <div class="form-group">
+              <div class="form-group">
                 <label for="userText">Webpage:</label>
                 <input type="text" class="form-control" id="webpageText">
               </div>
