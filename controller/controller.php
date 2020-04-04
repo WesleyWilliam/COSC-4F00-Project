@@ -113,46 +113,65 @@ try {
             $res = $model->recoverPassword($_POST['CODE'], $_POST['PWD']);
             if ($res == "CODEWRONG") {
                 $_SESSION['RECOVERMAIL_MSG'] = 'Something went wrong, try again';
-                redirect('view/recover-email.php');
-                die();
             } elseif ($res == "TIMEOUT") {
                 $_SESSION['RECOVERPWD_MSG'] = 'Password timed out, try again';
-                redirect('view/recover-email.php');
-                die();
             } elseif ($res == "SUCCESS") {
                 $_SESSION['LOGIN_MSG'] = 'Enter new password';
                 redirect('view/login.php');
                 die();
             }
+            redirect('view/recover-email.php');
+            die();
         }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'RECOVEREMAIL') {
         $res = $model->recoverCode($_POST['EMAIL']);
         if ($res == "EMAILDNE") {
             $_SESSION['RECOVEREMAIL_MSG'] = "Email does not exist";
-            redirect("view/recover-email.php");
-            die();
         } else {
             $msg = "Click on this link to reset your password\n www.cosc.brocku.ca" . $config['home-file-path'] . '/view/recover-password.php?code=' . strval($res);
             mail($_POST['EMAIL'], "Recovery email for Brix", $msg);
             $_SESSION['RECOVEREMAIL_MSG'] = 'Message sent, check your email and junk folder';
-            redirect('view/recover-email.php');
         }
+        redirect("view/recover-email.php");
+        die();
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPROFILE') {
         if (!empty($_POST['EMAIL'])) {
             $res = $model->updateAccountPreferences($_POST['FNAME'], $_POST['LNAME'], $_POST['DOB'], $_POST['PHONE'], $_POST['EMAIL']);
             if ($res == "SUCCESS") {
                 $_SESSION['UPDATEACCOUNT'] = 'Account has been updated';
-                redirect("view/account.php");
-                die();
             } else {
                 $_SESSION['UPDATEACCOUNT'] = 'Email Unavailable';
-                redirect("view/account.php");
-                die();
             }
         }
+        redirect("view/account.php");
+        die();
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPRIVACY') {
+        $res = $model->updateAccountPrivacy($_POST['VPERM'], $_POST['BLOCKED']);
+        if ($res == "SUCCESS") {
+            $_SESSION['UPDATEACCOUNT'] = 'Account has been updated';
+        } else {
+            $_SESSION['UPDATEACCOUNT'] = 'Update Failed';
+        }
+        redirect("view/account.php");
+        die();
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPAYMENT') {
+        $res = $model->updateAccountPayment($_POST['CNUM'], $_POST['EDATE'], $_POST['CVVNUM'], $_POST['TYPE']);
+        if ($res == "SUCCESS") {
+            $_SESSION['UPDATEACCOUNT'] = 'Account has been updated';
+        } else {
+            $_SESSION['UPDATEACCOUNT'] = 'Update Failed';
+        }
+        redirect("view/account.php");
+        die();
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATESUBSCRIPTIONS') {
+        $res = $model->updateAccountSubscription($_POST['SUB']);
+        if ($res == "SUCCESS") {
+            $_SESSION['UPDATEACCOUNT'] = 'Account has been updated';
+        } else {
+            $_SESSION['UPDATEACCOUNT'] = 'Update Failed';
+        }
+        redirect("view/account.php");
+        die();
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'DELETEACCOUNT') {
         $res = $model->deleteAccount();
         $model->logout();

@@ -52,7 +52,7 @@
             die();
           }
           foreach ($websitelst as $website) {
-            echo '<a class="list-group-item list-group-item-action" onclick="$(\'#webpageOptionsModal\').modal(\'show\')">' . $website->name . ' - ' . $website->user_id . '</a>';
+            echo '<a class="list-group-item list-group-item-action" onclick="$(\'#webpageOptionsModal\').modal(\'show\')">' . $website->name . ' - ' . $website->users_id . '</a>';
           } ?>
         </div>
 
