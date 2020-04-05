@@ -1,4 +1,4 @@
-var str = <?php echo json_encode($component); ?>;
+var str = <? php echo json_encode($component); ?>;
 var webpages = JSON.parse(str);
 var currentWebpage = 'homepage';
 var components = webpages[currentWebpage];
@@ -247,7 +247,7 @@ $(document).on('change', '#imageFile', function () {
 function getComponent() {
   console.log(indexGrid);
   //indexGrid is -1 if it's not in a grid
-  if(indexGrid == -1) {
+  if (indexGrid == -1) {
     return components[index];
   } else {
     return components[index].gridContent[indexGrid];
@@ -303,7 +303,7 @@ $(document).on('click', '.html-edit-button', function () {
   showChanges();
 })
 
-$(document).on("click", ".grid-edit-button", function() {
+$(document).on("click", ".grid-edit-button", function () {
   let columns = $("#editGridCol").val();
   $("#editGridModal").modal("hide");
   components[index].columns = columns;
@@ -311,11 +311,11 @@ $(document).on("click", ".grid-edit-button", function() {
   showChanges();
 });
 
-$(document).on('click','.add-webpage-button',function () {
+$(document).on('click', '.add-webpage-button', function () {
   $('#addWebpageModal').modal('show');
 })
 
-$(document).on('click','#save-webpage-button',function () {
+$(document).on('click', '#save-webpage-button', function () {
   changeWebpage($('#webpageText').val());
   $('#addWebpageModal').modal('hide');
 })
@@ -333,7 +333,7 @@ $(document).on("click", ".text-component-grid", function () {
   $('#editTextModal').modal('show');
   $('#editText').val(components[idBoth[0]].gridContent[idBoth[1]].content);
   $("#hType").val(components[idBoth[0]].gridContent[idBoth[1]].header);
-  
+
 });
 
 $(document).on("click", ".image-component-grid", function () {
@@ -356,7 +356,7 @@ $(document).on("click", ".grid-text-add", function () {
   var idBoth = id.split("-");
 
   addTextGrid(idBoth[1], idBoth[0]);
-  
+
 
 });
 
@@ -367,7 +367,7 @@ $(document).on("click", ".grid-image-add", function () {
   var idBoth = id.split("-");
 
   addImageGrid(idBoth[1], idBoth[0]);
-  
+
 
 });
 
@@ -378,7 +378,7 @@ $(document).on("click", ".grid-blank-add", function () {
   var idBoth = id.split("-");
 
   addBlankGrid(idBoth[1], idBoth[0]);
-  
+
 
 });
 
@@ -460,22 +460,22 @@ function gridComponentOutput(component, index) {
     if (component.gridContent[x] == null) {
       res += "<div class=\"dropdown\">" +
         "<button class=\"btn btn-success dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
-          "Add column item" +
+        "Add column item" +
         "</button>" +
         "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">" +
-          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-text-add\" href=\"#\">Text</a>" +
-          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-image-add\" href=\"#\">Image</a>" +
-          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-blank-add\" href=\"#\">Blank</a>" +
-          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-embed-add\" href=\"#\">Blank</a>" +
+        "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-text-add\" href=\"#\">Text</a>" +
+        "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-image-add\" href=\"#\">Image</a>" +
+        "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-blank-add\" href=\"#\">Blank</a>" +
+        "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-embed-add\" href=\"#\">Blank</a>" +
         "</div>" +
-      "</div>";
+        "</div>";
     } else if (component.gridContent[x].type == "text")
-      res += textComponentOutputGrid(component.gridContent[x], x ,index)
+      res += textComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "image")
       res += imageComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "blank")
       res += ""
-    
+
     res += "</div>";
   }
 
@@ -510,13 +510,10 @@ function getOutput(component, index) {
 // Function to render changes
 function showChanges() {
 
-
-
   $('#editor-user-page').empty()
   if (components.length == 1) {
     $('#editor-user-page').removeClass("invisible").addClass("visible");
   }
-
 
   for (let i = 0; i < components.length; i++) {
     switch (components[i].type) {
@@ -540,11 +537,7 @@ function showChanges() {
         break;
     }
   }
-
 }
-
-
-
 
 function deleteElement() {
   $('#editor-user-page').empty()
@@ -582,19 +575,19 @@ function changeWebpage(name) {
 
 function displayWebpages() {
   $('#webpages-nav-list').empty();
-  Object.keys(webpages).forEach(function(value,index) {
+  Object.keys(webpages).forEach(function (value, index) {
     var isCurrent = false;
     if (value === currentWebpage) {
       isCurrent = true;
     }
-    var htmlText = '<li class="nav-item active"><a onclick="changeWebpage(\'' 
-    + value + '\')" class="nav-link">' + (isCurrent?'<b>':'') + value + (isCurrent?'</b>':'') + '</a></li>';
+    var htmlText = '<li class="nav-item active"><a onclick="changeWebpage(\''
+      + value + '\')" class="nav-link">' + (isCurrent ? '<b>' : '') + value + (isCurrent ? '</b>' : '') + '</a></li>';
     $('#webpages-nav-list').append(htmlText);
   });
-  var finalEl = '<li class="nav-item active"><a class="nav-link add-webpage-button">+</a></li>'; 
+  var finalEl = '<li class="nav-item active"><a class="nav-link add-webpage-button">+</a></li>';
   $('#webpages-nav-list').append(finalEl);
 }
 
-$('#webpages-nav-list').ready(function(){
+$('#webpages-nav-list').ready(function () {
   displayWebpages();
 })
