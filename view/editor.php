@@ -127,6 +127,13 @@
             <i data-feather="code"></i>
           </div>
         </li>
+
+        <li id="button-sidebar-button" li class="list-group-item list-group-item-action button-sidebar">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Button</span>
+            <i data-feather="square"></i>
+          </div>
+        </li>
       </ul>
     </div>
 
@@ -465,6 +472,49 @@
         </div>
       </div>
     </div>
+
+<!-- EditButton modal -->
+<div class="modal fade" id="editButtonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Button</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="editButtonUrl">URL:</label>
+                <input type="text" class="form-control" id="editButtonURL">
+                <label for="editButtonText">Text:</label>
+                <input type="text" class="form-control" id="editButtonText">
+
+                <label for="editButtonStyle">Select Style:</label>
+              <select class="form-control" id="editButtonStyle">
+                <option value="btn btn-primary">Light Blue</option>
+                <option value="btn btn-secondary">Grey</option>
+                <option value="btn btn-success">Green</option>
+                <option value="btn btn-danger">Red</option>
+                <option value="btn btn-warning">Orange</option>
+                <option value="btn btn-info">Turqoise</option>
+                <option value="btn btn-light">White</option>
+                <option value="btn btn-dark">Black</option>
+                <option value="btn btn-link">Link</option>
+              </select>
+
+              </div>
+            </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary button-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <script>
       feather.replace() // For icons

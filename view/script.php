@@ -72,6 +72,9 @@ $(function () {
         case 'grid-sidebar-button':
           addGridComponent();
           break;
+        case 'button-sidebar-button':
+          addButtonComponent();
+          break;
       }
 
 
@@ -123,6 +126,13 @@ $(function () {
       case 'grid':
         $("#editGridModal").modal("show");
         $("#editGridCol").val(components[id].columns);
+        break;
+
+        case 'button':
+        $('#editButtonModal').modal('show');
+        $('#editButtonURL').val(components[id].url);
+        $('#editButtonText').val(components[id].content);
+
         break;
     }
 
@@ -200,6 +210,18 @@ function addGridComponent() {
   showChanges();
 }
 
+function addButtonComponent() {
+  var component = {
+    type: "button",
+    url: "https://youtu.be/8PNO9unyE-I",
+    content: "text here",
+    style: "btn btn-primary"
+
+  };
+  components.push(component);
+  showChanges();
+};
+
 
 function makeTextComponent() {
   var component = {
@@ -254,7 +276,15 @@ function makeBlankComponent() { // Used for grid
   return component;
 }
 
+function makeButtonComponent() {
+  var component = {
+    type: "button",
+    url: "https://youtu.be/8PNO9unyE-I",
+    content: "text here",
 
+  };
+
+};
 
 
 $(document).on('click', '.save-editor-changes', function () { // Save current state of the editor components
@@ -377,6 +407,18 @@ $(document).on("click", ".grid-edit-button", function() {
   showChanges();
 });
 
+$(document).on('click', '.button-edit-button', function () {
+  let url = $('#editButtonURL').val();
+  let content = $('#editButtonText').val();
+  let style = $('#editButtonStyle').val();
+  $('#editButtonModal').modal('hide');
+  components[index].url = url;
+  components[index].content = content;
+  components[index].style = style;
+
+  showChanges();
+})
+
 $(document).on('click','.add-webpage-button',function () {
   $('#addWebpageModal').modal('show');
 })
@@ -402,6 +444,10 @@ $(document).on("click", ".text-component-grid", function () {
   
 });
 
+$(function() {
+            $( ".button-component" ).button();
+         });
+
 $(document).on("click", ".image-component-grid", function () {
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -423,6 +469,8 @@ $(document).on("click", ".grid-text-add", function () {
 
   addTextGrid(idBoth[1], idBoth[0]);
   
+
+
 
 });
 
@@ -447,6 +495,8 @@ $(document).on("click", ".grid-blank-add", function () {
   
 
 });
+
+
 
 
 function addTextGrid(gridIndex, componentIndex) {
@@ -513,6 +563,12 @@ function HTMLComponentOutput(component, index) {
   return "<div id='" + index + "' class='component mb-4' draggable='true'><iframe id='iframe' srcdoc='" + component.content + "' sandbox></iframe></div>";
 }
 
+//Function to output button component 
+function buttonComponentOutput(component, index) {
+  return "<div id='" + index + "' class='component mb-4' draggable='true'><a href='"+component.url+"' target='_blank' class='"+component.style+"'>"+component.content+"</a></div>"
+}
+
+
 // Function to output grid component html code
 function gridComponentOutput(component, index) {
   var res = "";
@@ -567,7 +623,9 @@ function getOutput(component, index) {
       break;
     case 'grid':
       return gridComponentOutput(component, index);
-      ;
+      break;
+      case 'button':
+      return buttonComponentOutput(component, index);
       break;
   }
 }
@@ -602,6 +660,9 @@ function showChanges() {
         break;
       case 'grid':
         $('#editor-user-page').append(gridComponentOutput(components[i], i));
+        break;
+        case 'button':
+        $('#editor-user-page').append(buttonComponentOutput(components[i], i));
         break;
     }
   }
