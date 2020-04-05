@@ -92,6 +92,7 @@ $(function () {
     var type = components[id].type;
 
     index = id;
+    indexGrid = -1;
     switch (type) {
       case 'text':
         $('#editTextModal').modal('show');
@@ -301,7 +302,8 @@ $(document).on('change', '#imageFile', function () {
       console.log(data);
       console.log(error);
       $('#editImageModal').modal('hide')
-      components[index].content = "<?php echo $config['home-file-path']; ?>/" + data;
+      var component = getComponent();
+      component.content = "<?php echo $config['home-file-path']; ?>/" + data;
       showChanges();
       $('input[type="file"]').val(null);
     }
@@ -309,37 +311,36 @@ $(document).on('change', '#imageFile', function () {
 })
 
 
+function getComponent() {
+  console.log(indexGrid);
+  //indexGrid is -1 if it's not in a grid
+  if(indexGrid == -1) {
+    return components[index];
+  } else {
+    return components[index].gridContent[indexGrid];
+  }
+}
+
+
 
 $(document).on('click', '.text-edit-button', function () {
   let text = $('#editText').val();
-  $('#editTextModal').modal('hide')
-  components[index].content = text;
-  components[index].header = $("#hType").val();
-  showChanges();
-})
-
-$(document).on('click', '.text-edit-grid-button', function () {
-  let text = $('#editTextGrid').val();
-  $('#editTextModalGrid').modal('hide')
-  components[index].gridContent[indexGrid].content = text;
-  components[index].gridContent[indexGrid].header = $("#hTypeGrid").val();
+  $('#editTextModal').modal('hide');
+  var component = getComponent();
+  component.content = text;
+  component.header = $("#hType").val();
   showChanges();
 })
 
 $(document).on('click', '.image-edit-button', function () {
   let text = $('#addImageURL').val();
   $('#editImageModal').modal('hide')
-  components[index].content = text;
+  var component = getComponent();
+  component.content = text;
 
   showChanges();
 });
 
-$(document).on('click', '.image-edit-grid-button', function () {
-  let url = $('#addImageURLGrid').val();
-  $('#editImageModalGrid').modal('hide')
-  components[index].gridContent[indexGrid].content = url;
-  showChanges();
-})
 
 $(document).on('click', '.paragraph-edit-button', function () {
   let res = editor.getData();
@@ -396,9 +397,9 @@ $(document).on("click", ".text-component-grid", function () {
   index = idBoth[0];
   indexGrid = idBoth[1];
 
-  $('#editTextModalGrid').modal('show');
-  $('#editTextGrid').val(components[idBoth[0]].gridContent[idBoth[1]].content);
-  $("#hTypeGrid").val(components[idBoth[0]].gridContent[idBoth[1]].header);
+  $('#editTextModal').modal('show');
+  $('#editText').val(components[idBoth[0]].gridContent[idBoth[1]].content);
+  $("#hType").val(components[idBoth[0]].gridContent[idBoth[1]].header);
   
 });
 
@@ -411,8 +412,8 @@ $(document).on("click", ".image-component-grid", function () {
   index = idBoth[0];
   indexGrid = idBoth[1];
 
-  $('#editImageModalGrid').modal('show');
-  $('#addImageURLGrid').val(components[idBoth[0]].gridContent[idBoth[1]].content);
+  $('#editImageModal').modal('show');
+  $('#addImageURL').val(components[idBoth[0]].gridContent[idBoth[1]].content);
 });
 
 $(document).on("click", ".grid-text-add", function () {
@@ -619,6 +620,7 @@ function deleteElement() {
   components.splice(index, 1);
   showChanges();
   index = components.length;
+  indexGrid = -1;
 }
 
 $(document).on('click', '.preview-editor', function () {
