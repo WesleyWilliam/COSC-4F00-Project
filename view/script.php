@@ -5,6 +5,8 @@ var components = webpages[currentWebpage];
 var sortedIDs;
 var editor = null;
 var index; //this index is used to keep track of which element is currently selected on the page
+var indexGrid; //this index is used to keep track of which grid element is currently selected on the page
+var preventModal = false;
 
 $('#editor-user-page').hide();
 $(document).ready(function () {
@@ -81,6 +83,10 @@ $(function () {
 
 
   $(document).on("click", ".component", function () {
+    if (preventModal) {
+      preventModal = false;
+      return;
+    }
     console.log("id " + $(this).attr("id"));
     var id = $(this).attr("id");
     var type = components[id].type;
@@ -115,8 +121,8 @@ $(function () {
         break;
 
       case 'grid':
-        $('#editGridModal').modal('show');
-        $('#gridColumns').val(components[id].columns);
+        $("#editGridModal").modal("show");
+        $("#editGridCol").val(components[id].columns);
         break;
     }
 
@@ -186,18 +192,11 @@ function addParagraphComponent() {
 function addGridComponent() {
   var component = {
     type: "grid",
-    columns: 2,
-    gridComponents: [nil, nil]
-  }
-
-
-
+    content: "",
+    columns: 4,
+    gridContent: []
+  };
   components.push(component);
-
-  for (var i = 0; i < component.columns; i++) {
-    components[components.length - 1].gridComponents[i].id = components.length + " gridComponent: " + i;
-  }
-
   showChanges();
 }
 
@@ -205,7 +204,7 @@ function addGridComponent() {
 function makeTextComponent() {
   var component = {
     type: "text",
-    header: "display-3",
+    header: "h3",
     content: "Click to edit text"
   };
   return component;
@@ -247,12 +246,11 @@ function makeParagraphComponent() {
   return component;
 }
 
-function makeGridComponent() {
+function makeBlankComponent() { // Used for grid
   var component = {
-    type: "grid",
-    columns: 2,
-    gridComponents: [makeTextComponent(), makeTextComponent()]
-  }
+    type: "blank",
+    content: ""
+  };
   return component;
 }
 
@@ -320,6 +318,14 @@ $(document).on('click', '.text-edit-button', function () {
   showChanges();
 })
 
+$(document).on('click', '.text-edit-grid-button', function () {
+  let text = $('#editTextGrid').val();
+  $('#editTextModalGrid').modal('hide')
+  components[index].gridContent[indexGrid].content = text;
+  components[index].gridContent[indexGrid].header = $("#hTypeGrid").val();
+  showChanges();
+})
+
 $(document).on('click', '.image-edit-button', function () {
   let text = $('#addImageURL').val();
   $('#editImageModal').modal('hide')
@@ -327,6 +333,13 @@ $(document).on('click', '.image-edit-button', function () {
 
   showChanges();
 });
+
+$(document).on('click', '.image-edit-grid-button', function () {
+  let url = $('#addImageURLGrid').val();
+  $('#editImageModalGrid').modal('hide')
+  components[index].gridContent[indexGrid].content = url;
+  showChanges();
+})
 
 $(document).on('click', '.paragraph-edit-button', function () {
   let res = editor.getData();
@@ -356,49 +369,137 @@ $(document).on('click', '.html-edit-button', function () {
   showChanges();
 })
 
-$(document).on('click', '.grid-edit-button', function () {
-  let code = $('#gridColumns').val();
-  $('#editGridModal').modal('hide')
-  components[index].grids = code;
+$(document).on("click", ".grid-edit-button", function() {
+  let columns = $("#editGridCol").val();
+  $("#editGridModal").modal("hide");
+  components[index].columns = columns;
+  components[index].gridContent = [];
   showChanges();
-})
+});
 
 $(document).on('click','.add-webpage-button',function () {
   $('#addWebpageModal').modal('show');
 })
 
 $(document).on('click','#save-webpage-button',function () {
-  webpages[currentWebpage] = components;
-  currentWebpage = $('#webpageText').val();
-  if (typeof webpages[currentWebpage] == 'undefined') {
-    webpages[currentWebpage] = [];
-  }
-  components = webpages[currentWebpage];
-
-  showChanges();
-  
+  changeWebpage($('#webpageText').val());
   $('#addWebpageModal').modal('hide');
 })
+
+
+$(document).on("click", ".text-component-grid", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  index = idBoth[0];
+  indexGrid = idBoth[1];
+
+  $('#editTextModalGrid').modal('show');
+  $('#editTextGrid').val(components[idBoth[0]].gridContent[idBoth[1]].content);
+  $("#hTypeGrid").val(components[idBoth[0]].gridContent[idBoth[1]].header);
+  
+});
+
+$(document).on("click", ".image-component-grid", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  index = idBoth[0];
+  indexGrid = idBoth[1];
+
+  $('#editImageModalGrid').modal('show');
+  $('#addImageURLGrid').val(components[idBoth[0]].gridContent[idBoth[1]].content);
+});
+
+$(document).on("click", ".grid-text-add", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  addTextGrid(idBoth[1], idBoth[0]);
+  
+
+});
+
+$(document).on("click", ".grid-image-add", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  addImageGrid(idBoth[1], idBoth[0]);
+  
+
+});
+
+$(document).on("click", ".grid-blank-add", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
+
+  addBlankGrid(idBoth[1], idBoth[0]);
+  
+
+});
+
+
+function addTextGrid(gridIndex, componentIndex) {
+  var comp = components[componentIndex]
+  comp.gridContent[gridIndex] = makeTextComponent()
+  showChanges();
+}
+
+
+function addImageGrid(gridIndex, componentIndex) {
+  var comp = components[componentIndex]
+  comp.gridContent[gridIndex] = makeImageComponent()
+  showChanges();
+}
+
+function addBlankGrid(gridIndex, componentIndex) {
+  var comp = components[componentIndex]
+  comp.gridContent[gridIndex] = makeBlankComponent()
+  showChanges();
+}
 
 //Function to output text component html code
 function textComponentOutput(component, index) {
   var res = "";
   //component.head1 + component.index + component.head2 + component.content + components.tail
-  res += " <div id='" + index + "' class='component'  draggable='true' ><p class=" + component.header + ">" + component.content + "</p></div>";
+  res += " <div id='" + index + "' class='component mb-4'  draggable='true' ><p class=" + component.header + ">" + component.content + "</p></div>";
+  return res;
+}
+
+function textComponentOutputGrid(component, gridIndex, compIndex) {
+  var res = "";
+  //component.head1 + component.index + component.head2 + component.content + components.tail
+  res += " <div id='" + compIndex + "-" + gridIndex + "' class='mb-4 text-component-grid' ><p class=" + component.header + ">" + component.content + "</p></div>";
   return res;
 }
 
 // Function to output image component html code
 function imageComponentOutput(component, index) {
   var res = "";
-  res += "<div id='" + index + "' class='component'  draggable='true' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
+  res += "<div id='" + index + "' class='component mb-4'  draggable='true' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
+  return res;
+}
+
+function imageComponentOutputGrid(component, gridIndex, compIndex) {
+  var res = "";
+  res += "<div  id='" + compIndex + "-" + gridIndex + "' class='mb-4 image-component-grid' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
   return res;
 }
 
 // Function to output media component html code
 function mediaComponentOutput(component, index) {
   var res = "";
-  res += "<div id='" + index + "' class='component'  draggable='true' > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+  res += "<div id='" + index + "' class='component mb-4'  draggable='true' > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
   return res;
 }
 
@@ -409,17 +510,37 @@ function paragraphComponentOutput(component, index) {
 
 //Function to output HTML component 
 function HTMLComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component' draggable='true'><iframe id='iframe' srcdoc='" + component.content + "' sandbox></iframe></div>";
+  return "<div id='" + index + "' class='component mb-4' draggable='true'><iframe id='iframe' srcdoc='" + component.content + "' sandbox></iframe></div>";
 }
 
-//Function to output grid component 
+// Function to output grid component html code
 function gridComponentOutput(component, index) {
   var res = "";
-  res += "<div id='" + index + "' class='component'   draggable='true'>";
+  res +=
+    "<div id='" +
+    index +
+    "' class='component mb-4' draggable='true' ondragstart='dragGrid(event)'><div class='row'>";
 
-  for (var i = 0; i < component.columns; i++) {
-    res += "<div class='column' ondrop='drop(event, this)' ondragover='allowDrop(event)'>";
-    res += getOutput(component.gridComponents[i], i);
+  for (x = 0; x < component.columns; x++) { // For each column
+    res += "<div class='col bd-highlight d-flex align-items-center'>"
+    if (component.gridContent[x] == null) {
+      res += "<div class=\"dropdown\">" +
+        "<button class=\"btn btn-success dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">" +
+          "Add column item" +
+        "</button>" +
+        "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">" +
+          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-text-add\" href=\"#\">Text</a>" +
+          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-image-add\" href=\"#\">Image</a>" +
+          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-blank-add\" href=\"#\">Blank</a>" +
+        "</div>" +
+      "</div>";
+    } else if (component.gridContent[x].type == "text")
+      res += textComponentOutputGrid(component.gridContent[x], x ,index)
+    else if (component.gridContent[x].type == "image")
+      res += imageComponentOutputGrid(component.gridContent[x], x, index)
+    else if (component.gridContent[x].type == "blank")
+      res += ""
+    
     res += "</div>";
   }
 
@@ -510,4 +631,34 @@ $(document).on('click', '.preview-editor', function () {
     myWindow.document.getElementById('main-body').innerHTML = new_page;
   }
 
+})
+
+function changeWebpage(name) {
+  webpages[currentWebpage] = components;
+  currentWebpage = name;
+  if (typeof webpages[currentWebpage] == 'undefined') {
+    webpages[currentWebpage] = [];
+  }
+  components = webpages[currentWebpage];
+  displayWebpages();
+  showChanges();
+}
+
+function displayWebpages() {
+  $('#webpages-nav-list').empty();
+  Object.keys(webpages).forEach(function(value,index) {
+    var isCurrent = false;
+    if (value === currentWebpage) {
+      isCurrent = true;
+    }
+    var htmlText = '<li class="nav-item active"><a onclick="changeWebpage(\'' 
+    + value + '\')" class="nav-link">' + (isCurrent?'<b>':'') + value + (isCurrent?'</b>':'') + '</a></li>';
+    $('#webpages-nav-list').append(htmlText);
+  });
+  var finalEl = '<li class="nav-item active"><a class="nav-link add-webpage-button">+</a></li>'; 
+  $('#webpages-nav-list').append(finalEl);
+}
+
+$('#webpages-nav-list').ready(function(){
+  displayWebpages();
 })
