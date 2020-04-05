@@ -78,12 +78,11 @@ $(function () {
         case 'spacer-sidebar-button':
           component = makeSpacerComponent();
           break;
-        default:
-          console.log("Error, couldn't find id in drop switch statement");
-          break;
       }
-      components.push(component);
-      showChanges();
+      if (component!=null) {
+        components.push(component);
+        showChanges();
+      }
     }
 
   }); //make editor droppable
