@@ -52,30 +52,29 @@ $(function () {
     drop: function (e, ui) {
       var dropped = ui.draggable.attr("id");
 
-
+      var component = null;
       switch (dropped) {
         case 'text-sidebar-button':
-          addTextComponent();
+          component = makeTextComponent();
           break;
         case 'image-sidebar-button':
-          addImageComponent();
+          component = makeImageComponent();
           break;
         case 'embeddedcontent-sidebar-button':
-          addMediaComponent();
+          component = makeMediaComponent();
           break;
         case 'paragraph-sidebar-button':
-          addParagraphComponent();
+          component = makeParagraphComponent();
           break;
         case 'html-sidebar-button':
-          addHTMLComponent();
+          component = makeHTMLComponent();
           break;
         case 'grid-sidebar-button':
-          addGridComponent();
+          component = makeGridComponent();
           break;
       }
-
-
-
+      components.push(component);
+      showChanges();
     }
 
   }); //make editor droppable
@@ -126,81 +125,8 @@ $(function () {
         $("#editGridCol").val(components[id].columns);
         break;
     }
-
-
-
   });
-
-
-
-
 }); //used to make the elements on the page draggable, sortable, droppable, editable
-
-
-
-
-
-function addTextComponent() {
-  var component = {
-    type: "text",
-    header: "display-3",
-    content: "Click to edit text"
-  };
-  components.push(component);
-  showChanges();
-};
-
-function addMediaComponent() {
-  var component = {
-    type: "media",
-    height: 315,
-    width: 560,
-    content: "https://www.youtube.com/embed/8PNO9unyE-I"
-  };
-  components.push(component);
-  showChanges();
-};
-
-function addHTMLComponent() {
-  var component = {
-    type: "html",
-    content: "<p> Click to edit code </p>"
-  };
-  components.push(component);
-  showChanges();
-
-};
-
-function addImageComponent() {
-  var component = {
-    type: "image",
-    header: "img",
-    content: "https://i.imgflip.com/3trije.jpg"
-  };
-  components.push(component);
-  showChanges();
-}
-
-function addParagraphComponent() {
-  var component = {
-    type: "paragraph",
-    html: "<p>Click to edit paragraph<\/p>"
-  }
-  components.push(component);
-  showChanges();
-}
-
-function addGridComponent() {
-  var component = {
-    type: "grid",
-    content: "",
-    columns: 4,
-    gridContent: []
-  };
-  components.push(component);
-  showChanges();
-}
-
 
 function makeTextComponent() {
   var component = {
@@ -255,8 +181,15 @@ function makeBlankComponent() { // Used for grid
   return component;
 }
 
-
-
+function makeGridComponent() {
+  var component = {
+    type: "grid",
+    content: "",
+    columns: 4,
+    gridContent: []
+  };
+  return component;
+}
 
 $(document).on('click', '.save-editor-changes', function () { // Save current state of the editor components
   webpages[currentWebpage] = components;
@@ -533,6 +466,7 @@ function gridComponentOutput(component, index) {
           "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-text-add\" href=\"#\">Text</a>" +
           "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-image-add\" href=\"#\">Image</a>" +
           "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-blank-add\" href=\"#\">Blank</a>" +
+          "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-embed-add\" href=\"#\">Blank</a>" +
         "</div>" +
       "</div>";
     } else if (component.gridContent[x].type == "text")
