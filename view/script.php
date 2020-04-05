@@ -78,6 +78,9 @@ $(function () {
         case 'spacer-sidebar-button':
           component = makeSpacerComponent();
           break;
+          case 'divider-sidebar-button':
+          component = makeDividerComponent();
+          break;
       }
       if (component!=null) {
         components.push(component);
@@ -142,6 +145,10 @@ $(function () {
         case 'spacer':
         $('#editSpacerModal').modal('show');
         $('#editSpacerHeight').val(components[id].height);
+        break;
+
+        case 'divider':
+        $('#editDividerModal').modal('show');
         break;
 
         
@@ -226,6 +233,13 @@ function makeSpacerComponent() {
     type: "spacer",
     height: "100"
 
+  };
+  return component;
+};
+
+function makeDividerComponent() {
+  var component = {
+    type: "divider"
   };
   return component;
 };
@@ -370,6 +384,11 @@ $(document).on('click', '.spacer-edit-button', function () {
   showChanges();
 })
 
+$(document).on('click', '.divider-edit-button', function () {
+  $('#editDividerModal').modal('hide');
+  showChanges();
+})
+
 $(document).on('click', '#save-webpage-button', function () {
   changeWebpage($('#webpageText').val());
   $('#addWebpageModal').modal('hide');
@@ -478,7 +497,7 @@ function addEmbedGrid(gridIndex, componentIndex) {
 
 //Function to output text component html code
 function textComponentOutput(component, index) {
-  return " <div id='" + index + "' class='component mb-4'  draggable='true' ><p class=" + component.header + ">" + component.content + "</p></div>";
+  return " <div id='" + index + "' class='component mb-4'   ><p class=" + component.header + ">" + component.content + "</p></div>";
 }
 
 function textComponentOutputGrid(component, gridIndex, compIndex) {
@@ -487,7 +506,7 @@ function textComponentOutputGrid(component, gridIndex, compIndex) {
 
 // Function to output image component html code
 function imageComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4'  draggable='true' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
+  return "<div id='" + index + "' class='component mb-4'   ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
 }
 
 function imageComponentOutputGrid(component, gridIndex, compIndex) {
@@ -496,7 +515,7 @@ function imageComponentOutputGrid(component, gridIndex, compIndex) {
 
 // Function to output media component html code
 function mediaComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4'  draggable='true' > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+  return "<div id='" + index + "' class='component mb-4'   > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
 }
 
 function mediaComponentOutputGrid(component, gridIndex, compIndex) {
@@ -505,24 +524,28 @@ function mediaComponentOutputGrid(component, gridIndex, compIndex) {
 
 //Function to output paragraph component html code
 function paragraphComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component' draggable='true'>" + component.html + "</div>";
+  return "<div id='" + index + "' class='component' >" + component.html + "</div>";
 }
 
 //Function to output HTML component 
 function HTMLComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4' draggable='true'><iframe id='iframe' srcdoc='" + component.content + "' sandbox></iframe></div>";
+  return "<div id='" + index + "' class='component mb-4' ><iframe id='iframe' srcdoc='" + component.content + "' sandbox></iframe></div>";
 }
 
 //Function to output button component 
 function buttonComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4' draggable='true'><a href='"+component.url+"' target='_blank' class='"+component.style+"'>"+component.content+"</a></div>"
+  return "<div id='" + index + "' class='component mb-4' ><a href='"+component.url+"' target='_blank' class='"+component.style+"'>"+component.content+"</a></div>"
 }
 
 //Function to output spacer component 
 function spacerComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4' draggable='true' style='height:"+component.height+"px'>&nbsp;</div>"
+  return "<div id='" + index + "' class='component mb-4' style='height:"+component.height+"px'>&nbsp;</div>"
 }
 
+//Function to output divider component 
+function dividerComponentOutput(component, index) {
+  return "<div id='" + index + "' class='component mb-4'style='height:100px'><hr></div>"
+}
 
 // Function to output grid component html code
 function gridComponentOutput(component, index) {
@@ -588,6 +611,9 @@ function getOutput(component, index) {
       case 'spacer':
       return spacerComponentOutput(component, index);
       break;
+      case 'divider':
+      return dividerComponentOutput(component, index);
+      break;
   }
 }
 
@@ -624,6 +650,9 @@ function showChanges() {
         break;
       case 'spacer':
         $('#editor-user-page').append(spacerComponentOutput(components[i], i));
+        break;
+        case 'divider':
+        $('#editor-user-page').append(dividerComponentOutput(components[i], i));
         break;
     }
   }
