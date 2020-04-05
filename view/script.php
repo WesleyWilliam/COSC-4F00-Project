@@ -75,8 +75,11 @@ $(function () {
         case 'button-sidebar-button':
           component = makeButtonComponent();
           break;
-          case 'spacer-sidebar-button':
+        case 'spacer-sidebar-button':
           component = makeSpacerComponent();
+          break;
+        default:
+          console.log("Error, couldn't find id in drop switch statement");
           break;
       }
       components.push(component);
@@ -216,7 +219,7 @@ function makeButtonComponent() {
     content: "text here",
 
   };
-
+  return component;
 };
 
 function makeSpacerComponent() {
@@ -225,7 +228,7 @@ function makeSpacerComponent() {
     height: "100"
 
   };
-
+  return component;
 };
 
 
@@ -617,11 +620,10 @@ function showChanges() {
       case 'grid':
         $('#editor-user-page').append(gridComponentOutput(components[i], i));
         break;
-        case 'button':
+      case 'button':
         $('#editor-user-page').append(buttonComponentOutput(components[i], i));
         break;
-
-        case 'spacer':
+      case 'spacer':
         $('#editor-user-page').append(spacerComponentOutput(components[i], i));
         break;
     }
