@@ -138,8 +138,15 @@
 
         <li id="spacer-sidebar-button" li class="list-group-item list-group-item-action spacer-sidebar">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-            <span>spacer</span>
+            <span>Spacer</span>
             <i data-feather="maximize"></i>
+          </div>
+        </li>
+
+        <li id="divider-sidebar-button" li class="list-group-item list-group-item-action divider-sidebar">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Divider</span>
+            <i data-feather="minus"></i>
           </div>
         </li>
 
@@ -489,6 +496,26 @@
       </div>
     </div>
 
+<!-- editDivider modal -->
+<div class="modal fade" id="editDividerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Spacer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary divider-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script>
       feather.replace() // For icons
