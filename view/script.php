@@ -75,6 +75,9 @@ $(function () {
         case 'button-sidebar-button':
           addButtonComponent();
           break;
+          case 'spacer-sidebar-button':
+          addSpacerComponent();
+          break;
       }
 
 
@@ -132,8 +135,14 @@ $(function () {
         $('#editButtonModal').modal('show');
         $('#editButtonURL').val(components[id].url);
         $('#editButtonText').val(components[id].content);
-
         break;
+
+        case 'spacer':
+        $('#editSpacerModal').modal('show');
+        $('#editSpacerHeight').val(components[id].height);
+        break;
+
+        
     }
 
 
@@ -222,6 +231,19 @@ function addButtonComponent() {
   showChanges();
 };
 
+function addSpacerComponent() {
+  var component = {
+    type: "spacer",
+    height: "100"
+
+  };
+  components.push(component);
+  showChanges();
+};
+
+
+//make component functions
+
 
 function makeTextComponent() {
   var component = {
@@ -285,6 +307,17 @@ function makeButtonComponent() {
   };
 
 };
+
+function makeSpacerComponent() {
+  var component = {
+    type: "spacer",
+    height: "100"
+
+  };
+
+};
+
+
 
 
 $(document).on('click', '.save-editor-changes', function () { // Save current state of the editor components
@@ -419,6 +452,14 @@ $(document).on('click', '.button-edit-button', function () {
   showChanges();
 })
 
+$(document).on('click', '.spacer-edit-button', function () {
+  let height = $('#editSpacerHeight').val();
+  $('#editSpacerModal').modal('hide');
+  components[index].height = height;
+
+  showChanges();
+})
+
 $(document).on('click','.add-webpage-button',function () {
   $('#addWebpageModal').modal('show');
 })
@@ -444,9 +485,7 @@ $(document).on("click", ".text-component-grid", function () {
   
 });
 
-$(function() {
-            $( ".button-component" ).button();
-         });
+
 
 $(document).on("click", ".image-component-grid", function () {
   preventModal = true; // To prevent parent component click listener from triggering.
@@ -549,7 +588,7 @@ function imageComponentOutputGrid(component, gridIndex, compIndex) {
 // Function to output media component html code
 function mediaComponentOutput(component, index) {
   var res = "";
-  res += "<div id='" + index + "' class='component mb-4'  draggable='true' > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+  res += "<div id='" + index + "' class='component mb-4'  draggable='true' > <iframe width='" + component.width + "' padding='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
   return res;
 }
 
@@ -566,6 +605,11 @@ function HTMLComponentOutput(component, index) {
 //Function to output button component 
 function buttonComponentOutput(component, index) {
   return "<div id='" + index + "' class='component mb-4' draggable='true'><a href='"+component.url+"' target='_blank' class='"+component.style+"'>"+component.content+"</a></div>"
+}
+
+//Function to output spacer component 
+function spacerComponentOutput(component, index) {
+  return "<div id='" + index + "' class='component mb-4' draggable='true' style='height:"+component.height+"px'>&nbsp;</div>"
 }
 
 
@@ -627,6 +671,9 @@ function getOutput(component, index) {
       case 'button':
       return buttonComponentOutput(component, index);
       break;
+      case 'spacer':
+      return spacerComponentOutput(component, index);
+      break;
   }
 }
 
@@ -663,6 +710,10 @@ function showChanges() {
         break;
         case 'button':
         $('#editor-user-page').append(buttonComponentOutput(components[i], i));
+        break;
+
+        case 'spacer':
+        $('#editor-user-page').append(spacerComponentOutput(components[i], i));
         break;
     }
   }
