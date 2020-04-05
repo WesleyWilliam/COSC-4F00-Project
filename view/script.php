@@ -72,6 +72,15 @@ $(function () {
         case 'grid-sidebar-button':
           component = makeGridComponent();
           break;
+        case 'button-sidebar-button':
+          component = makeButtonComponent();
+          break;
+        case 'spacer-sidebar-button':
+          component = makeSpacerComponent();
+          break;
+        default:
+          console.log("Error, couldn't find id in drop switch statement");
+          break;
       }
       components.push(component);
       showChanges();
@@ -124,6 +133,19 @@ $(function () {
         $("#editGridModal").modal("show");
         $("#editGridCol").val(components[id].columns);
         break;
+
+        case 'button':
+        $('#editButtonModal').modal('show');
+        $('#editButtonURL').val(components[id].url);
+        $('#editButtonText').val(components[id].content);
+        break;
+
+        case 'spacer':
+        $('#editSpacerModal').modal('show');
+        $('#editSpacerHeight').val(components[id].height);
+        break;
+
+        
     }
   });
 }); //used to make the elements on the page draggable, sortable, droppable, editable
@@ -190,6 +212,27 @@ function makeGridComponent() {
   };
   return component;
 }
+function makeButtonComponent() {
+  var component = {
+    type: "button",
+    url: "https://youtu.be/8PNO9unyE-I",
+    content: "text here",
+
+  };
+  return component;
+};
+
+function makeSpacerComponent() {
+  var component = {
+    type: "spacer",
+    height: "100"
+
+  };
+  return component;
+};
+
+
+
 
 $(document).on('click', '.save-editor-changes', function () { // Save current state of the editor components
   webpages[currentWebpage] = components;
@@ -308,6 +351,26 @@ $(document).on('click', '.add-webpage-button', function () {
   $('#addWebpageModal').modal('show');
 })
 
+$(document).on('click', '.button-edit-button', function () {
+  let url = $('#editButtonURL').val();
+  let content = $('#editButtonText').val();
+  let style = $('#editButtonStyle').val();
+  $('#editButtonModal').modal('hide');
+  components[index].url = url;
+  components[index].content = content;
+  components[index].style = style;
+
+  showChanges();
+})
+
+$(document).on('click', '.spacer-edit-button', function () {
+  let height = $('#editSpacerHeight').val();
+  $('#editSpacerModal').modal('hide');
+  components[index].height = height;
+
+  showChanges();
+})
+
 $(document).on('click', '#save-webpage-button', function () {
   changeWebpage($('#webpageText').val());
   $('#addWebpageModal').modal('hide');
@@ -329,6 +392,8 @@ $(document).on("click", ".text-component-grid", function () {
 
 });
 
+
+
 $(document).on("click", ".image-component-grid", function () {
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -349,6 +414,8 @@ $(document).on("click", ".grid-text-add", function () {
   var idBoth = id.split("-");
 
   addTextGrid(idBoth[1], idBoth[0]);
+
+
 
 
 });
@@ -381,6 +448,8 @@ $(document).on("click", ".grid-embed-add", function () {
 
   addEmbedGrid(idBoth[1], idBoth[0]);
 });
+
+
 
 
 function addTextGrid(gridIndex, componentIndex) {
@@ -445,6 +514,17 @@ function HTMLComponentOutput(component, index) {
   return "<div id='" + index + "' class='component mb-4' draggable='true'><iframe id='iframe' srcdoc='" + component.content + "' sandbox></iframe></div>";
 }
 
+//Function to output button component 
+function buttonComponentOutput(component, index) {
+  return "<div id='" + index + "' class='component mb-4' draggable='true'><a href='"+component.url+"' target='_blank' class='"+component.style+"'>"+component.content+"</a></div>"
+}
+
+//Function to output spacer component 
+function spacerComponentOutput(component, index) {
+  return "<div id='" + index + "' class='component mb-4' draggable='true' style='height:"+component.height+"px'>&nbsp;</div>"
+}
+
+
 // Function to output grid component html code
 function gridComponentOutput(component, index) {
   var res = "";
@@ -502,7 +582,12 @@ function getOutput(component, index) {
       break;
     case 'grid':
       return gridComponentOutput(component, index);
-      ;
+      break;
+      case 'button':
+      return buttonComponentOutput(component, index);
+      break;
+      case 'spacer':
+      return spacerComponentOutput(component, index);
       break;
   }
 }
@@ -534,6 +619,12 @@ function showChanges() {
         break;
       case 'grid':
         $('#editor-user-page').append(gridComponentOutput(components[i], i));
+        break;
+      case 'button':
+        $('#editor-user-page').append(buttonComponentOutput(components[i], i));
+        break;
+      case 'spacer':
+        $('#editor-user-page').append(spacerComponentOutput(components[i], i));
         break;
     }
   }
