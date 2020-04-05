@@ -368,9 +368,6 @@ $(document).on('click', '.spacer-edit-button', function () {
   showChanges();
 })
 
-$(document).on('click','.add-webpage-button',function () {
-
-
 $(document).on('click', '#save-webpage-button', function () {
   changeWebpage($('#webpageText').val());
   $('#addWebpageModal').modal('hide');
