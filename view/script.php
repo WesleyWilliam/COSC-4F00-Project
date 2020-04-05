@@ -1,4 +1,4 @@
-var str = <? php echo json_encode($component); ?>;
+var str = <?php echo json_encode($component); ?>;
 var webpages = JSON.parse(str);
 var currentWebpage = 'homepage';
 var components = webpages[currentWebpage];
@@ -212,14 +212,9 @@ $(document).on('click', '.save-editor-changes', function () { // Save current st
   }, 5000);
 })
 
-
-
 $(document).on('change', '#imageFile', function () {
   var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php";
   var properties = document.getElementById("imageFile").files[0];
-  //  $.post(url,{COMMAND: 'PIC_UPLOAD'},function(data,status) {
-  //    console.log(data);
-  //  });
   var form_data = new FormData();
   form_data.append("file", properties);
   form_data.append("COMMAND", "PIC_UPLOAD");
@@ -243,7 +238,7 @@ $(document).on('change', '#imageFile', function () {
   });
 })
 
-
+//Gets the component from the index and indexGrid global variables
 function getComponent() {
   console.log(indexGrid);
   //indexGrid is -1 if it's not in a grid
@@ -253,8 +248,6 @@ function getComponent() {
     return components[index].gridContent[indexGrid];
   }
 }
-
-
 
 $(document).on('click', '.text-edit-button', function () {
   let text = $('#editText').val();
@@ -378,8 +371,15 @@ $(document).on("click", ".grid-blank-add", function () {
   var idBoth = id.split("-");
 
   addBlankGrid(idBoth[1], idBoth[0]);
+});
 
+$(document).on("click", ".grid-embed-add", function () {
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
 
+  addEmbedGrid(idBoth[1], idBoth[0]);
 });
 
 
@@ -402,39 +402,37 @@ function addBlankGrid(gridIndex, componentIndex) {
   showChanges();
 }
 
+function addEmbedGrid(gridIndex, componentIndex) {
+  var comp = components[componentIndex]
+  comp.gridContent[gridIndex] = makeMediaComponent()
+  showChanges();
+}
+
 //Function to output text component html code
 function textComponentOutput(component, index) {
-  var res = "";
-  //component.head1 + component.index + component.head2 + component.content + components.tail
-  res += " <div id='" + index + "' class='component mb-4'  draggable='true' ><p class=" + component.header + ">" + component.content + "</p></div>";
-  return res;
+  return " <div id='" + index + "' class='component mb-4'  draggable='true' ><p class=" + component.header + ">" + component.content + "</p></div>";
 }
 
 function textComponentOutputGrid(component, gridIndex, compIndex) {
-  var res = "";
-  //component.head1 + component.index + component.head2 + component.content + components.tail
-  res += " <div id='" + compIndex + "-" + gridIndex + "' class='mb-4 text-component-grid' ><p class=" + component.header + ">" + component.content + "</p></div>";
-  return res;
+  return " <div id='" + compIndex + "-" + gridIndex + "' class='mb-4 text-component-grid' ><p class=" + component.header + ">" + component.content + "</p></div>";
 }
 
 // Function to output image component html code
 function imageComponentOutput(component, index) {
-  var res = "";
-  res += "<div id='" + index + "' class='component mb-4'  draggable='true' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
-  return res;
+  return "<div id='" + index + "' class='component mb-4'  draggable='true' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
 }
 
 function imageComponentOutputGrid(component, gridIndex, compIndex) {
-  var res = "";
-  res += "<div  id='" + compIndex + "-" + gridIndex + "' class='mb-4 image-component-grid' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
-  return res;
+  return "<div  id='" + compIndex + "-" + gridIndex + "' class='mb-4 image-component-grid' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
 }
 
 // Function to output media component html code
 function mediaComponentOutput(component, index) {
-  var res = "";
-  res += "<div id='" + index + "' class='component mb-4'  draggable='true' > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
-  return res;
+  return "<div id='" + index + "' class='component mb-4'  draggable='true' > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+}
+
+function mediaComponentOutputGrid(component, gridIndex, compIndex) {
+  return "<div id='" + compIndex + "-" + gridIndex + "' class='component mb-4'  draggable='true' > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
 }
 
 //Function to output paragraph component html code
@@ -466,15 +464,17 @@ function gridComponentOutput(component, index) {
         "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-text-add\" href=\"#\">Text</a>" +
         "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-image-add\" href=\"#\">Image</a>" +
         "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-blank-add\" href=\"#\">Blank</a>" +
-        "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-embed-add\" href=\"#\">Blank</a>" +
+        "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-embed-add\" href=\"#\">Media</a>" +
         "</div>" +
         "</div>";
-    } else if (component.gridContent[x].type == "text")
+    } else if (component.gridContent[x].type == "text") 
       res += textComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "image")
       res += imageComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "blank")
       res += ""
+    else if (component.gridContent[x].type == "media")
+      res += mediaComponentOutputGrid(component.gridContent[x],x,index);
 
     res += "</div>";
   }
