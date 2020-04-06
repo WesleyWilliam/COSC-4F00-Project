@@ -79,7 +79,7 @@ class Model {
   
     public function addWebsite($name) {
         $user = $this -> getUser();
-        if (R::findOne('websites',' name like ? AND user_id = ? ',[$name,$user->id])) {
+        if (R::findOne('websites',' name like ? AND users_id = ? ',[$name,$user->id])) {
             return "ALREADYEXISTS";
         } else {
             $website = R::dispense('websites');
@@ -226,9 +226,34 @@ class Model {
         return "SUCCESS";
     }
 
-    public function deleteWebsite($website) {
+    public function deleteUser($user) {
+        R::trash( $user );
+        return "SUCCESS";
+    }
+
+    public function deleteWebsite($website_id) {
         $user = $this -> getUser();
-        R::trash('websites',$website);
+        unset($user-> xownWebsitesList[$website_id]);
+        R::store($user);
+        return "SUCCESS";
+        $site = R::load('websites',$website_id);
+         if ($user->id === $site->users_id) {
+             R::trash('websites',$website_id);
+             return "SUCCESS";
+         } else {
+             return "ERROR";
+         }
+    }
+
+    public function deleteAllUserWebsites() {
+        $user = $this -> getUser();
+        $user-> xownWebsitesList = array();
+        R::store($user);
+        return "SUCCESS";
+    }
+
+    public function deleteAllWebsites() {
+        R::wipe('websites');
         return "SUCCESS";
     }
 

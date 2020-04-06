@@ -27,8 +27,14 @@ try {
             redirect("view/login.php");
             die();
         } else {
-            redirect("view/website-name.php");
-            die();
+            $user = $model -> getUser();
+            if ($user->$level === "Admin"){
+                redirect("view/admin-portal.php");
+                die();
+            } else {
+                redirect("view/website-name.php");
+                die();
+            }
         }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SIGNUP') {
         if (empty($_POST['UNAME']) || strlen($_POST['UNAME']) < 4 || strpos($_POST['UNAME'], ' ') !== false) {
@@ -79,13 +85,14 @@ try {
             }
         }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_WIZARD') {
-        $_SESSION['WEBSITE_MSG'] = '';
         if (strlen($_POST['WEBSITE']) < 3) {
+            $_SESSION['WEBSITENAME'] = "The name of the website needs to have more than three characters";
             redirect("view/website-name.php");
             die();
         } else {
             $id = $model->addWebsite($_POST['WEBSITE']);
             if ($id == "ALREADYEXISTS") {
+                $_SESSION['WEBSITENAME'] = "This website already exists!";
                 redirect("view/website-name.php");
                 die();
             } else {
@@ -220,6 +227,11 @@ try {
     } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND']=='UNIQUE') {
         $model->setUniques();
         echo "Unique set in tables";
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_DELETE') {
+        $res = $model->deleteWebsite($_POST['SITE']);
+        $_SESSION['WEBSITENAME'] = "Website was succesfully deleted";
+        redirect("view/website-name.php");
+        die();
     }
 } catch (SessionNotFound $e) {
     redirect('view/login.php');

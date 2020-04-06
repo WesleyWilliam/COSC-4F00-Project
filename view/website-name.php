@@ -27,15 +27,6 @@
   include 'navbar.php' 
   ?>
 
-  <!-- If there is a message, show message to user -->
-  <?php
-  if (!empty($_SESSION['WEBSITE_MSG'])) {
-    echo "<div class=\"alert alert-warning\" role=\"alert\">";
-    echo $_SESSION['WEBSITE_MSG'];
-    echo "</div>";
-  }
-  ?>
-
   <?php
   try {
     $websitelst = $model->listWebsites();
@@ -46,16 +37,26 @@
   ?>
 
   <!-- Banner -->
-  <div class="jumbotron jumbotron-fluid">
+  <div class="jumbotron jumbotron-fluid mb-0" >
       <div class="container" id="banner-text">
           <h1 class="display-4">Your Websites</h1>
       </div>
   </div>
 
+  <!-- If there is a message, show message to user -->
+    <?php
+  if (!empty($_SESSION['WEBSITENAME'])) {
+      echo "<div class=\"alert alert-warning\" role=\"alert\">";
+      echo $_SESSION['WEBSITENAME'];
+      echo "</div>";
+      $_SESSION['WEBSITENAME'] = '';
+  } 
+  ?>
 
+  <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
   <div class="mt-4 pb-3">
     <div class="container" style="margin-top:80px; margin-bottom:50px;">
-      <table class="table table-hover" style="cursor: pointer;">
+      <table class="table table-hover">
         <thead>
             <tr>
             <th scope="col">Website Name</th>
@@ -66,14 +67,13 @@
         <?php
             if (!empty($websitelst))
               foreach ($websitelst as $website) {
-                echo '<tr><td data-href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . '">' . $website->name . '</td>';
-                echo "<td class='text-right'><a class='btn btn-danger' data-toggle='modal' data-target='#del-feedback' href=''>Delete</a></td></tr>";
+                echo '<tr><td style="cursor: pointer;" data-href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . '">www.' . $website->name . '.com</td>';
+                echo '<td class="text-right"><button type="button" onclick="StoreWebID('. $website->id .')" class="btn btn-danger" name="web" value="' . $website->id . '" data-toggle="modal" data-target="#del-feedback">Delete</button></td></tr>';
               }
             else{ 
-              echo "<tr><td data-href=''>You have no websites.</td>";
+              echo "<tr><td data-href=''>You have no websites! Please click the plus button to create a new website.</td>";
               echo "<td></td></tr>";
             }
-
           ?>
         </tbody>
       </table>
@@ -99,14 +99,16 @@
           <div class="container mt-3">
             <p style="text-align:center; margin-bottom:40px;">Are you sure you want to delete your website?</p>
             <div class="modal-footer">
-                <a type="button" class="btn btn-outline-danger" href="" action="<?php echo $config['home-file-path']; ?>/controller/controller.php" method="POST" data-dismiss="modal">Delete</a>
-                <a type="button" class="btn btn-secondary" href="" data-dismiss="modal">Close</a>
+              <button name="SITE" type="Submit" value="fish" id="deletefinal" class="btn btn-outline-danger">Delete</button>
+              <input type="hidden" name="COMMAND" value="WEBSITE_DELETE">
+              <a type="button" class="btn btn-secondary" href="" data-dismiss="modal">Close</a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+          </form> 
 
 
   <div class="modal fade" id="new-feedback" tabindex="-1" role="dialog" aria-hidden="true">
@@ -117,12 +119,21 @@
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true" style="color:white;">&times;</span>
         </div>
+          <!-- If there is a message, show message to user -->
+          <?php
+          if (!empty($_SESSION['WEBSITENAME'])) {
+              echo "<div class=\"alert alert-warning\" role=\"alert\">";
+              echo $_SESSION['WEBSITENAME'];
+              echo "</div>";
+              $_SESSION['WEBSITENAME'] = '';
+          } 
+          ?>
         <div class="modal-body" style="margin-bottom:30px;">
           <div class="container">
             <h4 class="text-center mt-5 text-muted">Enter the name of your website:</h4>
             <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
               <div class="form-group form-group-lg">
-                <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z_]{3}[A-Za-z_]*$" title="3 characters, only a-z and underline">
+                <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters">
               </div>
               <div class="form-group" style="text-align:center">
                 <button class="btn btn-outline-primary" type="Submit">Submit</button>
@@ -157,6 +168,11 @@
                 });
             });
         });
+
+function StoreWebID(f) {
+    $("#deletefinal").val(f);
+  }
+
     </script>
 </body>
 
