@@ -236,13 +236,6 @@ class Model {
         unset($user-> xownWebsitesList[$website_id]);
         R::store($user);
         return "SUCCESS";
-        $site = R::load('websites',$website_id);
-         if ($user->id === $site->users_id) {
-             R::trash('websites',$website_id);
-             return "SUCCESS";
-         } else {
-             return "ERROR";
-         }
     }
 
     public function deleteAllUserWebsites() {

@@ -67,7 +67,7 @@
         <?php
             if (!empty($websitelst))
               foreach ($websitelst as $website) {
-                echo '<tr><td style="cursor: pointer;" data-href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . '">www.' . $website->name . '.com</td>';
+                echo '<tr><td style="cursor: pointer;" data-href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . '">' . $website->name . '</td>';
                 echo '<td class="text-right"><button type="button" onclick="StoreWebID('. $website->id .')" class="btn btn-danger" name="web" value="' . $website->id . '" data-toggle="modal" data-target="#del-feedback">Delete</button></td></tr>';
               }
             else{ 
