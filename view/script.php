@@ -375,7 +375,9 @@ $(document).on('click','#delete-webpage-button', function () {
 })
 
 $(document).on('click','#deleteWebsiteModalButton',function (){
-  delete webpages[currentWebpage];
+  var tmpWebpage = currentWebpage;
+  changeWebpage('homepage');
+  delete webpages[tmpWebpage];
   displayWebpages();
 });
 

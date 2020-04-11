@@ -441,7 +441,7 @@
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" id="deleteWebsiteModalButton" aria-label="Close">Yes</button>
+              <button type="button" class="btn btn-primary" id="deleteWebsiteModalButton" aria-label="Close" data-dismiss="modal">Yes</button>
           </div>
         </div>
       </div>
