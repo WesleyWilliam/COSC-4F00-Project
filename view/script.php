@@ -389,7 +389,8 @@ $(document).on('click', '.divider-edit-button', function () {
   showChanges();
 })
 
-$(document).on('click', '#save-webpage-button', function () {
+$(document).on('submit', '#save-webpage-form', function (e) {
+  e.preventDefault();
   changeWebpage($('#webpageText').val());
   $('#addWebpageModal').modal('hide');
 })

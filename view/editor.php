@@ -410,16 +410,16 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form id="save-webpage-form">
               <div class="form-group">
                 <label for="userText">Webpage:</label>
-                <input type="text" class="form-control" id="webpageText">
+                <input type="text" class="form-control" id="webpageText" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces">
               </div>
-            </form>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" id="save-webpage-button" data-dismiss="modal" aria-label="Close">Add</button>
+              <button type="submit" class="btn btn-primary" id="save-webpage-button" aria-label="Close">Add</button>
             </div>
+      </form>
           </div>
         </div>
       </div>
