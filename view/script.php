@@ -364,6 +364,21 @@ $(document).on('click', '.add-webpage-button', function () {
   $('#addWebpageModal').modal('show');
 })
 
+$(document).on('click','#delete-webpage-button', function () {
+  if (currentWebpage == 'homepage') {
+    alert('can\'t delete homepage');
+  } else {
+    $('#deleteWebpageModalBody').text("Are you sure you want to delete webpage " + currentWebpage + "?");
+    $('#deleteWebpageModal').modal('show');
+  }
+
+})
+
+$(document).on('click','#deleteWebsiteModalButton',function (){
+  delete webpages[currentWebpage];
+  displayWebpages();
+});
+
 $(document).on('click', '.button-edit-button', function () {
   let url = $('#editButtonURL').val();
   let content = $('#editButtonText').val();
