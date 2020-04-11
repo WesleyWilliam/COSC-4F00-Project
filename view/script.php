@@ -40,6 +40,7 @@ $(function () {
 
 
   $("#sidebarList > li").draggable({
+    helper:'clone',
     revert: true,
     revertDuration: 0
 
@@ -50,6 +51,7 @@ $(function () {
   $("#editor-user-page").droppable({
 
     drop: function (e, ui) {
+
       var dropped = ui.draggable.attr("id");
 
       var component = null;
@@ -89,6 +91,12 @@ $(function () {
     }
 
   }); //make editor droppable
+
+  $(document).on("click", "#sidebarMinimize", function () {
+    $("#sidebar").toggle();
+
+  });
+
 
 
 

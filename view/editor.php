@@ -14,11 +14,24 @@
       background-color: yellow;
     }
 
-    /*used for grid*/
-    .column {
-      float: left;
-      width: 50%;
+    /*making navbar scrollable*/
+    #sidebar {
+      height: 700px;
+      width: 15%;
     }
+
+    #sidebarList {
+
+      height:100%;
+
+      max-width: 100%;
+overflow-y: scroll;
+overflow-x: hidden;
+
+
+
+
+}
   </style>
 
   <!-- Including bootstrap CSS files -->
@@ -76,10 +89,16 @@
 
   <!-- Editor -->
   <div class="row">
+  <i id="sidebarMinimize" data-feather="sidebar"></i>
+
+  </div>
+  <div class="row">
 
     <!-- Side bar -->
-    <div class="col" id="sidebar">
-      <ul class="list-group" id="sidebarList" style="position:fixed; width:15%;">
+
+    <div id="sidebar" class="col" >
+
+      <ul id="sidebarList" class="list-group ui-draggable"  >
         <li id="text-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Text</span>
