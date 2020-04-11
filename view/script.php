@@ -372,6 +372,23 @@ $(document).on('click', '.add-webpage-button', function () {
   $('#addWebpageModal').modal('show');
 })
 
+$(document).on('click','#delete-webpage-button', function () {
+  if (currentWebpage == 'homepage') {
+    alert('can\'t delete homepage');
+  } else {
+    $('#deleteWebpageModalBody').text("Are you sure you want to delete webpage " + currentWebpage + "?");
+    $('#deleteWebpageModal').modal('show');
+  }
+
+})
+
+$(document).on('click','#deleteWebsiteModalButton',function (){
+  var tmpWebpage = currentWebpage;
+  changeWebpage('homepage');
+  delete webpages[tmpWebpage];
+  displayWebpages();
+});
+
 $(document).on('click', '.button-edit-button', function () {
   let url = $('#editButtonURL').val();
   let content = $('#editButtonText').val();
@@ -397,7 +414,8 @@ $(document).on('click', '.divider-edit-button', function () {
   showChanges();
 })
 
-$(document).on('click', '#save-webpage-button', function () {
+$(document).on('submit', '#save-webpage-form', function (e) {
+  e.preventDefault();
   changeWebpage($('#webpageText').val());
   $('#addWebpageModal').modal('hide');
 })

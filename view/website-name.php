@@ -132,7 +132,7 @@
             <h4 class="text-center mt-5 text-muted">Enter the name of your website:</h4>
             <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
               <div class="form-group form-group-lg">
-                <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters">
+                <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces">
               </div>
               <div class="form-group" style="text-align:center">
                 <button class="btn btn-outline-primary" type="Submit">Submit</button>

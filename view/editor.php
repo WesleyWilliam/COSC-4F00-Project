@@ -180,7 +180,7 @@ overflow-x: hidden;
           <a role="button" href="<?php echo $config['home-file-path']; ?>/view/themes.php" class="btn btn-outline-info mr-2 btn-link">Themes</a>
           <button type="button" class="btn btn-outline-info mr-2">Help</button>
           <button type="button" class="btn btn-outline-info">Edit</button>
-          <button type="button" class="btn btn-outline-info add-webpage-button">Add Webpage</button>
+          <button type="button" class="btn btn-outline-danger" id="delete-webpage-button">Delete Webpage</button>
         </div>
         <div>
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
@@ -429,16 +429,38 @@ overflow-x: hidden;
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form id="save-webpage-form">
               <div class="form-group">
                 <label for="userText">Webpage:</label>
-                <input type="text" class="form-control" id="webpageText">
+                <input type="text" class="form-control" id="webpageText" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces">
               </div>
-            </form>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" id="save-webpage-button" data-dismiss="modal" aria-label="Close">Add</button>
+              <button type="submit" class="btn btn-primary" id="save-webpage-button" aria-label="Close">Add</button>
             </div>
+      </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Delete Webpage Modal -->
+    <div class="modal fade" id="deleteWebpageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Webpage</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p id="deleteWebpageModalBody"></p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" id="deleteWebsiteModalButton" aria-label="Close" data-dismiss="modal">Yes</button>
           </div>
         </div>
       </div>
