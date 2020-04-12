@@ -435,7 +435,7 @@ overflow-x: hidden;
             <form id="save-webpage-form">
               <div class="form-group">
                 <label for="userText">Webpage:</label>
-                <input type="text" class="form-control" id="webpageText" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces">
+                <input type="text" class="form-control" id="webpageText" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces" required>
               </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
