@@ -20,6 +20,9 @@ class Model {
 
 
     public function loginAccount($username,$password) {
+        if (!isset($username) || !isset($password) ) {
+            return 'NOTFOUND';
+        }
         $user = NULL;
         try {
             $user = $this->getUser();
@@ -39,6 +42,9 @@ class Model {
     }
     
     public function createAccount($username,$email,$password) {
+        if (!isset($username) || !isset($email) || !isset($password)) {
+            return "ERR";
+        }
         //Check if user exists first
         $query = R::findOne('users',' username LIKE ? OR email LIKE ? ', [$username,$email]);
         if (!empty($query) && $query->username == $username) {
@@ -78,6 +84,9 @@ class Model {
     }
   
     public function addWebsite($name) {
+        if (!isset($name)) {
+            return "ERR";
+        }
         $user = $this -> getUser();
         if (R::findOne('websites',' name like ? AND users_id = ? ',[$name,$user->id])) {
             return "ALREADYEXISTS";
@@ -107,6 +116,9 @@ class Model {
     }
 
     public function saveWebsites($website, $components) {
+        if (!isset($website) || !isset($components)) {
+            return "WRONGUSER";
+        }
         $website = R::load('websites',$website);
         if ($website->users_id === $this->getUser()->id) {
             $website -> webpages = $components;
