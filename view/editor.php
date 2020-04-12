@@ -60,13 +60,16 @@ overflow-x: hidden;
       if ($component == "WRONGUSER") {
         echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
         die();
+      } elseif ($component == "ERR") {
+        echo '</head><body> <h1>Error, something went wrong, try logging out and trying again </h1> </body> </html>';
+        die();
       }
     } else {
       //Later on well make this go to the first website for your user
       echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
       die();
     }
-  } catch (SessionNotFound $e) {
+  } catch (Exception $e) {
     redirect('view/login.php');
     die();
   }

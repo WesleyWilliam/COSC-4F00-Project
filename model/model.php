@@ -27,7 +27,7 @@ class Model {
         try {
             $user = $this->getUser();
             return "SUCCESS";
-        } catch(SessionNotFound $e) {
+        } catch(Exception $e) {
             //Do nothing
         }
         // How you query stuff, mostly just normal sql
@@ -106,6 +106,9 @@ class Model {
     }
     
     public function getWebsites($website) {
+        if (!isset($website)) {
+            return "ERR";
+        }
         $user = $this -> getUser();
         $site = R::load('websites',$website);
         if ($user->id === $site->users_id) {
@@ -152,6 +155,9 @@ class Model {
 
     //To send to someone if they forget their password
     public function recoverCode($email) {
+        if (!isset($email)) {
+            return "ERR";
+        }
         $user = R::findOne('users',' email Like ? ',[$email]);
         if (!isset($user)) {
             return "EMAILDNE";
@@ -171,6 +177,9 @@ class Model {
     }
     
     public function recoverPassword($code, $password) {
+        if (!isset($code) || !isset($password)) {
+            return "ERR";
+        }
         $recover = R::findOne('recover',' code = ? ',[$code]);
         if (!isset($recover)) {
             return "CODEWRONG";

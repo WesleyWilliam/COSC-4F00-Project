@@ -150,6 +150,10 @@ try {
                 $_SESSION['LOGIN_MSG'] = 'Enter new password';
                 redirect('view/login.php');
                 die();
+            } elseif ($res == "ERR") {
+                $_SESSION['RECOVEREMAIL_MSG'] = "Something went wrong, try again";
+                redirect('view/recover-email.php');
+                die();
             }
             
         }
@@ -157,6 +161,10 @@ try {
         $res = $model->recoverCode($_POST['EMAIL']);
         if ($res == "EMAILDNE") {
             $_SESSION['RECOVEREMAIL_MSG'] = "Email does not exist";
+            redirect("view/recover-email.php");
+            die();
+        } elseif($res == "ERR") {
+            $_SESSION['RECOVEREMAIL_MSG'] = "Error, please try again";
             redirect("view/recover-email.php");
             die();
         } else {
