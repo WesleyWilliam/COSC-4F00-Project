@@ -1,4 +1,4 @@
-var str = <?php echo json_encode($component); ?>;
+var str = <? php echo json_encode($component); ?>;
 var webpages = JSON.parse(str);
 var currentWebpage = 'homepage';
 var components = webpages[currentWebpage];
@@ -40,7 +40,7 @@ $(function () {
 
 
   $("#sidebarList > li").draggable({
-    helper:'clone',
+    helper: 'clone',
     revert: true,
     revertDuration: 0
 
@@ -80,11 +80,11 @@ $(function () {
         case 'spacer-sidebar-button':
           component = makeSpacerComponent();
           break;
-          case 'divider-sidebar-button':
+        case 'divider-sidebar-button':
           component = makeDividerComponent();
           break;
       }
-      if (component!=null) {
+      if (component != null) {
         components.push(component);
         showChanges();
       }
@@ -144,22 +144,22 @@ $(function () {
         $("#editGridCol").val(components[id].columns);
         break;
 
-        case 'button':
+      case 'button':
         $('#editButtonModal').modal('show');
         $('#editButtonURL').val(components[id].url);
         $('#editButtonText').val(components[id].content);
         break;
 
-        case 'spacer':
+      case 'spacer':
         $('#editSpacerModal').modal('show');
         $('#editSpacerHeight').val(components[id].height);
         break;
 
-        case 'divider':
+      case 'divider':
         $('#editDividerModal').modal('show');
         break;
 
-        
+
     }
   });
 }); //used to make the elements on the page draggable, sortable, droppable, editable
@@ -380,7 +380,7 @@ $(document).on('click', '.add-webpage-button', function () {
   $('#addWebpageModal').modal('show');
 })
 
-$(document).on('click','#delete-webpage-button', function () {
+$(document).on('click', '#delete-webpage-button', function () {
   if (currentWebpage == 'homepage') {
     alert('can\'t delete homepage');
   } else {
@@ -390,7 +390,7 @@ $(document).on('click','#delete-webpage-button', function () {
 
 })
 
-$(document).on('click','#deleteWebsiteModalButton',function (){
+$(document).on('click', '#deleteWebsiteModalButton', function () {
   var tmpWebpage = currentWebpage;
   changeWebpage('homepage');
   delete webpages[tmpWebpage];
@@ -568,12 +568,12 @@ function HTMLComponentOutput(component, index) {
 
 //Function to output button component 
 function buttonComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4' ><a href='"+component.url+"' target='_blank' class='"+component.style+"'>"+component.content+"</a></div>"
+  return "<div id='" + index + "' class='component mb-4' ><a href='" + component.url + "' target='_blank' class='" + component.style + "'>" + component.content + "</a></div>"
 }
 
 //Function to output spacer component 
 function spacerComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4' style='height:"+component.height+"px'>&nbsp;</div>"
+  return "<div id='" + index + "' class='component mb-4' style='height:" + component.height + "px'>&nbsp;</div>"
 }
 
 //Function to output divider component 
@@ -603,14 +603,14 @@ function gridComponentOutput(component, index) {
         "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-embed-add\" href=\"#\">Media</a>" +
         "</div>" +
         "</div>";
-    } else if (component.gridContent[x].type == "text") 
+    } else if (component.gridContent[x].type == "text")
       res += textComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "image")
       res += imageComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "blank")
       res += ""
     else if (component.gridContent[x].type == "media")
-      res += mediaComponentOutputGrid(component.gridContent[x],x,index);
+      res += mediaComponentOutputGrid(component.gridContent[x], x, index);
 
     res += "</div>";
   }
@@ -639,13 +639,13 @@ function getOutput(component, index) {
     case 'grid':
       return gridComponentOutput(component, index);
       break;
-      case 'button':
+    case 'button':
       return buttonComponentOutput(component, index);
       break;
-      case 'spacer':
+    case 'spacer':
       return spacerComponentOutput(component, index);
       break;
-      case 'divider':
+    case 'divider':
       return dividerComponentOutput(component, index);
       break;
   }
@@ -685,7 +685,7 @@ function showChanges() {
       case 'spacer':
         $('#editor-user-page').append(spacerComponentOutput(components[i], i));
         break;
-        case 'divider':
+      case 'divider':
         $('#editor-user-page').append(dividerComponentOutput(components[i], i));
         break;
     }

@@ -22,16 +22,16 @@
 
     #sidebarList {
 
-      height:100%;
+      height: 100%;
 
       max-width: 100%;
-overflow-y: scroll;
-overflow-x: hidden;
+      overflow-y: scroll;
+      overflow-x: hidden;
 
 
 
 
-}
+    }
   </style>
 
   <!-- Including bootstrap CSS files -->
@@ -77,11 +77,9 @@ overflow-x: hidden;
 
   <!-- Javascript code -->
   <script>
-    
-  <?php include('script.php') ?>
- 
+    <?php include('script.php') ?>
   </script>
-    
+
 
 </head>
 
@@ -92,16 +90,16 @@ overflow-x: hidden;
 
   <!-- Editor -->
   <div class="row">
-  <i id="sidebarMinimize" data-feather="sidebar"></i>
+    <i id="sidebarMinimize" data-feather="sidebar"></i>
 
   </div>
   <div class="row">
 
     <!-- Side bar -->
 
-    <div id="sidebar" class="col" >
+    <div id="sidebar" class="col">
 
-      <ul id="sidebarList" class="list-group ui-draggable"  >
+      <ul id="sidebarList" class="list-group ui-draggable">
         <li id="text-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Text</span>
@@ -381,7 +379,7 @@ overflow-x: hidden;
       </div>
     </div>
 
-  
+
 
     <!-- Edit grid -->
     <div class="modal fade" id="editGridModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -437,11 +435,11 @@ overflow-x: hidden;
                 <label for="userText">Webpage:</label>
                 <input type="text" class="form-control" id="webpageText" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces" required>
               </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-primary" id="save-webpage-button" aria-label="Close">Add</button>
-            </div>
-      </form>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="save-webpage-button" aria-label="Close">Add</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -462,15 +460,15 @@ overflow-x: hidden;
             <p id="deleteWebpageModalBody"></p>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" id="deleteWebsiteModalButton" aria-label="Close" data-dismiss="modal">Yes</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="deleteWebsiteModalButton" aria-label="Close" data-dismiss="modal">Yes</button>
           </div>
         </div>
       </div>
     </div>
 
-<!-- EditButton modal -->
-<div class="modal fade" id="editButtonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- EditButton modal -->
+    <div class="modal fade" id="editButtonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -488,17 +486,17 @@ overflow-x: hidden;
                 <input type="text" class="form-control" id="editButtonText">
 
                 <label for="editButtonStyle">Select Style:</label>
-              <select class="form-control" id="editButtonStyle">
-                <option value="btn btn-primary">Light Blue</option>
-                <option value="btn btn-secondary">Grey</option>
-                <option value="btn btn-success">Green</option>
-                <option value="btn btn-danger">Red</option>
-                <option value="btn btn-warning">Orange</option>
-                <option value="btn btn-info">Turqoise</option>
-                <option value="btn btn-light">White</option>
-                <option value="btn btn-dark">Black</option>
-                <option value="btn btn-link">Link</option>
-              </select>
+                <select class="form-control" id="editButtonStyle">
+                  <option value="btn btn-primary">Light Blue</option>
+                  <option value="btn btn-secondary">Grey</option>
+                  <option value="btn btn-success">Green</option>
+                  <option value="btn btn-danger">Red</option>
+                  <option value="btn btn-warning">Orange</option>
+                  <option value="btn btn-info">Turqoise</option>
+                  <option value="btn btn-light">White</option>
+                  <option value="btn btn-dark">Black</option>
+                  <option value="btn btn-link">Link</option>
+                </select>
 
               </div>
             </form>
@@ -511,7 +509,7 @@ overflow-x: hidden;
       </div>
     </div>
 
-<!-- EditSpacer modal -->
+    <!-- EditSpacer modal -->
     <div class="modal fade" id="editSpacerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -524,7 +522,7 @@ overflow-x: hidden;
           <div class="modal-body">
             <form>
               <div class="form-group">
-       
+
                 <label for="editSpacerHeight">Height:</label>
                 <input type="number" class="form-control" id="editSpacerHeight">
 
@@ -540,8 +538,8 @@ overflow-x: hidden;
       </div>
     </div>
 
-<!-- editDivider modal -->
-<div class="modal fade" id="editDividerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- editDivider modal -->
+    <div class="modal fade" id="editDividerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
