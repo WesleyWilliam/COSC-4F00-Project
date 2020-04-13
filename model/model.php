@@ -20,11 +20,14 @@ class Model {
 
 
     public function loginAccount($username,$password) {
+        if (!isset($username) || !isset($password) ) {
+            return 'NOTFOUND';
+        }
         $user = NULL;
         try {
             $user = $this->getUser();
             return "SUCCESS";
-        } catch(SessionNotFound $e) {
+        } catch(Exception $e) {
             //Do nothing
         }
         // How you query stuff, mostly just normal sql
@@ -39,6 +42,9 @@ class Model {
     }
     
     public function createAccount($username,$email,$password) {
+        if (!isset($username) || !isset($email) || !isset($password)) {
+            return "ERR";
+        }
         //Check if user exists first
         $query = R::findOne('users',' username LIKE ? OR email LIKE ? ', [$username,$email]);
         if (!empty($query) && $query->username == $username) {
@@ -78,6 +84,9 @@ class Model {
     }
   
     public function addWebsite($name) {
+        if (!isset($name)) {
+            return "ERR";
+        }
         $user = $this -> getUser();
         if (R::findOne('websites',' name like ? AND users_id = ? ',[$name,$user->id])) {
             return "ALREADYEXISTS";
@@ -97,6 +106,9 @@ class Model {
     }
     
     public function getWebsites($website) {
+        if (!isset($website)) {
+            return "ERR";
+        }
         $user = $this -> getUser();
         $site = R::load('websites',$website);
         if ($user->id === $site->users_id) {
@@ -107,6 +119,9 @@ class Model {
     }
 
     public function saveWebsites($website, $components) {
+        if (!isset($website) || !isset($components)) {
+            return "WRONGUSER";
+        }
         $website = R::load('websites',$website);
         if ($website->users_id === $this->getUser()->id) {
             $website -> webpages = $components;
@@ -140,6 +155,9 @@ class Model {
 
     //To send to someone if they forget their password
     public function recoverCode($email) {
+        if (!isset($email)) {
+            return "ERR";
+        }
         $user = R::findOne('users',' email Like ? ',[$email]);
         if (!isset($user)) {
             return "EMAILDNE";
@@ -159,6 +177,9 @@ class Model {
     }
     
     public function recoverPassword($code, $password) {
+        if (!isset($code) || !isset($password)) {
+            return "ERR";
+        }
         $recover = R::findOne('recover',' code = ? ',[$code]);
         if (!isset($recover)) {
             return "CODEWRONG";

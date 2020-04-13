@@ -30,7 +30,7 @@
         } else {
             $name = $user->firstname;
         }
-    } catch (SessionNotFound $e) {
+    } catch (Exception $e) {
         redirect('view/login.php');
         die();
     }

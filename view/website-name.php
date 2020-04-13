@@ -30,7 +30,7 @@
   <?php
   try {
     $websitelst = $model->listWebsites();
-  } catch (SessionNotFound $e) {
+  } catch (Exception $e) {
     redirect('view/login.php');
     die();
   }

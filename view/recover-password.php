@@ -39,7 +39,7 @@
             <input type="password" class="form-control" id="password2" name="PWD2">
           </div>
           <input type="hidden" name="COMMAND" value="RECOVERPWD">
-          <input type="hidden" name="CODE" value="<?php echo $_GET['code']; ?>">
+          <input type="hidden" name="CODE" value="<?php if (isset($_GET['code'])) { echo $_GET['code']; } ?>">
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>

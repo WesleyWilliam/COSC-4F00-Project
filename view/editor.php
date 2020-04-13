@@ -60,13 +60,16 @@ overflow-x: hidden;
       if ($component == "WRONGUSER") {
         echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
         die();
+      } elseif ($component == "ERR") {
+        echo '</head><body> <h1>Error, something went wrong, try logging out and trying again </h1> </body> </html>';
+        die();
       }
     } else {
       //Later on well make this go to the first website for your user
       echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
       die();
     }
-  } catch (SessionNotFound $e) {
+  } catch (Exception $e) {
     redirect('view/login.php');
     die();
   }
@@ -432,7 +435,7 @@ overflow-x: hidden;
             <form id="save-webpage-form">
               <div class="form-group">
                 <label for="userText">Webpage:</label>
-                <input type="text" class="form-control" id="webpageText" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces">
+                <input type="text" class="form-control" id="webpageText" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces" required>
               </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
