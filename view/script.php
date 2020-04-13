@@ -277,11 +277,11 @@ $(document).on('click', '.save-editor-changes', function () { // Save current st
 })
 
 $(document).on('change', '#imageFile', function () {
-  var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php";
+  var url = "<?php echo $config['home-file-path']; ?>/controller/imgupload.php";
   var properties = document.getElementById("imageFile").files[0];
+  console.log(properties);
   var form_data = new FormData();
   form_data.append("file", properties);
-  form_data.append("COMMAND", "PIC_UPLOAD");
 
   $.ajax({
     url: url,
@@ -291,12 +291,20 @@ $(document).on('change', '#imageFile', function () {
     cache: false,
     processData: false,
     success: function (data, error) {
-      console.log(data);
       console.log(error);
       $('#editImageModal').modal('hide')
       var component = getComponent();
-      component.content = "<?php echo $config['home-file-path']; ?>/" + data;
-      showChanges();
+      if (data == "TOOBIG") {
+        alert("Image is too big, make it smaller then try again");
+      } else if (data == "NOTIMG") {
+        alert("Not an image");
+      } else if (data == "ERR") {
+        alert("Error uploading image");
+      } else {
+        component.content = "<?php echo $config['home-file-path']; ?>/" + data;
+        showChanges();
+      }
+      //Used to ensure you can upload two of the same photo on firefox
       $('input[type="file"]').val(null);
     }
   });
