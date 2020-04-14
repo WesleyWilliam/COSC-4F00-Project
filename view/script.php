@@ -697,7 +697,11 @@ function deleteElement() {
   if (components.length == 1) {
     $('#editor-user-page').removeClass("invisible").addClass("visible");
   }
-  components.splice(index, 1);
+  if (indexGrid != -1) {
+    components[index].gridContent.splice(indexGrid, 1);
+  } else {
+    components.splice(index, 1);
+  }
   showChanges();
   index = components.length;
   indexGrid = -1;
