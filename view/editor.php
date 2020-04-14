@@ -379,7 +379,22 @@
       </div>
     </div>
 
-
+    <!-- Uploading image modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="imgSpinnerModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Uploading image</h5>
+          </div>
+          <div class="modal-body">
+            <p>Uploading image</p>
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Edit grid -->
     <div class="modal fade" id="editGridModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

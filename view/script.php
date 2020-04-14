@@ -277,6 +277,7 @@ $(document).on('click', '.save-editor-changes', function () { // Save current st
 })
 
 $(document).on('change', '#imageFile', function () {
+  $('#imgSpinnerModal').modal('show');
   var url = "<?php echo $config['home-file-path']; ?>/controller/imgupload.php";
   var properties = document.getElementById("imageFile").files[0];
   console.log(properties);
@@ -291,6 +292,7 @@ $(document).on('change', '#imageFile', function () {
     cache: false,
     processData: false,
     success: function (data, error) {
+      $('#imgSpinnerModal').modal('hide');
       console.log(error);
       $('#editImageModal').modal('hide')
       var component = getComponent();
