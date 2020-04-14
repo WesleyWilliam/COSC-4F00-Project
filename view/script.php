@@ -1,8 +1,8 @@
 var str = <?php echo json_encode($component); ?>;
 var webpages = JSON.parse(str);
 var currentWebpage = 'homepage';
-var editorComponents = webpages[currentWebpage];
-var footerComponents = [];
+var editorComponents = webpages['webpages'][currentWebpage];
+var footerComponents = webpages['footer'];
 var componentParent; //when an element is clicked, we need to know which area it was clicked on in order to edit/delete it
 var sortedIDs;
 var editor = null;
@@ -331,7 +331,9 @@ function makeDividerComponent() {
 
 
 $(document).on('click', '.save-editor-changes', function () { // Save current state of the editor editorComponents
-  webpages[currentWebpage] = editorComponents;
+  webpages['webpages'][currentWebpage] = editorComponents;
+  webpages['footer'] = footerComponents;
+
   $(".save-webpage-alert").show();
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
@@ -910,19 +912,19 @@ $(document).on('click', '.preview-editor', function () {
 })
 
 function changeWebpage(name) {
-  webpages[currentWebpage] = editorComponents;
+  webpages['webpages'][currentWebpage] = editorComponents;
   currentWebpage = name;
-  if (typeof webpages[currentWebpage] == 'undefined') {
-    webpages[currentWebpage] = [];
+  if (typeof webpages['webpages'][currentWebpage] == 'undefined') {
+    webpages['webpages'][currentWebpage] = [];
   }
-  editorComponents = webpages[currentWebpage];
+  editorComponents = webpages['webpages'][currentWebpage];
   displayWebpages();
   showChanges();
 }
 
 function displayWebpages() {
   $('#webpages-nav-list').empty();
-  Object.keys(webpages).forEach(function (value, index) {
+  Object.keys(webpages['webpages']).forEach(function (value, index) {
     var isCurrent = false;
     if (value === currentWebpage) {
       isCurrent = true;
