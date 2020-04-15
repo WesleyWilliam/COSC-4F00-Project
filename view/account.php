@@ -36,25 +36,40 @@
     }
     ?>
 
-    <!--Title-->
-    <div class="border-bottom mr-5 ml-5">
-        <h1 class="display-4 text-center pb-3">Hello <?php echo $name; ?>!</h1>
-        <p class="text-center">Here you can change your account infomation</p>
+    <!-- Banner -->
+    <div class="jumbotron jumbotron-fluid bg-info text-white">
+        <div class="container" id="banner-text">
+            <h1 class="display-4" ><?php echo $name; ?>'s Account</h1>
+            <p>Update your information here.</p>
+        </div>
     </div>
 
-    <!-- Nav -->
-    <div class="row">
-        <div class="col-3">
-            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+    <!-- Sub Nav -->
+
+    <div class="container">
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
                 <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">Profile</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="v-pills-privacy-tab" data-toggle="pill" href="#v-pills-privacy" role="tab" aria-controls="v-pills-privacy" aria-selected="false">Privacy</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="v-pills-payment-tab" data-toggle="pill" href="#v-pills-payment" role="tab" aria-controls="v-pills-payment" aria-selected="false">Payment Method</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="v-pills-subscriptions-tab" data-toggle="pill" href="#v-pills-subscriptions" role="tab" aria-controls="v-pills-subscriptions" aria-selected="false">Subscriptions</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
-            </div>
-        </div>
-        <div class="col-9">
-            <div class="tab-content" id="v-pills-tabContent">
+            </li>
+        </ul>
+    </div>
+    
+        <!-- Page Contents -->
+        <div class = "container">
+            <div class="container tab-content" id="v-pills-tabContent">
+                <!-- Profile -->
                 <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                     <div class="row">
                         <div class="col">
@@ -73,7 +88,7 @@
                     </div>
                     <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>First Name: </p>
                             </div>
                             <div class="col-3">
@@ -83,7 +98,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>Last Name:</p>
                             </div>
                             <div class="col-3">
@@ -93,7 +108,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>Date Of Birth:</p>
                             </div>
                             <div class="col-3">
@@ -103,7 +118,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>Phone Number: </p>
                             </div>
                             <div class="col-3">
@@ -113,7 +128,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>Email*: </p>
                             </div>
                             <div class="col-3">
@@ -123,7 +138,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                             </div>
                             <div class="col-3">
                                 <input type="hidden" name="COMMAND" value="UPDATEPROFILE">
@@ -132,6 +147,8 @@
                         </div>
                     </form>
                 </div>
+
+                <!--Privacy-->
                 <div class="tab-pane fade" id="v-pills-privacy" role="tabpanel" aria-labelledby="v-pills-privacy-tab">
                     <div class="row">
                         <div class="col">
@@ -150,7 +167,7 @@
                     </div>
                     <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>Permissions to view account: </p>
                             </div>
                             <div class="col-3">
@@ -165,7 +182,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>Blocked Users:</p>
                             </div>
                             <div class="col-3">
@@ -176,6 +193,8 @@
                         </div>
                     </form>
                 </div>
+
+                <!-- Payment Method -->
                 <div class="tab-pane fade" id="v-pills-payment" role="tabpanel" aria-labelledby="v-pills-payment-tab">
                     <div class="row">
                         <div class="col">
@@ -194,7 +213,7 @@
                     </div>
                     <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>Credit card number: </p>
                             </div>
                             <div class="col-3">
@@ -204,7 +223,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>Experation Date:</p>
                             </div>
                             <div class="col-3">
@@ -214,7 +233,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>CVV:</p>
                             </div>
                             <div class="col-3">
@@ -224,7 +243,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>Type: </p>
                             </div>
                             <div class="col-3">
@@ -238,7 +257,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                             </div>
                             <div class="col-3">
                                 <input type="hidden" name="COMMAND" value="UPDATEPAYMENT">
@@ -247,6 +266,8 @@
                         </div>
                     </form>
                 </div>
+
+                <!-- Subscriptions -->
                 <div class="tab-pane fade" id="v-pills-subscriptions" role="tabpanel" aria-labelledby="v-pills-subscriptions-tab">
                     <div class="row">
                         <div class="col">
@@ -263,24 +284,32 @@
                             ?>
                         </div>
                     </div>
+
                     <div class="row">
-                        <div class="col-2">
-                            <p>Subscriptions: </p>
-                        </div>
-                        <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+                            <div class="col-5 text-right">
+                                <p>Plan: </p>
+                            </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <input type="hidden" name="COMMAND" value="UPDATESUBSCRIPTIONS">
-                                    <select class="form-control" onchange="this.form.submit()" name="SUB">
-                                        <option value="PREM">Premium</option>
-                                        <option value="BASIC">Basic</option>
-                                        <option value="FREE">Free</option>
+                                    <select class="form-control" name="COMMAND" value="UPDATESUBSCRIPTIONS">
+                                        <option value="MC">Starter - free</option>
+                                        <option value="VISA">Basic - $9/mo</option>
+                                        <option value="PP">Pro - $16/mo</option>
                                     </select>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5 text-right">
+                            </div>
+                            <div class="col-3">
+                                <input type="hidden" name="COMMAND" value="UPDATEPLAN">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </div>
                 </div>
+
+                <!--Settings -->
                 <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
                     <div class="row">
                         <div class="col">
@@ -299,7 +328,7 @@
                     </div>
                     <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST" >
                         <div class="row">
-                            <div class="col-2">
+                            <div class="col-5 text-right">
                                 <p>Delete Account: </p>
                             </div>
                             <div class="col-3">
@@ -314,6 +343,7 @@
             </div>
         </div>
     </div>
+
 
     <!--Footer-->
     <footer id="sticky-footer" class="py-4 bg-dark text-white-50 fixed-bottom">
