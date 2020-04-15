@@ -19,6 +19,19 @@
       float: left;
       width: 50%;
     }
+
+    #footer-user-page{
+
+position: sticky;
+bottom: 0px;
+
+
+    }
+
+    #editor-user-page{
+
+
+    }
   </style>
 
   <!-- Including bootstrap CSS files -->
@@ -184,14 +197,15 @@
         Webpage changes saved.
       </div>
       
+<div>
           <!-- Editor space -->
-
       <div class="jumbotron mt-3 mr-4 visible editable-area" id="editor-user-page">
       </div>
 
           <!-- Footer space -->
       <div class="jumbotron mt-3 mr-4 visible editable-area" id="footer-user-page">
       </div>
+</div>
 
     </div>
 
