@@ -32,6 +32,19 @@
 
 
     }
+
+    #footer-user-page{
+
+position: sticky;
+bottom: 0px;
+
+
+    }
+
+    #editor-user-page{
+
+
+    }
   </style>
 
   <!-- Including bootstrap CSS files -->
@@ -203,8 +216,17 @@
       <div class="alert alert-success save-webpage-alert mr-4" role="alert">
         Webpage changes saved.
       </div>
-      <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page">
+      
+<div>
+          <!-- Editor space -->
+      <div class="jumbotron mt-3 mr-4 visible editable-area" id="editor-user-page">
       </div>
+
+          <!-- Footer space -->
+      <div class="jumbotron mt-3 mr-4 visible editable-area" id="footer-user-page">
+      </div>
+</div>
+
     </div>
 
     <!-- Ensures the link in CKEditor works -->

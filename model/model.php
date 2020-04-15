@@ -93,7 +93,7 @@ class Model {
         } else {
             $website = R::dispense('websites');
             $website -> name = $name;
-            $website -> webpages = '{"homepage": []}';
+            $website -> webpages = '{"webpages":{"homepage": []},"footer":[]}';
             $user-> xownWebsitesList[] = $website;
             R::store($user);
             return $website->id;
