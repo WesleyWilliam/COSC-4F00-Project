@@ -1,4 +1,4 @@
-var str = <? php echo json_encode($component); ?>;
+var str = <?php echo json_encode($component); ?>;
 var webpages = JSON.parse(str);
 var currentWebpage = 'homepage';
 var editorComponents = webpages['webpages'][currentWebpage];
