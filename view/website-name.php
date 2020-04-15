@@ -98,7 +98,7 @@
             <div class="container mt-3">
               <p style="text-align:center; margin-bottom:40px;">Are you sure you want to delete your website?</p>
               <div class="modal-footer">
-                <button name="SITE" type="Submit" value="fish" id="deletefinal" class="btn btn-outline-danger">Delete</button>
+                <button name="SITE" type="Submit" id="deletefinal" class="btn btn-outline-danger">Delete</button>
                 <input type="hidden" name="COMMAND" value="WEBSITE_DELETE">
                 <a type="button" class="btn btn-secondary" href="" data-dismiss="modal">Close</a>
               </div>

@@ -93,7 +93,7 @@ class Model {
         } else {
             $website = R::dispense('websites');
             $website -> name = $name;
-            $website -> webpages = '{"homepage": []}';
+            $website -> webpages = '{"webpages":{"homepage": []},"footer":[]}';
             $user-> xownWebsitesList[] = $website;
             R::store($user);
             return $website->id;
@@ -247,16 +247,43 @@ class Model {
         return "SUCCESS";
     }
 
-    public function deleteUser($user) {
-        R::trash( $user );
-        return "SUCCESS";
-    }
-
     public function deleteWebsite($website_id) {
         $user = $this -> getUser();
         unset($user-> xownWebsitesList[$website_id]);
         R::store($user);
         return "SUCCESS";
+    }
+
+    public function deleteWebsiteAdmin($website_id) {
+        $website = R::load('websites',$website_id);
+        if(isset($website->users_id)){
+            $user = R::load('users',$website->users_id);
+            unset($user-> xownWebsitesList[$website_id]);
+            R::store($user);
+        } else {
+            R::trash($website);
+        }
+        return "SUCCESS";
+    }
+
+    public function deleteUserAdmin($user_id) {
+        $user = $this -> getUser();
+        if($user->id != $user_id){
+            $userd = R::load('users',$user_id);
+            R::trash($userd);
+            return "SUCCESS";
+        } else {
+            return "FAIL";
+        }
+    }
+
+    public function isAdmin(){
+        $user = $this -> getUser();
+        if(isset($user->admin) && $user->admin == true){
+            return $user->admin;
+        } else {
+            return false;
+        }
     }
 
     public function deleteAllUserWebsites() {
@@ -278,6 +305,16 @@ class Model {
         $contact -> msg = $msg;
         $contact -> time = time();
         R::store($contact);
+    }
+
+    public function getAllContact() {
+        return R::findAll('contact');
+    }
+
+    public function deleteContact($contactId) {
+        $contact = R::load('contact',$contactId);
+        R::trash($contact);
+        return "SUCCESS";
     }
 
     public function setUniques() {

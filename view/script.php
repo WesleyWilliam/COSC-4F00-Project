@@ -1,7 +1,9 @@
 var str = <?php echo json_encode($component); ?>;
 var webpages = JSON.parse(str);
 var currentWebpage = 'homepage';
-var components = webpages[currentWebpage];
+var editorComponents = webpages['webpages'][currentWebpage];
+var footerComponents = webpages['footer'];
+var componentParent; //when an element is clicked, we need to know which area it was clicked on in order to edit/delete it
 var sortedIDs;
 var editor = null;
 var index; //this index is used to keep track of which element is currently selected on the page
@@ -16,22 +18,55 @@ $(document).ready(function () {
 
 $(function () {
   var startingItem;
+  //  var startingParent;
+  var temp;
+
+  //var theParent;
 
 
-  $('#editor-user-page').sortable({
+  $(".editable-area").sortable({
 
     axis: "y",
 
     start: function (e, ui) {
-      sortedIDs = $("#editor-user-page").sortable("toArray");
       startingItem = ui.item.index();
+      var startingParent = ui.item.parent().attr('id');
+      //    sortedIDs = $("#" + startingParent).sortable("toArray");
+
+
+      if (startingParent === "editor-user-page") {
+        temp = editorComponents.splice(startingItem, 1);
+        //  editorComponents.splice(stoppingItem, 0, temp[0]);
+      }
+      else if (startingParent == "footer-user-page") {
+        temp = footerComponents.splice(startingItem, 1);
+        // footerComponents.splice(stoppingItem, 0, temp[0]);
+      }
+
+      // delete from editorComponents array on start
+      // put it somewhere temporarily
+      //place it wherever its supposed to go on drop
+
+
     },
 
     stop: function (e, ui) {
-      sortedIDs = $("#editor-user-page").sortable("toArray");
+      var stoppingParent = ui.item.parent().attr('id');
+      console.log("work " + stoppingParent);
+
+      //   sortedIDs = $("#"+stoppingParent).sortable("toArray");
       var stoppingItem = ui.item.index();
-      var temp = components.splice(startingItem, 1);
-      components.splice(stoppingItem, 0, temp[0]);
+
+      if (stoppingParent === "editor-user-page") {
+        // var temp = editorComponents.splice(startingItem, 1);
+        editorComponents.splice(stoppingItem, 0, temp[0]);
+      }
+      else if (stoppingParent == "footer-user-page") {
+        //   var temp = footerComponents.splice(startingItem, 1);
+        footerComponents.splice(stoppingItem, 0, temp[0]);
+      }
+
+
       showChanges();
 
 
@@ -48,11 +83,16 @@ $(function () {
   }); //make sidebar draggable
 
 
-  $("#editor-user-page").droppable({
+  $(".editable-area").droppable({
+
+
 
     drop: function (e, ui) {
 
       var dropped = ui.draggable.attr("id");
+      var theParent = $(this).attr('id');
+      componentParent = theParent;
+      console.log("theparent: " + theParent);
 
       var component = null;
       switch (dropped) {
@@ -85,8 +125,20 @@ $(function () {
           break;
       }
       if (component != null) {
-        components.push(component);
+        //        editorComponents.push(component);
+
+        if (theParent === "editor-user-page") {
+          editorComponents.push(component);
+
+        }
+        else if (theParent == "footer-user-page") {
+          footerComponents.push(component);
+
+        }
+
+
         showChanges();
+        // componentParent = undefined;
       }
     }
 
@@ -101,58 +153,76 @@ $(function () {
 
 
   $(document).on("click", ".component", function () {
+
+
+
     if (preventModal) {
       preventModal = false;
       return;
     }
+
+    componentParent = $(this).parent().attr('id');
+    console.log("componentParent " + componentParent);
+
+    var tempComponents;
+
+    if (componentParent == "editor-user-page") {
+      tempComponents = editorComponents;
+    }
+
+    if (componentParent == "footer-user-page") {
+      tempComponents = footerComponents;
+    }
+
     console.log("id " + $(this).attr("id"));
     var id = $(this).attr("id");
-    var type = components[id].type;
+    var type = tempComponents[id].type;
 
     index = id;
     indexGrid = -1;
+
     switch (type) {
       case 'text':
         $('#editTextModal').modal('show');
-        $('#editText').val(components[id].content);
+        $('#editText').val(tempComponents[id].content);
         break;
 
       case 'image':
         $('#editImageModal').modal('show');
-        $('#addImageURL').val(components[id].content);
+        $('#addImageURL').val(tempComponents[id].content);
         break;
 
       case 'media':
         $('#editMediaModal').modal('show');
-        $('#editMediaURL').val(components[id].content);
-        $('#editMediaWidth').val(components[id].width);
-        $('#editMediaHeight').val(components[id].height);
+        $('#editMediaURL').val(tempComponents[id].content);
+        $('#editMediaWidth').val(tempComponents[id].width);
+        $('#editMediaHeight').val(tempComponents[id].height);
         break;
 
       case 'paragraph':
-        editor.setData(components[id].html);
+        editor.setData(tempComponents[id].html);
         $('#editParagraphModal').modal('show');
         break;
 
       case 'html':
         $('#editHTMLModal').modal('show');
-        $('#editHTML').val(components[id].content);
+        $('#editHTML').val(tempComponents[id].content);
         break;
 
       case 'grid':
         $("#editGridModal").modal("show");
-        $("#editGridCol").val(components[id].columns);
+        $("#editGridCol").val(tempComponents[id].columns);
         break;
 
       case 'button':
         $('#editButtonModal').modal('show');
-        $('#editButtonURL').val(components[id].url);
-        $('#editButtonText').val(components[id].content);
+        $('#editButtonURL').val(tempComponents[id].url);
+        $('#editButtonText').val(tempComponents[id].content);
         break;
 
       case 'spacer':
         $('#editSpacerModal').modal('show');
-        $('#editSpacerHeight').val(components[id].height);
+        $('#editSpacerHeight').val(tempComponents[id].height);
         break;
 
       case 'divider':
@@ -162,6 +232,19 @@ $(function () {
 
 
     }
+
+
+
+    if (componentParent == "editor-user-page") {
+      editorComponents = tempComponents;
+    }
+
+    if (componentParent == "footer-user-page") {
+      footerComponents = tempComponents;
+    }
+    //componentParent = undefined;
+
+
   });
 }); //used to make the elements on the page draggable, sortable, droppable, editable
 
@@ -258,8 +341,10 @@ function makeDividerComponent() {
 
 
 
-$(document).on('click', '.save-editor-changes', function () { // Save current state of the editor components
-  webpages[currentWebpage] = components;
+$(document).on('click', '.save-editor-changes', function () { // Save current state of the editor editorComponents
+  webpages['webpages'][currentWebpage] = editorComponents;
+  webpages['footer'] = footerComponents;
+
   $(".save-webpage-alert").show();
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
@@ -319,11 +404,29 @@ $(document).on('change', '#imageFile', function () {
 function getComponent() {
   console.log(indexGrid);
   //indexGrid is -1 if it's not in a grid
-  if (indexGrid == -1) {
-    return components[index];
-  } else {
-    return components[index].gridContent[indexGrid];
+
+  if (componentParent == "editor-user-page") {
+
+    if (indexGrid == -1) {
+      return editorComponents[index];
+    } else {
+      return editorComponents[index].gridContent[indexGrid];
+    }
+
   }
+
+  if (componentParent == "footer-user-page") {
+
+    if (indexGrid == -1) {
+      return footerComponents[index];
+    } else {
+      return footerComponents[index].gridContent[indexGrid];
+    }
+
+  }
+
+
+
 }
 
 $(document).on('click', '.text-edit-button', function () {
@@ -332,7 +435,12 @@ $(document).on('click', '.text-edit-button', function () {
   var component = getComponent();
   component.content = text;
   component.header = $("#hType").val();
+
+
+
+
   showChanges();
+
 })
 
 $(document).on('click', '.image-edit-button', function () {
@@ -348,8 +456,19 @@ $(document).on('click', '.image-edit-button', function () {
 $(document).on('click', '.paragraph-edit-button', function () {
   let res = editor.getData();
   $('#editParagraphModal').modal('hide');
-  components[index].html = editor.getData();
+
+  if (theParent === "editor-user-page") {
+    editorComponents[index].html = editor.getData();
+
+  }
+  else if (theParent == "footer-user-page") {
+    footerComponents[index].html = editor.getData();
+
+  }
+
   showChanges();
+
+
 });
 
 
@@ -360,24 +479,55 @@ $(document).on('click', '.media-edit-button', function () {
 
   $('#editMediaModal').modal('hide')
   text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
-  components[index].content = text;
-  components[index].height = height;
-  components[index].width = width;
+
+
+  if (theParent === "editor-user-page") {
+    editorComponents[index].content = text;
+    editorComponents[index].height = height;
+    editorComponents[index].width = width;
+  }
+  else if (theParent == "footer-user-page") {
+    footerComponents[index].content = text;
+    footerComponents[index].height = height;
+    footerComponents[index].width = width;
+  }
+
+
+
   showChanges();
 })
 
 $(document).on('click', '.html-edit-button', function () {
   let code = $('#editHTML').val();
   $('#editHTMLModal').modal('hide')
-  components[index].content = code;
+
+  if (theParent === "editor-user-page") {
+    editorComponents[index].content = code;
+
+  }
+  else if (theParent == "footer-user-page") {
+    footerComponents[index].content = code;
+
+  }
+
   showChanges();
 })
 
 $(document).on("click", ".grid-edit-button", function () {
   let columns = $("#editGridCol").val();
   $("#editGridModal").modal("hide");
-  components[index].columns = columns;
-  components[index].gridContent = [];
+
+
+  if (theParent === "editor-user-page") {
+    editorComponents[index].columns = columns;
+    editorComponents[index].gridContent = [];
+  }
+  else if (theParent == "footer-user-page") {
+    footerComponents[index].columns = columns;
+    footerComponents[index].gridContent = [];
+  }
+
+
   showChanges();
 });
 
@@ -407,9 +557,19 @@ $(document).on('click', '.button-edit-button', function () {
   let content = $('#editButtonText').val();
   let style = $('#editButtonStyle').val();
   $('#editButtonModal').modal('hide');
-  components[index].url = url;
-  components[index].content = content;
-  components[index].style = style;
+
+
+  if (theParent === "editor-user-page") {
+    editorComponents[index].url = url;
+    editorComponents[index].content = content;
+    editorComponents[index].style = style;
+  }
+  else if (theParent == "footer-user-page") {
+    footerComponents[index].url = url;
+    footerComponents[index].content = content;
+    footerComponents[index].style = style;
+  }
+
 
   showChanges();
 })
@@ -417,7 +577,7 @@ $(document).on('click', '.button-edit-button', function () {
 $(document).on('click', '.spacer-edit-button', function () {
   let height = $('#editSpacerHeight').val();
   $('#editSpacerModal').modal('hide');
-  components[index].height = height;
+  editorComponents[index].height = height;
 
   showChanges();
 })
@@ -426,6 +586,7 @@ $(document).on('click', '.divider-edit-button', function () {
   let height = $('#editDividerHeight').val();
   $('#editDividerModal').modal('hide');
   components[index].height = height;
+
 
   showChanges();
 })
@@ -447,8 +608,8 @@ $(document).on("click", ".text-component-grid", function () {
   indexGrid = idBoth[1];
 
   $('#editTextModal').modal('show');
-  $('#editText').val(components[idBoth[0]].gridContent[idBoth[1]].content);
-  $("#hType").val(components[idBoth[0]].gridContent[idBoth[1]].header);
+  $('#editText').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+  $("#hType").val(editorComponents[idBoth[0]].gridContent[idBoth[1]].header);
 
 });
 
@@ -464,7 +625,7 @@ $(document).on("click", ".image-component-grid", function () {
   indexGrid = idBoth[1];
 
   $('#editImageModal').modal('show');
-  $('#addImageURL').val(components[idBoth[0]].gridContent[idBoth[1]].content);
+  $('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
 });
 
 $(document).on("click", ".grid-text-add", function () {
@@ -513,26 +674,26 @@ $(document).on("click", ".grid-embed-add", function () {
 
 
 function addTextGrid(gridIndex, componentIndex) {
-  var comp = components[componentIndex]
+  var comp = editorComponents[componentIndex]
   comp.gridContent[gridIndex] = makeTextComponent()
   showChanges();
 }
 
 
 function addImageGrid(gridIndex, componentIndex) {
-  var comp = components[componentIndex]
+  var comp = editorComponents[componentIndex]
   comp.gridContent[gridIndex] = makeImageComponent()
   showChanges();
 }
 
 function addBlankGrid(gridIndex, componentIndex) {
-  var comp = components[componentIndex]
+  var comp = editorComponents[componentIndex]
   comp.gridContent[gridIndex] = makeBlankComponent()
   showChanges();
 }
 
 function addEmbedGrid(gridIndex, componentIndex) {
-  var comp = components[componentIndex]
+  var comp = editorComponents[componentIndex]
   comp.gridContent[gridIndex] = makeMediaComponent()
   showChanges();
 }
@@ -662,58 +823,115 @@ function getOutput(component, index) {
 // Function to render changes
 function showChanges() {
 
-  $('#editor-user-page').empty()
-  if (components.length == 1) {
+  $('.editable-area').empty()
+
+  //  $('#editor-user-page').empty()
+  if (editorComponents.length == 1) {
     $('#editor-user-page').removeClass("invisible").addClass("visible");
   }
 
-  for (let i = 0; i < components.length; i++) {
-    switch (components[i].type) {
+  if (footerComponents.length == 1) {
+    $('#footer-user-page').removeClass("invisible").addClass("visible");
+  }
+
+  for (let i = 0; i < editorComponents.length; i++) {
+    switch (editorComponents[i].type) {
       case 'text':
-        $('#editor-user-page').append(textComponentOutput(components[i], i));
+        $('#editor-user-page').append(textComponentOutput(editorComponents[i], i));
         break;
       case 'image':
-        $('#editor-user-page').append(imageComponentOutput(components[i], i));
+        $('#editor-user-page').append(imageComponentOutput(editorComponents[i], i));
         break;
       case 'media':
-        $('#editor-user-page').append(mediaComponentOutput(components[i], i));
+        $('#editor-user-page').append(mediaComponentOutput(editorComponents[i], i));
         break;
       case 'paragraph':
-        $('#editor-user-page').append(paragraphComponentOutput(components[i], i));
+        $('#editor-user-page').append(paragraphComponentOutput(editorComponents[i], i));
         break;
       case 'html':
-        $('#editor-user-page').append(HTMLComponentOutput(components[i], i));
+        $('#editor-user-page').append(HTMLComponentOutput(editorComponents[i], i));
         break;
       case 'grid':
-        $('#editor-user-page').append(gridComponentOutput(components[i], i));
+        $('#editor-user-page').append(gridComponentOutput(editorComponents[i], i));
         break;
       case 'button':
-        $('#editor-user-page').append(buttonComponentOutput(components[i], i));
+        $('#editor-user-page').append(buttonComponentOutput(editorComponents[i], i));
         break;
       case 'spacer':
-        $('#editor-user-page').append(spacerComponentOutput(components[i], i));
+        $('#editor-user-page').append(spacerComponentOutput(editorComponents[i], i));
         break;
       case 'divider':
-        $('#editor-user-page').append(dividerComponentOutput(components[i], i));
+        $('#editor-user-page').append(dividerComponentOutput(editorComponents[i], i));
         break;
     }
   }
+
+  for (let i = 0; i < footerComponents.length; i++) {
+    switch (footerComponents[i].type) {
+      case 'text':
+        $('#footer-user-page').append(textComponentOutput(footerComponents[i], i));
+        break;
+      case 'image':
+        $('#footer-user-page').append(imageComponentOutput(footerComponents[i], i));
+        break;
+      case 'media':
+        $('#footer-user-page').append(mediaComponentOutput(footerComponents[i], i));
+        break;
+      case 'paragraph':
+        $('#footer-user-page').append(paragraphComponentOutput(footerComponents[i], i));
+        break;
+      case 'html':
+        $('#footer-user-page').append(HTMLComponentOutput(footerComponents[i], i));
+        break;
+      case 'grid':
+        $('#footer-user-page').append(gridComponentOutput(footerComponents[i], i));
+        break;
+      case 'button':
+        $('#footer-user-page').append(buttonComponentOutput(footerComponents[i], i));
+        break;
+      case 'spacer':
+        $('#footer-user-page').append(spacerComponentOutput(footerComponents[i], i));
+        break;
+      case 'divider':
+        $('#footer-user-page').append(dividerComponentOutput(footerComponents[i], i));
+        break;
+    }
+  }
+
+  componentParent = undefined;
+
 }
 
 function deleteElement() {
-  $('#editor-user-page').empty()
-  if (components.length == 1) {
+
+  $('#editable-area').empty()
+  if (editorComponents.length == 1) {
     $('#editor-user-page').removeClass("invisible").addClass("visible");
   }
-  if (indexGrid != -1) {
-    components[index].gridContent.splice(indexGrid, 1);
-  } else {
-    components.splice(index, 1);
+
+  if (footerComponents.length == 1) {
+    $('#footer-user-page').removeClass("invisible").addClass("visible");
+  }
+
+  if (componentParent == "editor-user-page") {
+    if (indexGrid != -1) {
+      components[index].gridContent.splice(indexGrid, 1);
+    } else {
+      components.splice(index, 1);
+    }
   }
   showChanges();
-  index = components.length;
+  index = editorComponents.length;
   indexGrid = -1;
 }
+
+if (componentParent == "footer-user-page") {
+  footerComponents.splice(index, 1);
+  showChanges();
+  index = footerComponents.length;
+  indexGrid = -1;
+}
+
 
 $(document).on('click', '.preview-editor', function () {
   const new_page = $('#editor-user-page').html();
@@ -728,19 +946,19 @@ $(document).on('click', '.preview-editor', function () {
 })
 
 function changeWebpage(name) {
-  webpages[currentWebpage] = components;
+  webpages['webpages'][currentWebpage] = editorComponents;
   currentWebpage = name;
-  if (typeof webpages[currentWebpage] == 'undefined') {
-    webpages[currentWebpage] = [];
+  if (typeof webpages['webpages'][currentWebpage] == 'undefined') {
+    webpages['webpages'][currentWebpage] = [];
   }
-  components = webpages[currentWebpage];
+  editorComponents = webpages['webpages'][currentWebpage];
   displayWebpages();
   showChanges();
 }
 
 function displayWebpages() {
   $('#webpages-nav-list').empty();
-  Object.keys(webpages).forEach(function (value, index) {
+  Object.keys(webpages['webpages']).forEach(function (value, index) {
     var isCurrent = false;
     if (value === currentWebpage) {
       isCurrent = true;
