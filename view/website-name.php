@@ -22,91 +22,92 @@
   <?php require_once '../utilities/requirements.php' ?>
 
   <!-- Nav Bar -->
-  <?php 
-  $page = 'websites';
-  include 'navbar.php' 
-  ?>
-
-  <!-- If there is a message, show message to user -->
   <?php
-  if (!empty($_SESSION['WEBSITE_MSG'])) {
-    echo "<div class=\"alert alert-warning\" role=\"alert\">";
-    echo $_SESSION['WEBSITE_MSG'];
-    echo "</div>";
-  }
+  $page = 'websites';
+  include 'navbar.php'
   ?>
 
   <?php
   try {
     $websitelst = $model->listWebsites();
-  } catch (SessionNotFound $e) {
+  } catch (Exception $e) {
     redirect('view/login.php');
     die();
   }
   ?>
 
   <!-- Banner -->
-  <div class="jumbotron jumbotron-fluid">
-      <div class="container" id="banner-text">
-          <h1 class="display-4">Your Websites</h1>
-      </div>
+  <div class="jumbotron jumbotron-fluid mb-0">
+    <div class="container" id="banner-text">
+      <h1 class="display-4">Your Websites</h1>
+    </div>
   </div>
 
+  <!-- If there is a message, show message to user -->
+  <?php
+  if (!empty($_SESSION['WEBSITENAME'])) {
+    echo "<div class=\"alert alert-warning\" role=\"alert\">";
+    echo $_SESSION['WEBSITENAME'];
+    echo "</div>";
+    $_SESSION['WEBSITENAME'] = '';
+  }
+  ?>
 
-  <div class="mt-4 pb-3">
-    <div class="container" style="margin-top:80px; margin-bottom:50px;">
-      <table class="table table-hover" >
-        <thead>
+  <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+    <div class="mt-4 pb-3">
+      <div class="container" style="margin-top:80px; margin-bottom:50px;">
+        <table class="table table-hover">
+          <thead>
             <tr>
-            <th scope="col">Website Name</th>
-            <th scope="col"></th>
+              <th scope="col">Website Name</th>
+              <th scope="col"></th>
             </tr>
-        </thead>
-        <tbody>
-        <?php
+          </thead>
+          <tbody>
+            <?php
             if (!empty($websitelst))
               foreach ($websitelst as $website) {
-                echo '<tr style="cursor: pointer;"><td data-href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . ' ">' . $website->name . '</td>';
-                echo "<td class='text-right'><a class='btn btn-danger' data-toggle='modal' data-target='#del-feedback' href=''>Delete</a></td></tr>";
-              }
-            else{ 
-              echo "<tr><td data-href=''>You have no websites.</td>";
+                echo '<tr><td style="cursor: pointer;" data-href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . '">' . $website->name . '</td>';
+                echo '<td class="text-right"><button type="button" onclick="StoreWebID(' . $website->id . ')" class="btn btn-danger" name="web" value="' . $website->id . '" data-toggle="modal" data-target="#del-feedback">Delete</button></td></tr>';
+              } else {
+              echo "<tr><td data-href=''>You have no websites! Please click the plus button to create a new website.</td>";
               echo "<td></td></tr>";
             }
-
-          ?>
-        </tbody>
-      </table>
+            ?>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
 
-  <!-- + button -->
+    <!-- + button -->
     <div class="container" style="padding-bottom:150px;">
-        <div class="text-right mb-3 overlay">
-          <button type="button" class="btn btn-light-primary btn-circle btn-xl" data-toggle="modal" data-target="#new-feedback"><i class="fa fa-plus" aria-hidden="true"></i></button>
-        </div>
+      <div class="text-right mb-3 overlay">
+        <button type="button" class="btn btn-light-primary btn-circle btn-xl" data-toggle="modal" data-target="#new-feedback"><i class="fa fa-plus" aria-hidden="true"></i></button>
+      </div>
     </div>
 
-  <div class="modal fade" id="del-feedback" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header text-left bg-danger text-white">
-          <h5 class="modal-title w-100">Deleting is Permanent!</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" style="color:white;">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="container mt-3">
-            <p style="text-align:center; margin-bottom:40px;">Are you sure you want to delete your website?</p>
-            <div class="modal-footer">
-                <a type="button" class="btn btn-outline-danger" href="" action="<?php echo $config['home-file-path']; ?>/controller/controller.php" method="POST" data-dismiss="modal">Delete</a>
+    <div class="modal fade" id="del-feedback" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-left bg-danger text-white">
+            <h5 class="modal-title w-100">Deleting is Permanent!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" style="color:white;">&times;</span>
+          </div>
+          <div class="modal-body">
+            <div class="container mt-3">
+              <p style="text-align:center; margin-bottom:40px;">Are you sure you want to delete your website?</p>
+              <div class="modal-footer">
+                <button name="SITE" type="Submit" id="deletefinal" class="btn btn-outline-danger">Delete</button>
+                <input type="hidden" name="COMMAND" value="WEBSITE_DELETE">
                 <a type="button" class="btn btn-secondary" href="" data-dismiss="modal">Close</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </form>
 
 
   <div class="modal fade" id="new-feedback" tabindex="-1" role="dialog" aria-hidden="true">
@@ -115,16 +116,25 @@
         <div class="modal-header text-left bg-info text-white">
           <h5 class="modal-title w-100">Create a New Website!</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" style="color:white;">&times;</span>
+            <span aria-hidden="true" style="color:white;">&times;</span>
         </div>
+        <!-- If there is a message, show message to user -->
+        <?php
+        if (!empty($_SESSION['WEBSITENAME'])) {
+          echo "<div class=\"alert alert-warning\" role=\"alert\">";
+          echo $_SESSION['WEBSITENAME'];
+          echo "</div>";
+          $_SESSION['WEBSITENAME'] = '';
+        }
+        ?>
         <div class="modal-body" style="margin-bottom:30px;">
           <div class="container">
             <h4 class="text-center mt-5 text-muted">Enter the name of your website:</h4>
             <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
               <div class="form-group form-group-lg">
-                <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z_]{3}[A-Za-z_]*$" title="3 characters, only a-z and underline">
+                <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces">
               </div>
-              <div class="form-group" style="text-align:center; margin-top: 30px;">
+              <div class="form-group" style="text-align:center">
                 <button class="btn btn-outline-primary" type="Submit">Submit</button>
                 <input type="hidden" name="COMMAND" value="WEBSITE_WIZARD">
               </div>
@@ -138,7 +148,7 @@
   <!-- Footer -->
   <footer id="sticky-footer" class="py-4 bg-dark text-white-50 fixed-bottom">
     <div class="container text-center">
-        <small>Copyright &copy; Brix.ca</small>
+      <small>Copyright &copy; Brix.ca</small>
     </div>
   </footer>
 
@@ -148,16 +158,20 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
   <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const rows = document.querySelectorAll("td[data-href]");
-            rows.forEach(row => {
-                row.addEventListener("click", ()=>{
-                    window.location.href = row.dataset.href;
+    document.addEventListener("DOMContentLoaded", () => {
+      const rows = document.querySelectorAll("td[data-href]");
+      rows.forEach(row => {
+        row.addEventListener("click", () => {
+          window.location.href = row.dataset.href;
 
-                });
-            });
         });
-    </script>
+      });
+    });
+
+    function StoreWebID(f) {
+      $("#deletefinal").val(f);
+    }
+  </script>
 </body>
 
 </html>
