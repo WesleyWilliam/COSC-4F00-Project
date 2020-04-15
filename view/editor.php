@@ -14,21 +14,21 @@
       background-color: yellow;
     }
 
-    /*making navbar scrollable*/
-    #sidebar {
-      height: 700px;
-      width: 15%;
+    /*used for grid*/
+    .column {
+      float: left;
+      width: 50%;
     }
 
-    #sidebarList {
+    #footer-user-page{
 
-      height: 100%;
-
-      max-width: 100%;
-      overflow-y: scroll;
-      overflow-x: hidden;
+position: sticky;
+bottom: 0px;
 
 
+    }
+
+    #editor-user-page{
 
 
     }
@@ -73,16 +73,13 @@ bottom: 0px;
       if ($component == "WRONGUSER") {
         echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
         die();
-      } elseif ($component == "ERR") {
-        echo '</head><body> <h1>Error, something went wrong, try logging out and trying again </h1> </body> </html>';
-        die();
       }
     } else {
       //Later on well make this go to the first website for your user
       echo '</head><body> <h1> Error, needs website id provided by get request </h1> </body> </html>';
       die();
     }
-  } catch (Exception $e) {
+  } catch (SessionNotFound $e) {
     redirect('view/login.php');
     die();
   }
@@ -90,9 +87,11 @@ bottom: 0px;
 
   <!-- Javascript code -->
   <script>
-    <?php include('script.php') ?>
+    
+  <?php include('script.php') ?>
+ 
   </script>
-
+    
 
 </head>
 
@@ -103,16 +102,10 @@ bottom: 0px;
 
   <!-- Editor -->
   <div class="row">
-    <i id="sidebarMinimize" data-feather="sidebar"></i>
-
-  </div>
-  <div class="row">
 
     <!-- Side bar -->
-
-    <div id="sidebar" class="col">
-
-      <ul id="sidebarList" class="list-group ui-draggable">
+    <div class="col" id="sidebar">
+      <ul class="list-group" id="sidebarList" style="position:fixed; width:15%;">
         <li id="text-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Text</span>
@@ -194,7 +187,7 @@ bottom: 0px;
           <a role="button" href="<?php echo $config['home-file-path']; ?>/view/themes.php" class="btn btn-outline-info mr-2 btn-link">Themes</a>
           <button type="button" class="btn btn-outline-info mr-2">Help</button>
           <button type="button" class="btn btn-outline-info">Edit</button>
-          <button type="button" class="btn btn-outline-danger" id="delete-webpage-button">Delete Webpage</button>
+          <button type="button" class="btn btn-outline-info add-webpage-button">Add Webpage</button>
         </div>
         <div>
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
@@ -225,6 +218,7 @@ bottom: 0px;
           <!-- Footer space -->
       <div class="jumbotron mt-3 mr-4 visible editable-area" id="footer-user-page">
       </div>
+
 </div>
 
     </div>
@@ -401,22 +395,7 @@ bottom: 0px;
       </div>
     </div>
 
-    <!-- Uploading image modal -->
-    <div class="modal" tabindex="-1" role="dialog" id="imgSpinnerModal">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Uploading image</h5>
-          </div>
-          <div class="modal-body">
-            <p>Uploading image</p>
-            <div class="spinner-border" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  
 
     <!-- Edit grid -->
     <div class="modal fade" id="editGridModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -467,45 +446,23 @@ bottom: 0px;
             </button>
           </div>
           <div class="modal-body">
-            <form id="save-webpage-form">
+            <form>
               <div class="form-group">
                 <label for="userText">Webpage:</label>
-                <input type="text" class="form-control" id="webpageText" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces" required>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" id="save-webpage-button" aria-label="Close">Add</button>
+                <input type="text" class="form-control" id="webpageText">
               </div>
             </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" id="save-webpage-button" data-dismiss="modal" aria-label="Close">Add</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-
-    <!-- Delete Webpage Modal -->
-    <div class="modal fade" id="deleteWebpageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Delete Webpage</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p id="deleteWebpageModalBody"></p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" id="deleteWebsiteModalButton" aria-label="Close" data-dismiss="modal">Yes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- EditButton modal -->
-    <div class="modal fade" id="editButtonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- EditButton modal -->
+<div class="modal fade" id="editButtonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -523,17 +480,17 @@ bottom: 0px;
                 <input type="text" class="form-control" id="editButtonText">
 
                 <label for="editButtonStyle">Select Style:</label>
-                <select class="form-control" id="editButtonStyle">
-                  <option value="btn btn-primary">Light Blue</option>
-                  <option value="btn btn-secondary">Grey</option>
-                  <option value="btn btn-success">Green</option>
-                  <option value="btn btn-danger">Red</option>
-                  <option value="btn btn-warning">Orange</option>
-                  <option value="btn btn-info">Turqoise</option>
-                  <option value="btn btn-light">White</option>
-                  <option value="btn btn-dark">Black</option>
-                  <option value="btn btn-link">Link</option>
-                </select>
+              <select class="form-control" id="editButtonStyle">
+                <option value="btn btn-primary">Light Blue</option>
+                <option value="btn btn-secondary">Grey</option>
+                <option value="btn btn-success">Green</option>
+                <option value="btn btn-danger">Red</option>
+                <option value="btn btn-warning">Orange</option>
+                <option value="btn btn-info">Turqoise</option>
+                <option value="btn btn-light">White</option>
+                <option value="btn btn-dark">Black</option>
+                <option value="btn btn-link">Link</option>
+              </select>
 
               </div>
             </form>
@@ -546,7 +503,7 @@ bottom: 0px;
       </div>
     </div>
 
-    <!-- EditSpacer modal -->
+<!-- EditSpacer modal -->
     <div class="modal fade" id="editSpacerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -559,7 +516,7 @@ bottom: 0px;
           <div class="modal-body">
             <form>
               <div class="form-group">
-
+       
                 <label for="editSpacerHeight">Height:</label>
                 <input type="number" class="form-control" id="editSpacerHeight">
 
@@ -575,17 +532,26 @@ bottom: 0px;
       </div>
     </div>
 
-    <!-- editDivider modal -->
-    <div class="modal fade" id="editDividerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- editDivider modal -->
+<div class="modal fade" id="editDividerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Spacer</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Divider</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
+          <form>
+              <div class="form-group">
+       
+                <label for="editDividerHeight">Height:</label>
+                <input type="number" class="form-control" id="editDividerHeight">
+
+
+              </div>
+            </form>
 
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
