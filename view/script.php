@@ -157,6 +157,7 @@ $(function () {
 
       case 'divider':
         $('#editDividerModal').modal('show');
+        $('#editDividerHeight').val(components[id].height);
         break;
 
 
@@ -247,7 +248,9 @@ function makeSpacerComponent() {
 
 function makeDividerComponent() {
   var component = {
-    type: "divider"
+    type: "divider",
+    height: "100"
+
   };
   return component;
 };
@@ -420,7 +423,10 @@ $(document).on('click', '.spacer-edit-button', function () {
 })
 
 $(document).on('click', '.divider-edit-button', function () {
+  let height = $('#editDividerHeight').val();
   $('#editDividerModal').modal('hide');
+  components[index].height = height;
+
   showChanges();
 })
 
@@ -580,7 +586,7 @@ function spacerComponentOutput(component, index) {
 
 //Function to output divider component 
 function dividerComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4'style='height:100px'><hr></div>"
+  return "<div id='" + index + "' class='component mb-4' style='height:" + component.height + "px'><hr></div>"
 }
 
 // Function to output grid component html code
