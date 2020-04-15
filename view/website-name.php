@@ -55,7 +55,7 @@
 
   <div class="mt-4 pb-3">
     <div class="container" style="margin-top:80px; margin-bottom:50px;">
-      <table class="table table-hover" style="cursor: pointer;">
+      <table class="table table-hover" >
         <thead>
             <tr>
             <th scope="col">Website Name</th>
@@ -66,7 +66,7 @@
         <?php
             if (!empty($websitelst))
               foreach ($websitelst as $website) {
-                echo '<tr><td data-href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . '">' . $website->name . '</td>';
+                echo '<tr style="cursor: pointer;"><td data-href="' . $config['home-file-path'] . '/view/editor.php?website=' . $website->id . ' ">' . $website->name . '</td>';
                 echo "<td class='text-right'><a class='btn btn-danger' data-toggle='modal' data-target='#del-feedback' href=''>Delete</a></td></tr>";
               }
             else{ 
@@ -82,7 +82,7 @@
 
   <!-- + button -->
     <div class="container" style="padding-bottom:150px;">
-        <div class="text-right mr-2 overlay">
+        <div class="text-right mb-3 overlay">
           <button type="button" class="btn btn-light-primary btn-circle btn-xl" data-toggle="modal" data-target="#new-feedback"><i class="fa fa-plus" aria-hidden="true"></i></button>
         </div>
     </div>
@@ -125,7 +125,7 @@
                 <input name="WEBSITE" type="text" class="form-control mt-5" style="text-align:center" pattern="[A-Za-z_]{3}[A-Za-z_]*$" title="3 characters, only a-z and underline">
               </div>
               <div class="form-group" style="text-align:center; margin-top: 30px;">
-                <button class="btn btn-outline-info" type="Submit">Submit</button>
+                <button class="btn btn-outline-primary" type="Submit">Submit</button>
                 <input type="hidden" name="COMMAND" value="WEBSITE_WIZARD">
               </div>
             </form>
