@@ -30,7 +30,7 @@
         } else {
             $name = $user->firstname;
         }
-    } catch (SessionNotFound $e) {
+    } catch (Exception $e) {
         redirect('view/login.php');
         die();
     }
@@ -155,7 +155,8 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <select id="cars" class="form-control">
+                                    <input type="hidden" name="COMMAND" value="UPDATEPRIVACY">
+                                    <select id="permisson" class="form-control" name="VPERM" onchange="this.form.submit()" value="<?php echo $user->view_permissions; ?>">
                                         <option value="ALL">Everyone</option>
                                         <option value="FRIENDS">Friends</option>
                                         <option value="ME">Only Me</option>
@@ -198,7 +199,7 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <input type="tel" inputmode="numeric" class="form-control" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" id="ccn" name="CREDIT" placeholder="xxxx xxxx xxxx xxxx" value="8223 2012 2302 9291">
+                                    <input type="tel" inputmode="numeric" class="form-control" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" id="ccn" name="CNUM" placeholder="xxxx xxxx xxxx xxxx" value="<?php echo $user->cardnumber; ?>">
                                 </div>
                             </div>
                         </div>
@@ -208,7 +209,7 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <input type="month" class="form-control" id="experation" name="EXPERATION" placeholder="experation" value="2020-03">
+                                    <input type="month" class="form-control" id="experation" name="EDATE" value="<?php echo $user->expdate; ?>">
                                 </div>
                             </div>
                         </div>
@@ -218,7 +219,7 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <input type="tel" inputmode="numeric" class="form-control" pattern="[0-9]{3}" autocomplete="cvv-number" maxlength="3" id="cvv" name="CVV" placeholder="xxx" value="">
+                                    <input type="tel" inputmode="numeric" class="form-control" pattern="[0-9]{3}" autocomplete="cvv-number" maxlength="3" id="cvv" name="CVVNUM" placeholder="xxx" value="<?php echo $user->cvvnum; ?>">
                                 </div>
                             </div>
                         </div>
@@ -228,7 +229,7 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <select id="cars" class="form-control">
+                                    <select class="form-control" name="TYPE" value="<?php echo $user->type; ?>">
                                         <option value="MC">Master Card</option>
                                         <option value="VISA">Visa</option>
                                         <option value="PP">Pay Pal</option>
@@ -269,7 +270,8 @@
                         <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
                             <div class="col-3">
                                 <div class="form-group">
-                                    <select id="cars" class="form-control">
+                                    <input type="hidden" name="COMMAND" value="UPDATESUBSCRIPTIONS">
+                                    <select class="form-control" onchange="this.form.submit()" name="SUB">
                                         <option value="PREM">Premium</option>
                                         <option value="BASIC">Basic</option>
                                         <option value="FREE">Free</option>
@@ -295,7 +297,7 @@
                             ?>
                         </div>
                     </div>
-                    <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
+                    <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST" >
                         <div class="row">
                             <div class="col-2">
                                 <p>Delete Account: </p>

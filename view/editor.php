@@ -9,18 +9,42 @@
 
   <!-- Local CSS -->
   <style>
+    /*components turn yellow on hover. Should be changed to reflect the style of the website, just wanted to add the feature*/
+    div.component:hover {
+      background-color: yellow;
+    }
 
-div.component:hover {
-  background-color: yellow;
-}
+    /*used for grid*/
+    .column {
+      float: left;
+      width: 50%;
+    }
 
-.highlight {
-            border: 1px solid red;
-            font-weight: bold;
-            font-size: 45px;
-            background-color: #333333;
-         }
+    #footer-user-page{
 
+position: sticky;
+bottom: 0px;
+
+
+    }
+
+    #editor-user-page{
+
+
+    }
+
+    #footer-user-page{
+
+position: sticky;
+bottom: 0px;
+
+
+    }
+
+    #editor-user-page{
+
+
+    }
   </style>
 
   <!-- Including bootstrap CSS files -->
@@ -32,8 +56,8 @@ div.component:hover {
   <!-- Jquery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<!-- jquery ui -->
-  <script src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- jquery ui -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
   <!-- CKEditor -->
   <script src="https://cdn.ckeditor.com/ckeditor5/17.0.0/classic/ckeditor.js"></script>
@@ -45,7 +69,7 @@ div.component:hover {
   try {
     $component = NULL;
     if (isset($_GET['website'])) {
-      $component = $model->getComponents($_GET['website']);
+      $component = $model->getWebsites($_GET['website']);
       if ($component == "WRONGUSER") {
         echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
         die();
@@ -78,10 +102,11 @@ div.component:hover {
 
   <!-- Editor -->
   <div class="row">
+
     <!-- Side bar -->
-    <div class="col" id="sidebar" >
+    <div class="col" id="sidebar">
       <ul class="list-group" id="sidebarList" style="position:fixed; width:15%;">
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addText(event)">
+        <li id="text-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Text</span>
 
@@ -89,14 +114,15 @@ div.component:hover {
           </div>
         </li>
 
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addImage(event)">
+        <li id="image-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Image</span>
 
             <i data-feather="image"></i>
           </div>
         </li>
-        <li class="list-group-item list-group-item-action">
+        <li id="grid-sidebar-button" class="list-group-item list-group-item-action">
+
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Grid</span>
 
@@ -104,7 +130,7 @@ div.component:hover {
           </div>
         </li>
 
-        <li class="list-group-item list-group-item-action" draggable="true" ondragstart="addMedia(event)">
+        <li id="embeddedcontent-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Embedded Content</span>
 
@@ -114,21 +140,45 @@ div.component:hover {
 
 
 
-        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" draggable="true" ondragstart="addParagraph(event)">
+        <li id="paragraph-sidebar-button" class="list-group-item list-group-item-action paragraph-sidebar">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Rich Text</span>
             <i data-feather="align-left"></i>
           </div>
         </li>
 
-        <li class="list-group-item list-group-item-action paragraph-sidebar" id="paragraph-sidebar-button" draggable="true" ondragstart="addHTML(event)">
+        <li id="html-sidebar-button" li class="list-group-item list-group-item-action html-sidebar">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>HTML Block</span>
             <i data-feather="code"></i>
           </div>
         </li>
+
+        <li id="button-sidebar-button" li class="list-group-item list-group-item-action button-sidebar">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Button</span>
+            <i data-feather="square"></i>
+          </div>
+        </li>
+
+
+        <li id="spacer-sidebar-button" li class="list-group-item list-group-item-action spacer-sidebar">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Spacer</span>
+            <i data-feather="maximize"></i>
+          </div>
+        </li>
+
+        <li id="divider-sidebar-button" li class="list-group-item list-group-item-action divider-sidebar">
+          <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+            <span>Divider</span>
+            <i data-feather="minus"></i>
+          </div>
+        </li>
+
       </ul>
     </div>
+
 
     <!-- Editor -->
     <div class="col-10">
@@ -137,18 +187,40 @@ div.component:hover {
           <a role="button" href="<?php echo $config['home-file-path']; ?>/view/themes.php" class="btn btn-outline-info mr-2 btn-link">Themes</a>
           <button type="button" class="btn btn-outline-info mr-2">Help</button>
           <button type="button" class="btn btn-outline-info">Edit</button>
+          <button type="button" class="btn btn-outline-info add-webpage-button">Add Webpage</button>
         </div>
         <div>
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
-          <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save</button>
+          <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save all</button>
           <button type="button" class="btn btn-outline-info preview-editor">Preview</button>
         </div>
       </div>
+      <!-- Webpages Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Webpages</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto" id="webpages-nav-list">
+            <li class="nav-item active">
+              <!-- <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a> -->
+            </li>
+          </ul>
+        </div>
+      </nav>
       <div class="alert alert-success save-webpage-alert mr-4" role="alert">
         Webpage changes saved.
       </div>
-      <div class="jumbotron mt-3 mr-4 visible" id="editor-user-page" ondrop="drop(event, this)" ondragover="allowDrop(event)" >
+      
+<div>
+          <!-- Editor space -->
+      <div class="jumbotron mt-3 mr-4 visible editable-area" id="editor-user-page">
       </div>
+
+          <!-- Footer space -->
+      <div class="jumbotron mt-3 mr-4 visible editable-area" id="footer-user-page">
+      </div>
+
+</div>
+
     </div>
 
     <!-- Ensures the link in CKEditor works -->
@@ -317,6 +389,173 @@ div.component:hover {
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
               <button type="button" class="btn btn-primary media-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+
+    <!-- Edit grid -->
+    <div class="modal fade" id="editGridModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Grid</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="editGridCol">Number of columns:</label>
+              <select class="form-control" id="editGridCol">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary grid-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Add Webpage Modal -->
+    <div class="modal fade" id="addWebpageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Webpage</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="userText">Webpage:</label>
+                <input type="text" class="form-control" id="webpageText">
+              </div>
+            </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" id="save-webpage-button" data-dismiss="modal" aria-label="Close">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- EditButton modal -->
+<div class="modal fade" id="editButtonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Button</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="editButtonUrl">URL:</label>
+                <input type="text" class="form-control" id="editButtonURL">
+                <label for="editButtonText">Text:</label>
+                <input type="text" class="form-control" id="editButtonText">
+
+                <label for="editButtonStyle">Select Style:</label>
+              <select class="form-control" id="editButtonStyle">
+                <option value="btn btn-primary">Light Blue</option>
+                <option value="btn btn-secondary">Grey</option>
+                <option value="btn btn-success">Green</option>
+                <option value="btn btn-danger">Red</option>
+                <option value="btn btn-warning">Orange</option>
+                <option value="btn btn-info">Turqoise</option>
+                <option value="btn btn-light">White</option>
+                <option value="btn btn-dark">Black</option>
+                <option value="btn btn-link">Link</option>
+              </select>
+
+              </div>
+            </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary button-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- EditSpacer modal -->
+    <div class="modal fade" id="editSpacerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Spacer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+       
+                <label for="editSpacerHeight">Height:</label>
+                <input type="number" class="form-control" id="editSpacerHeight">
+
+
+              </div>
+            </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary spacer-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- editDivider modal -->
+<div class="modal fade" id="editDividerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Divider</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          <form>
+              <div class="form-group">
+       
+                <label for="editDividerHeight">Height:</label>
+                <input type="number" class="form-control" id="editDividerHeight">
+
+
+              </div>
+            </form>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
+              <button type="button" class="btn btn-primary divider-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
             </div>
           </div>
         </div>
