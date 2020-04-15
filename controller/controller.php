@@ -238,6 +238,25 @@ try {
         $_SESSION['WEBSITENAME'] = "Website was succesfully deleted";
         redirect("view/website-name.php");
         die();
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_DELETE_ADMIN') {
+        $res = $model->deleteWebsiteAdmin($_POST['SITE']);
+        $_SESSION['WEBSITENAME'] = "Website was succesfully deleted";
+        redirect("view/admin-portal.php");
+        die();
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'USER_DELETE_ADMIN') {
+        $res = $model->deleteUserAdmin($_POST['SITE']);
+        if($res == "SUCCESS"){
+            $_SESSION['WEBSITENAME'] = "User was succesfully deleted";
+        } else {
+            $_SESSION['WEBSITENAME'] = "Sorry you cannot delete yourself";
+        }
+        redirect("view/admin-portal.php");
+        die();
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'CONTACT_DELETE_ADMIN') {
+        $res = $model->deleteContact($_POST['SITE']);
+        $_SESSION['WEBSITENAME'] = "Contact was succesfully deleted";
+        redirect("view/admin-portal.php");
+        die();
     } else {
         redirect('view/login.php');
         die();
