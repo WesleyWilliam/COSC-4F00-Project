@@ -23,7 +23,7 @@
   try {
     $model->getUser();
     redirect('view/website-name.php');
-  } catch (SessionNotFound $e) {
+  } catch (Exception $e) {
     //Do nothing
   }
   ?>

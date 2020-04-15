@@ -47,7 +47,7 @@
           $websitelst = null;
           try {
             $websitelst = $model->listAllWebsites();
-          } catch (SessionNotFound $e) {
+          } catch (Exception $e) {
             redirect('view/login.php');
             die();
           }
@@ -81,7 +81,7 @@
           $userlst = null;
           try {
             $userlst = $model->listAllUsers();
-          } catch (SessionNotFound $e) {
+          } catch (Exception $e) {
             redirect('view/login.php');
             die();
           }

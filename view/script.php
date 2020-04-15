@@ -1,4 +1,4 @@
-var str = <?php echo json_encode($component); ?>;
+var str = <? php echo json_encode($component); ?>;
 var webpages = JSON.parse(str);
 var currentWebpage = 'homepage';
 var editorComponents = webpages['webpages'][currentWebpage];
@@ -18,9 +18,9 @@ $(document).ready(function () {
 
 $(function () {
   var startingItem;
-//  var startingParent;
+  //  var startingParent;
   var temp;
-  
+
   //var theParent;
 
 
@@ -30,40 +30,40 @@ $(function () {
 
     start: function (e, ui) {
       startingItem = ui.item.index();
-     var startingParent = ui.item.parent().attr('id');
-  //    sortedIDs = $("#" + startingParent).sortable("toArray");
+      var startingParent = ui.item.parent().attr('id');
+      //    sortedIDs = $("#" + startingParent).sortable("toArray");
 
 
-      if (startingParent === "editor-user-page"){
-       temp = editorComponents.splice(startingItem, 1);
-    //  editorComponents.splice(stoppingItem, 0, temp[0]);
+      if (startingParent === "editor-user-page") {
+        temp = editorComponents.splice(startingItem, 1);
+        //  editorComponents.splice(stoppingItem, 0, temp[0]);
       }
-      else if (startingParent == "footer-user-page"){
-         temp = footerComponents.splice(startingItem, 1);
-     // footerComponents.splice(stoppingItem, 0, temp[0]);
+      else if (startingParent == "footer-user-page") {
+        temp = footerComponents.splice(startingItem, 1);
+        // footerComponents.splice(stoppingItem, 0, temp[0]);
       }
 
-// delete from editorComponents array on start
-// put it somewhere temporarily
-//place it wherever its supposed to go on drop
+      // delete from editorComponents array on start
+      // put it somewhere temporarily
+      //place it wherever its supposed to go on drop
 
 
     },
 
     stop: function (e, ui) {
       var stoppingParent = ui.item.parent().attr('id');
-     console.log("work " +  stoppingParent);
+      console.log("work " + stoppingParent);
 
-   //   sortedIDs = $("#"+stoppingParent).sortable("toArray");
+      //   sortedIDs = $("#"+stoppingParent).sortable("toArray");
       var stoppingItem = ui.item.index();
 
-      if (stoppingParent === "editor-user-page"){
-     // var temp = editorComponents.splice(startingItem, 1);
-      editorComponents.splice(stoppingItem, 0, temp[0]);
+      if (stoppingParent === "editor-user-page") {
+        // var temp = editorComponents.splice(startingItem, 1);
+        editorComponents.splice(stoppingItem, 0, temp[0]);
       }
-      else if (stoppingParent == "footer-user-page"){
-     //   var temp = footerComponents.splice(startingItem, 1);
-     footerComponents.splice(stoppingItem, 0, temp[0]);
+      else if (stoppingParent == "footer-user-page") {
+        //   var temp = footerComponents.splice(startingItem, 1);
+        footerComponents.splice(stoppingItem, 0, temp[0]);
       }
 
 
@@ -75,6 +75,7 @@ $(function () {
 
 
   $("#sidebarList > li").draggable({
+    helper: 'clone',
     revert: true,
     revertDuration: 0
 
@@ -87,10 +88,11 @@ $(function () {
 
 
     drop: function (e, ui) {
+
       var dropped = ui.draggable.attr("id");
       var theParent = $(this).attr('id');
       componentParent = theParent;
-console.log("theparent: " + theParent);
+      console.log("theparent: " + theParent);
 
       var component = null;
       switch (dropped) {
@@ -118,29 +120,35 @@ console.log("theparent: " + theParent);
         case 'spacer-sidebar-button':
           component = makeSpacerComponent();
           break;
-          case 'divider-sidebar-button':
+        case 'divider-sidebar-button':
           component = makeDividerComponent();
           break;
       }
-      if (component!=null) {
-//        editorComponents.push(component);
+      if (component != null) {
+        //        editorComponents.push(component);
 
-        if (theParent === "editor-user-page"){
+        if (theParent === "editor-user-page") {
           editorComponents.push(component);
 
-      }
-      else if (theParent == "footer-user-page"){
-        footerComponents.push(component);
+        }
+        else if (theParent == "footer-user-page") {
+          footerComponents.push(component);
 
-      }
+        }
 
 
         showChanges();
-       // componentParent = undefined;
+        // componentParent = undefined;
       }
     }
 
   }); //make editor droppable
+
+  $(document).on("click", "#sidebarMinimize", function () {
+    $("#sidebar").toggle();
+
+  });
+
 
 
 
@@ -154,17 +162,17 @@ console.log("theparent: " + theParent);
     }
 
     componentParent = $(this).parent().attr('id');
-  console.log("componentParent " + componentParent);
+    console.log("componentParent " + componentParent);
 
-  var tempComponents;
+    var tempComponents;
 
-if (componentParent == "editor-user-page"){
-  tempComponents = editorComponents;
-}
+    if (componentParent == "editor-user-page") {
+      tempComponents = editorComponents;
+    }
 
-if (componentParent == "footer-user-page"){
-  tempComponents = footerComponents;
-}
+    if (componentParent == "footer-user-page") {
+      tempComponents = footerComponents;
+    }
 
     console.log("id " + $(this).attr("id"));
     var id = $(this).attr("id");
@@ -206,34 +214,34 @@ if (componentParent == "footer-user-page"){
         $("#editGridCol").val(tempComponents[id].columns);
         break;
 
-        case 'button':
+      case 'button':
         $('#editButtonModal').modal('show');
         $('#editButtonURL').val(tempComponents[id].url);
         $('#editButtonText').val(tempComponents[id].content);
         break;
 
-        case 'spacer':
+      case 'spacer':
         $('#editSpacerModal').modal('show');
         $('#editSpacerHeight').val(tempComponents[id].height);
         break;
 
-        case 'divider':
+      case 'divider':
         $('#editDividerModal').modal('show');
         break;
 
-        
+
     }
 
 
 
-    if (componentParent == "editor-user-page"){
-  editorComponents = tempComponents;
-}
+    if (componentParent == "editor-user-page") {
+      editorComponents = tempComponents;
+    }
 
-if (componentParent == "footer-user-page"){
-  footerComponents = tempComponents;
-}
-//componentParent = undefined;
+    if (componentParent == "footer-user-page") {
+      footerComponents = tempComponents;
+    }
+    //componentParent = undefined;
 
 
   });
@@ -354,11 +362,12 @@ $(document).on('click', '.save-editor-changes', function () { // Save current st
 })
 
 $(document).on('change', '#imageFile', function () {
-  var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php";
+  $('#imgSpinnerModal').modal('show');
+  var url = "<?php echo $config['home-file-path']; ?>/controller/imgupload.php";
   var properties = document.getElementById("imageFile").files[0];
+  console.log(properties);
   var form_data = new FormData();
   form_data.append("file", properties);
-  form_data.append("COMMAND", "PIC_UPLOAD");
 
   $.ajax({
     url: url,
@@ -368,12 +377,21 @@ $(document).on('change', '#imageFile', function () {
     cache: false,
     processData: false,
     success: function (data, error) {
-      console.log(data);
+      $('#imgSpinnerModal').modal('hide');
       console.log(error);
       $('#editImageModal').modal('hide')
       var component = getComponent();
-      component.content = "<?php echo $config['home-file-path']; ?>/" + data;
-      showChanges();
+      if (data == "TOOBIG") {
+        alert("Image is too big, make it smaller then try again");
+      } else if (data == "NOTIMG") {
+        alert("Not an image");
+      } else if (data == "ERR") {
+        alert("Error uploading image");
+      } else {
+        component.content = "<?php echo $config['home-file-path']; ?>/" + data;
+        showChanges();
+      }
+      //Used to ensure you can upload two of the same photo on firefox
       $('input[type="file"]').val(null);
     }
   });
@@ -384,25 +402,25 @@ function getComponent() {
   console.log(indexGrid);
   //indexGrid is -1 if it's not in a grid
 
-if (componentParent == "editor-user-page"){
+  if (componentParent == "editor-user-page") {
 
-  if (indexGrid == -1) {
-    return editorComponents[index];
-  } else {
-    return editorComponents[index].gridContent[indexGrid];
+    if (indexGrid == -1) {
+      return editorComponents[index];
+    } else {
+      return editorComponents[index].gridContent[indexGrid];
+    }
+
   }
 
-}
+  if (componentParent == "footer-user-page") {
 
-if (componentParent == "footer-user-page"){
+    if (indexGrid == -1) {
+      return footerComponents[index];
+    } else {
+      return footerComponents[index].gridContent[indexGrid];
+    }
 
-  if (indexGrid == -1) {
-    return footerComponents[index];
-  } else {
-    return footerComponents[index].gridContent[indexGrid];
   }
-
-}
 
 
 
@@ -417,7 +435,7 @@ $(document).on('click', '.text-edit-button', function () {
 
 
 
-  
+
   showChanges();
 
 })
@@ -436,18 +454,18 @@ $(document).on('click', '.paragraph-edit-button', function () {
   let res = editor.getData();
   $('#editParagraphModal').modal('hide');
 
-  if (theParent === "editor-user-page"){
+  if (theParent === "editor-user-page") {
     editorComponents[index].html = editor.getData();
 
-      }
-      else if (theParent == "footer-user-page"){
-        footerComponents[index].html = editor.getData();
+  }
+  else if (theParent == "footer-user-page") {
+    footerComponents[index].html = editor.getData();
 
-      }
+  }
 
-      showChanges();
+  showChanges();
 
-  
+
 });
 
 
@@ -460,16 +478,16 @@ $(document).on('click', '.media-edit-button', function () {
   text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
 
 
-  if (theParent === "editor-user-page"){
+  if (theParent === "editor-user-page") {
     editorComponents[index].content = text;
-  editorComponents[index].height = height;
-  editorComponents[index].width = width;
-      }
-      else if (theParent == "footer-user-page"){
-        footerComponents[index].content = text;
-  footerComponents[index].height = height;
-  footerComponents[index].width = width;
-      }
+    editorComponents[index].height = height;
+    editorComponents[index].width = width;
+  }
+  else if (theParent == "footer-user-page") {
+    footerComponents[index].content = text;
+    footerComponents[index].height = height;
+    footerComponents[index].width = width;
+  }
 
 
 
@@ -480,14 +498,14 @@ $(document).on('click', '.html-edit-button', function () {
   let code = $('#editHTML').val();
   $('#editHTMLModal').modal('hide')
 
-  if (theParent === "editor-user-page"){
+  if (theParent === "editor-user-page") {
     editorComponents[index].content = code;
 
-      }
-      else if (theParent == "footer-user-page"){
-        footerComponents[index].content = code;
+  }
+  else if (theParent == "footer-user-page") {
+    footerComponents[index].content = code;
 
-      }
+  }
 
   showChanges();
 })
@@ -497,14 +515,14 @@ $(document).on("click", ".grid-edit-button", function () {
   $("#editGridModal").modal("hide");
 
 
-  if (theParent === "editor-user-page"){
+  if (theParent === "editor-user-page") {
     editorComponents[index].columns = columns;
-  editorComponents[index].gridContent = [];
-      }
-      else if (theParent == "footer-user-page"){
-        footerComponents[index].columns = columns;
-  footerComponents[index].gridContent = [];
-      }
+    editorComponents[index].gridContent = [];
+  }
+  else if (theParent == "footer-user-page") {
+    footerComponents[index].columns = columns;
+    footerComponents[index].gridContent = [];
+  }
 
 
   showChanges();
@@ -514,6 +532,23 @@ $(document).on('click', '.add-webpage-button', function () {
   $('#addWebpageModal').modal('show');
 })
 
+$(document).on('click', '#delete-webpage-button', function () {
+  if (currentWebpage == 'homepage') {
+    alert('can\'t delete homepage');
+  } else {
+    $('#deleteWebpageModalBody').text("Are you sure you want to delete webpage " + currentWebpage + "?");
+    $('#deleteWebpageModal').modal('show');
+  }
+
+})
+
+$(document).on('click', '#deleteWebsiteModalButton', function () {
+  var tmpWebpage = currentWebpage;
+  changeWebpage('homepage');
+  delete webpages[tmpWebpage];
+  displayWebpages();
+});
+
 $(document).on('click', '.button-edit-button', function () {
   let url = $('#editButtonURL').val();
   let content = $('#editButtonText').val();
@@ -521,16 +556,16 @@ $(document).on('click', '.button-edit-button', function () {
   $('#editButtonModal').modal('hide');
 
 
-  if (theParent === "editor-user-page"){
+  if (theParent === "editor-user-page") {
     editorComponents[index].url = url;
-  editorComponents[index].content = content;
-  editorComponents[index].style = style;
-      }
-      else if (theParent == "footer-user-page"){
-        footerComponents[index].url = url;
-  footerComponents[index].content = content;
-  footerComponents[index].style = style;
-      }
+    editorComponents[index].content = content;
+    editorComponents[index].style = style;
+  }
+  else if (theParent == "footer-user-page") {
+    footerComponents[index].url = url;
+    footerComponents[index].content = content;
+    footerComponents[index].style = style;
+  }
 
 
   showChanges();
@@ -547,17 +582,18 @@ $(document).on('click', '.spacer-edit-button', function () {
 $(document).on('click', '.divider-edit-button', function () {
   $('#editDividerModal').modal('hide');
 
-  if (theParent === "editor-user-page"){
+  if (theParent === "editor-user-page") {
 
-      }
-      else if (theParent == "footer-user-page"){
+  }
+  else if (theParent == "footer-user-page") {
 
-      }
+  }
 
   showChanges();
 })
 
-$(document).on('click', '#save-webpage-button', function () {
+$(document).on('submit', '#save-webpage-form', function (e) {
+  e.preventDefault();
   changeWebpage($('#webpageText').val());
   $('#addWebpageModal').modal('hide');
 })
@@ -674,7 +710,7 @@ function textComponentOutputGrid(component, gridIndex, compIndex) {
 
 // Function to output image component html code
 function imageComponentOutput(component, index) {
-  return "<div id='"  + index + "' class='component mb-4'   ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
+  return "<div id='" + index + "' class='component mb-4'   ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
 }
 
 function imageComponentOutputGrid(component, gridIndex, compIndex) {
@@ -702,12 +738,12 @@ function HTMLComponentOutput(component, index) {
 
 //Function to output button component 
 function buttonComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4' ><a href='"+component.url+"' target='_blank' class='"+component.style+"'>"+component.content+"</a></div>"
+  return "<div id='" + index + "' class='component mb-4' ><a href='" + component.url + "' target='_blank' class='" + component.style + "'>" + component.content + "</a></div>"
 }
 
 //Function to output spacer component 
 function spacerComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4' style='height:"+component.height+"px'>&nbsp;</div>"
+  return "<div id='" + index + "' class='component mb-4' style='height:" + component.height + "px'>&nbsp;</div>"
 }
 
 //Function to output divider component 
@@ -737,14 +773,14 @@ function gridComponentOutput(component, index) {
         "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-embed-add\" href=\"#\">Media</a>" +
         "</div>" +
         "</div>";
-    } else if (component.gridContent[x].type == "text") 
+    } else if (component.gridContent[x].type == "text")
       res += textComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "image")
       res += imageComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "blank")
       res += ""
     else if (component.gridContent[x].type == "media")
-      res += mediaComponentOutputGrid(component.gridContent[x],x,index);
+      res += mediaComponentOutputGrid(component.gridContent[x], x, index);
 
     res += "</div>";
   }
@@ -773,13 +809,13 @@ function getOutput(component, index) {
     case 'grid':
       return gridComponentOutput(component, index);
       break;
-      case 'button':
+    case 'button':
       return buttonComponentOutput(component, index);
       break;
-      case 'spacer':
+    case 'spacer':
       return spacerComponentOutput(component, index);
       break;
-      case 'divider':
+    case 'divider':
       return dividerComponentOutput(component, index);
       break;
   }
@@ -790,7 +826,7 @@ function showChanges() {
 
   $('.editable-area').empty()
 
-//  $('#editor-user-page').empty()
+  //  $('#editor-user-page').empty()
   if (editorComponents.length == 1) {
     $('#editor-user-page').removeClass("invisible").addClass("visible");
   }
@@ -825,7 +861,7 @@ function showChanges() {
       case 'spacer':
         $('#editor-user-page').append(spacerComponentOutput(editorComponents[i], i));
         break;
-        case 'divider':
+      case 'divider':
         $('#editor-user-page').append(dividerComponentOutput(editorComponents[i], i));
         break;
     }
@@ -857,13 +893,13 @@ function showChanges() {
       case 'spacer':
         $('#footer-user-page').append(spacerComponentOutput(footerComponents[i], i));
         break;
-        case 'divider':
+      case 'divider':
         $('#footer-user-page').append(dividerComponentOutput(footerComponents[i], i));
         break;
     }
   }
 
-componentParent = undefined;
+  componentParent = undefined;
 
 }
 
@@ -878,25 +914,24 @@ function deleteElement() {
     $('#footer-user-page').removeClass("invisible").addClass("visible");
   }
 
-  if (componentParent == "editor-user-page"){
-  editorComponents.splice(index, 1);
+  if (componentParent == "editor-user-page") {
+    if (indexGrid != -1) {
+      components[index].gridContent.splice(indexGrid, 1);
+    } else {
+      components.splice(index, 1);
+    }
+  }
   showChanges();
   index = editorComponents.length;
   indexGrid = -1;
-  }
+}
 
-  if (componentParent == "footer-user-page"){
-    footerComponents.splice(index, 1);
+if (componentParent == "footer-user-page") {
+  footerComponents.splice(index, 1);
   showChanges();
   index = footerComponents.length;
   indexGrid = -1;
-  }
-
 }
-
-
-
-
 
 
 $(document).on('click', '.preview-editor', function () {
