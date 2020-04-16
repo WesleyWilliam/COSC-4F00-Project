@@ -21,7 +21,7 @@ if (!empty($_SESSION['CONTACT_MSG'])) {
           <div class="col-md-6">
           <div class="md-form mb-0">
             <label for="nameInput">Name</label>
-            <input type="text" class="form-control" id="nameInput" name="FULLNAME" placeholder="Enter your full name" required autofocus>
+            <input type="text" class="form-control" id="nameInput" name="FULLNAME" placeholder="Enter your full name">
           </div>
             </div>
         </div>
@@ -35,10 +35,11 @@ if (!empty($_SESSION['CONTACT_MSG'])) {
             </div>
             
             <div class="w-100 pt-3 pr-3 text-right">
-              <button type="submit" class="btn btn-lg btn-outline-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-lg btn-outline-success" data-dismiss="modal">Send »</button>
+              <button type="button" class="btn btn-lg btn-outline-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-lg btn-outline-success">Send »</button>
+              <input type="hidden" name="COMMAND" value="CONTACT">
             </div>
-            <input type="hidden" name="COMMAND" value="CONTACT">
+            
 
           </div>
         </div>
