@@ -222,12 +222,12 @@ try {
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'CONTACT') {
         if (empty($_POST['EMAIL'])) {
             $_SESSION['CONTACT_MSG'] = "Enter email address";
-            redirect('view/contact.php');
+            redirect('view/support.php');
             die();
         } else {
-            $model->sendContact($_POST['EMAIL'],isset($_POST['FULLNAME'])? $_POST['FULLNAME']:'',isset($_POST['MSG'])?$_POST['MSG']:'');
+            $model->sendContact($_POST['EMAIL'],$_POST['FULLNAME'],$_POST['MSG']);
             $_SESSION['CONTACT_MSG'] = 'Message sent';
-            redirect('view/contact.php');
+            redirect('view/support.php');
             die();
         }
     } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND']=='UNIQUE') {

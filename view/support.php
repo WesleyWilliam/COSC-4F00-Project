@@ -58,12 +58,21 @@
     ?>
 
     <!-- Banner -->
-    <div class="jumbotron jumbotron-fluid" id="top">
+    <div class="jumbotron jumbotron-fluid mb-0" id="top">
         <div class="container" id="banner-text">
             <h1 class="display-4">Help Center</h1>
             <p class="lead">All the answers in one place.</p>
         </div>
     </div>
+
+    <?php
+    if (!empty($_SESSION['CONTACT_MSG'])) {
+    echo "<div class=\"alert alert-warning\" role=\"alert\">";
+    echo $_SESSION['CONTACT_MSG'];
+    echo "</div>";
+    $_SESSION['CONTACT_MSG'] = '';
+    }
+    ?>
 
     <!-- Page Content -->
     <div class="container mt-5">
