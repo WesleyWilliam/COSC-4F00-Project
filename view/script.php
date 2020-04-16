@@ -75,9 +75,12 @@ $(function () {
 
 
   $("#sidebarList > li").draggable({
+    
     helper: 'clone',
+    appendTo: '#sidebar',
+    scroll: false,
     revert: true,
-    revertDuration: 0
+    revertDuration: 0,
 
 
   }); //make sidebar draggable

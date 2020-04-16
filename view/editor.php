@@ -14,12 +14,7 @@
       background-color: yellow;
     }
 
-    /*used for grid*/
-    .column {
-      float: left;
-      width: 50%;
-    }
-
+ 
     #footer-user-page{
 
 position: sticky;
@@ -28,23 +23,36 @@ bottom: 0px;
 
     }
 
-    #editor-user-page{
+ /*making navbar scrollable*/
+  
+    
+    #sidebar { 
+      
+      max-height: 600px;
 
-
-    }
-
-    #footer-user-page{
-
-position: sticky;
-bottom: 0px;
-
-
-    }
-
-    #editor-user-page{
-
+      width: 15%;
+      max-width: 15%;
 
     }
+
+    #sidebarList {
+
+      max-height: inherit;
+
+      max-width: 100%;
+      overflow-y: scroll;
+
+
+
+
+}
+
+
+
+
+
+
+ 
   </style>
 
   <!-- Including bootstrap CSS files -->
@@ -101,11 +109,17 @@ bottom: 0px;
   <?php include 'navbar.php' ?>
 
   <!-- Editor -->
+
+  <div class="row">
+  <i id="sidebarMinimize" data-feather="sidebar"></i>
+
+  </div>
+
   <div class="row">
 
     <!-- Side bar -->
-    <div class="col" id="sidebar">
-      <ul class="list-group" id="sidebarList" style="position:fixed; width:15%;">
+    <div id="sidebar" class="col" >
+      <ul id="sidebarList" class="list-group ui-draggable"  style="position:fixed; width:15%;">
         <li id="text-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Text</span>
