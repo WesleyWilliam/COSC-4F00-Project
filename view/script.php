@@ -30,7 +30,7 @@ $(function () {
 
     start: function (e, ui) {
       startingItem = ui.item.index();
-      var startingParent = ui.item.parent().attr('id');
+      var startingParent = ui.item.closest('.editable-area').attr('id');
       //    sortedIDs = $("#" + startingParent).sortable("toArray");
 
 
@@ -51,8 +51,8 @@ $(function () {
     },
 
     stop: function (e, ui) {
-      var stoppingParent = ui.item.parent().attr('id');
-      console.log("work " + stoppingParent);
+      var stoppingParent = ui.item.closest('.editable-area').attr('id');
+      //console.log("work " + stoppingParent);
 
       //   sortedIDs = $("#"+stoppingParent).sortable("toArray");
       var stoppingItem = ui.item.index();
@@ -161,7 +161,7 @@ $(function () {
       return;
     }
 
-    componentParent = $(this).parent().attr('id');
+    componentParent = $(this).closest('.editable-area').attr('id');
     console.log("componentParent " + componentParent);
 
     var tempComponents;
@@ -293,14 +293,6 @@ function makeParagraphComponent() {
   return component;
 }
 
-function makeBlankComponent() { // Used for grid
-  var component = {
-    type: "blank",
-    content: ""
-  };
-  return component;
-}
-
 function makeGridComponent() {
   var component = {
     type: "grid",
@@ -402,14 +394,20 @@ $(document).on('change', '#imageFile', function () {
 
 //Gets the component from the index and indexGrid global variables
 function getComponent() {
-  console.log(indexGrid);
+  //console.log(indexGrid);
   //indexGrid is -1 if it's not in a grid
 
-  if (componentParent == "editor-user-page") {
+  console.log("the 1: " + index);
+      console.log("the 2: " + indexGrid);
+      console.log("dad: " + componentParent);
 
+  if (componentParent == "editor-user-page") {
+console.log("testing");
     if (indexGrid == -1) {
       return editorComponents[index];
     } else {
+      console.log("hiya: " + editorComponents[index].gridContent[indexGrid]);
+
       return editorComponents[index].gridContent[indexGrid];
     }
 
@@ -420,21 +418,22 @@ function getComponent() {
     if (indexGrid == -1) {
       return footerComponents[index];
     } else {
+
       return footerComponents[index].gridContent[indexGrid];
     }
 
   }
 
-
+console.log("fuck");
 
 }
 
 $(document).on('click', '.text-edit-button', function () {
   let text = $('#editText').val();
-  $('#editTextModal').modal('hide');
   var component = getComponent();
   component.content = text;
   component.header = $("#hType").val();
+  $('#editTextModal').modal('hide');
 
 
 
@@ -456,16 +455,10 @@ $(document).on('click', '.image-edit-button', function () {
 $(document).on('click', '.paragraph-edit-button', function () {
   let res = editor.getData();
   $('#editParagraphModal').modal('hide');
+  var component = getComponent();
+  component.html = editor.getData();
 
-  if (theParent === "editor-user-page") {
-    editorComponents[index].html = editor.getData();
-
-  }
-  else if (theParent == "footer-user-page") {
-    footerComponents[index].html = editor.getData();
-
-  }
-
+  
   showChanges();
 
 
@@ -478,21 +471,13 @@ $(document).on('click', '.media-edit-button', function () {
   let width = $('#editMediaWidth').val();
 
   $('#editMediaModal').modal('hide')
+  var component = getComponent();
+
   text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
 
-
-  if (theParent === "editor-user-page") {
-    editorComponents[index].content = text;
-    editorComponents[index].height = height;
-    editorComponents[index].width = width;
-  }
-  else if (theParent == "footer-user-page") {
-    footerComponents[index].content = text;
-    footerComponents[index].height = height;
-    footerComponents[index].width = width;
-  }
-
-
+    component.content = text;
+    component.height = height;
+    component.width = width;
 
   showChanges();
 })
@@ -500,15 +485,9 @@ $(document).on('click', '.media-edit-button', function () {
 $(document).on('click', '.html-edit-button', function () {
   let code = $('#editHTML').val();
   $('#editHTMLModal').modal('hide')
+  var component = getComponent();
 
-  if (theParent === "editor-user-page") {
-    editorComponents[index].content = code;
-
-  }
-  else if (theParent == "footer-user-page") {
-    footerComponents[index].content = code;
-
-  }
+  component.content = code;
 
   showChanges();
 })
@@ -516,17 +495,11 @@ $(document).on('click', '.html-edit-button', function () {
 $(document).on("click", ".grid-edit-button", function () {
   let columns = $("#editGridCol").val();
   $("#editGridModal").modal("hide");
+  var component = getComponent();
 
 
-  if (theParent === "editor-user-page") {
-    editorComponents[index].columns = columns;
-    editorComponents[index].gridContent = [];
-  }
-  else if (theParent == "footer-user-page") {
-    footerComponents[index].columns = columns;
-    footerComponents[index].gridContent = [];
-  }
-
+    component.columns = columns;
+    component.gridContent = [];
 
   showChanges();
 });
@@ -558,18 +531,11 @@ $(document).on('click', '.button-edit-button', function () {
   let style = $('#editButtonStyle').val();
   $('#editButtonModal').modal('hide');
 
+  var component = getComponent();
 
-  if (theParent === "editor-user-page") {
-    editorComponents[index].url = url;
-    editorComponents[index].content = content;
-    editorComponents[index].style = style;
-  }
-  else if (theParent == "footer-user-page") {
-    footerComponents[index].url = url;
-    footerComponents[index].content = content;
-    footerComponents[index].style = style;
-  }
-
+    component.url = url;
+    component.content = content;
+    component.style = style;
 
   showChanges();
 })
@@ -577,7 +543,9 @@ $(document).on('click', '.button-edit-button', function () {
 $(document).on('click', '.spacer-edit-button', function () {
   let height = $('#editSpacerHeight').val();
   $('#editSpacerModal').modal('hide');
-  editorComponents[index].height = height;
+  var component = getComponent();
+
+  component.height = height;
 
   showChanges();
 })
@@ -585,7 +553,9 @@ $(document).on('click', '.spacer-edit-button', function () {
 $(document).on('click', '.divider-edit-button', function () {
   let height = $('#editDividerHeight').val();
   $('#editDividerModal').modal('hide');
-  components[index].height = height;
+  var component = getComponent();
+
+  component.height = height;
 
 
   showChanges();
@@ -599,39 +569,130 @@ $(document).on('submit', '#save-webpage-form', function (e) {
 
 
 $(document).on("click", ".text-component-grid", function () {
+
+  componentParent = $(this).closest('.editable-area').attr('id');
+    console.log("componentParent" + componentParent);
+
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  
+  var idBoth = id.split("-");
+  //var component = getComponent();
+
+  index = idBoth[0];
+  indexGrid = idBoth[1];
+
+  console.log("idBoth[0]: " + idBoth[0]);
+  console.log("idBoth[1]: " + idBoth[1]);
+
+  $('#editTextModal').modal('show');
+
+ if (componentParent=="editor-user-page"){
+  $('#editText').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+  $("#hType").val(editorComponents[idBoth[0]].gridContent[idBoth[1]].header);
+ }
+
+ if (componentParent=="footer-user-page"){
+  $('#editText').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].content);
+  $("#hType").val(footerComponents[idBoth[0]].gridContent[idBoth[1]].header);
+ }
+  //showChanges();
+
+});
+
+
+
+$(document).on("click", ".media-component-grid", function () {
+
+  componentParent = $(this).closest('.editable-area').attr('id');
+    console.log("componentParent " + componentParent);
+
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
   var id = $(this).attr("id");
   var idBoth = id.split("-");
 
+
+  
   index = idBoth[0];
   indexGrid = idBoth[1];
 
-  $('#editTextModal').modal('show');
-  $('#editText').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
-  $("#hType").val(editorComponents[idBoth[0]].gridContent[idBoth[1]].header);
+  console.log("idBoth[1]: " + idBoth[1]);
+  console.log("idBoth[0]: " + idBoth[0]);
+  console.log("idBoth[1]: " + idBoth[1]);
+
+  $('#editMediaModal').modal('show');
+
+
+
+  if (componentParent=="editor-user-page"){
+
+  $('#editMediaURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+  $('#editMediaHeight').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].height);
+
+  $('#editMediaWidth').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].width);
+  }
+
+
+  if (componentParent=="footer-user-page"){
+
+$('#editMediaURL').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].content);
+$('#editMediaHeight').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].height);
+
+$('#editMediaWidth').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].width);
+}
 
 });
+
+$(document).on("click", ".spacer-component-grid", function () {
+
+componentParent = $(this).closest('.editable-area').attr('id');
+  console.log("componentParent " + componentParent);
+
+preventModal = true; // To prevent parent component click listener from triggering.
+event.preventDefault();
+var id = $(this).attr("id");
+var idBoth = id.split("-");
+
+index = idBoth[0];
+indexGrid = idBoth[1];
+
+$('#editSpacerModal').modal('show');
+$('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+});
+
+
 
 
 
 $(document).on("click", ".image-component-grid", function () {
-  preventModal = true; // To prevent parent component click listener from triggering.
-  event.preventDefault();
-  var id = $(this).attr("id");
-  var idBoth = id.split("-");
 
-  index = idBoth[0];
-  indexGrid = idBoth[1];
+componentParent = $(this).closest('.editable-area').attr('id');
+  console.log("componentParent " + componentParent);
 
-  $('#editImageModal').modal('show');
-  $('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+preventModal = true; // To prevent parent component click listener from triggering.
+event.preventDefault();
+var id = $(this).attr("id");
+var idBoth = id.split("-");
+
+index = idBoth[0];
+indexGrid = idBoth[1];
+
+$('#editImageModal').modal('show');
+$('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
 });
+
+
+
+
 
 $(document).on("click", ".grid-text-add", function () {
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
   var id = $(this).attr("id");
+  var theParent = $(this).closest('.editable-area').attr('id');
+  componentParent = theParent;
   var idBoth = id.split("-");
 
   addTextGrid(idBoth[1], idBoth[0]);
@@ -642,30 +703,48 @@ $(document).on("click", ".grid-text-add", function () {
 });
 
 $(document).on("click", ".grid-image-add", function () {
+
+  componentParent = $(this).closest('.editable-area').attr('id');
+    console.log("componentParent " + componentParent);
+
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
   var id = $(this).attr("id");
   var idBoth = id.split("-");
+  var theParent = $(this).closest('.editable-area').attr('id');
+  componentParent = theParent;
 
   addImageGrid(idBoth[1], idBoth[0]);
 
 
 });
 
-$(document).on("click", ".grid-blank-add", function () {
+$(document).on("click", ".grid-spacer-add", function () {
+
+  componentParent = $(this).closest('.editable-area').attr('id');
+    console.log("componentParent " + componentParent);
+
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
   var id = $(this).attr("id");
   var idBoth = id.split("-");
+  var theParent = $(this).closest('.editable-area').attr('id');
+  componentParent = theParent;
 
-  addBlankGrid(idBoth[1], idBoth[0]);
+  addSpacerGrid(idBoth[1], idBoth[0]);
 });
 
 $(document).on("click", ".grid-embed-add", function () {
+
+  componentParent = $(this).closest('.editable-area').attr('id');
+    console.log("componentParent " + componentParent);
+
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
   var id = $(this).attr("id");
   var idBoth = id.split("-");
+  var theParent = $(this).closest('.editable-area').attr('id');
+  componentParent = theParent;
 
   addEmbedGrid(idBoth[1], idBoth[0]);
 });
@@ -674,26 +753,58 @@ $(document).on("click", ".grid-embed-add", function () {
 
 
 function addTextGrid(gridIndex, componentIndex) {
+
+if (componentParent == "editor-user-page"){ 
   var comp = editorComponents[componentIndex]
-  comp.gridContent[gridIndex] = makeTextComponent()
+}
+
+if (componentParent == "footer-user-page"){ 
+  var comp = footerComponents[componentIndex]
+}
+
+comp.gridContent[gridIndex] = makeTextComponent()
+
   showChanges();
 }
 
 
 function addImageGrid(gridIndex, componentIndex) {
+
+  if (componentParent == "editor-user-page"){ 
   var comp = editorComponents[componentIndex]
+}
+
+if (componentParent == "footer-user-page"){ 
+  var comp = footerComponents[componentIndex]
+}
+
   comp.gridContent[gridIndex] = makeImageComponent()
   showChanges();
 }
 
-function addBlankGrid(gridIndex, componentIndex) {
+function addSpacerGrid(gridIndex, componentIndex) {
+
+  if (componentParent == "editor-user-page"){ 
   var comp = editorComponents[componentIndex]
-  comp.gridContent[gridIndex] = makeBlankComponent()
+}
+
+if (componentParent == "footer-user-page"){ 
+  var comp = footerComponents[componentIndex]
+}
+  comp.gridContent[gridIndex] = makeSpacerComponent()
   showChanges();
 }
 
 function addEmbedGrid(gridIndex, componentIndex) {
+
+  if (componentParent == "editor-user-page"){ 
   var comp = editorComponents[componentIndex]
+}
+
+if (componentParent == "footer-user-page"){ 
+  var comp = footerComponents[componentIndex]
+}
+
   comp.gridContent[gridIndex] = makeMediaComponent()
   showChanges();
 }
@@ -718,11 +829,11 @@ function imageComponentOutputGrid(component, gridIndex, compIndex) {
 
 // Function to output media component html code
 function mediaComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4'   > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+  return "<div id='" + index + "' class='component mb-4'   style='padding:20px'> <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
 }
 
 function mediaComponentOutputGrid(component, gridIndex, compIndex) {
-  return "<div id='" + compIndex + "-" + gridIndex + "' class='component mb-4'  draggable='true' > <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
+  return "<div id='" + compIndex + "-" + gridIndex + "' class='component mb-4 media-component-grid' style='padding:20px'> <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
 }
 
 //Function to output paragraph component html code
@@ -745,6 +856,10 @@ function spacerComponentOutput(component, index) {
   return "<div id='" + index + "' class='component mb-4' style='height:" + component.height + "px'>&nbsp;</div>"
 }
 
+function spacerComponentOutputGrid(component, gridIndex, compIndex) {
+  return "<div id='" + compIndex + "-" + gridIndex + "' class='component mb-4 spacer-component-grid' style='height:" + component.height + "px'>&nbsp;</div>"
+}
+
 //Function to output divider component 
 function dividerComponentOutput(component, index) {
   return "<div id='" + index + "' class='component mb-4' style='height:" + component.height + "px'><hr></div>"
@@ -756,7 +871,7 @@ function gridComponentOutput(component, index) {
   res +=
     "<div id='" +
     index +
-    "' class='component mb-4' draggable='true' ondragstart='dragGrid(event)'><div class='row'>";
+    "' class='component mb-4' ><div class='row'>";
 
   for (x = 0; x < component.columns; x++) { // For each column
     res += "<div class='col bd-highlight d-flex align-items-center'>"
@@ -768,7 +883,7 @@ function gridComponentOutput(component, index) {
         "<div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">" +
         "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-text-add\" href=\"#\">Text</a>" +
         "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-image-add\" href=\"#\">Image</a>" +
-        "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-blank-add\" href=\"#\">Blank</a>" +
+        "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-spacer-add\" href=\"#\">Spacer</a>" +
         "<a id=\"" + index + "-" + x + "\" class=\"dropdown-item grid-embed-add\" href=\"#\">Media</a>" +
         "</div>" +
         "</div>";
@@ -776,8 +891,8 @@ function gridComponentOutput(component, index) {
       res += textComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "image")
       res += imageComponentOutputGrid(component.gridContent[x], x, index)
-    else if (component.gridContent[x].type == "blank")
-      res += ""
+      else if (component.gridContent[x].type == "spacer")
+      res += spacerComponentOutputGrid(component.gridContent[x], x, index);
     else if (component.gridContent[x].type == "media")
       res += mediaComponentOutputGrid(component.gridContent[x], x, index);
 
@@ -904,7 +1019,7 @@ function showChanges() {
 
 function deleteElement() {
 
-  $('#editable-area').empty()
+  $('.editable-area').empty()
   if (editorComponents.length == 1) {
     $('#editor-user-page').removeClass("invisible").addClass("visible");
   }
@@ -919,26 +1034,22 @@ function deleteElement() {
     } else {
       editorComponents.splice(index, 1);
     }
-    showChanges();
-    index = editorComponents.length;
-    indexGrid = -1;
   }
 
-  if (componentParent == "footer-user-page") {
-    if (indexGrid != -1) {
+
+
+if (componentParent == "footer-user-page") {
+  if (indexGrid != -1) {
       footerComponents[index].gridContent.splice(indexGrid, 1);
     } else {
       footerComponents.splice(index, 1);
     }
-    showChanges();
-    index = footerComponents.length;
-    indexGrid = -1;
-  }
+}
+index = editorComponents.length;
+  indexGrid = -1;
+showChanges();
 
 }
-
-
-
 
 $(document).on('click', '.preview-editor', function () {
   const new_page = $('#editor-user-page').html();
