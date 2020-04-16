@@ -268,8 +268,8 @@ class Model {
 
     public function deleteUserAdmin($user_id) {
         $user = $this -> getUser();
-        if($user->id != $user_id){
-            $userd = R::load('users',$user_id);
+        $userd = R::load('users',$user_id);
+        if($user->id != $userd->id){
             R::trash($userd);
             return "SUCCESS";
         } else {
@@ -279,8 +279,8 @@ class Model {
 
     public function isAdmin(){
         $user = $this -> getUser();
-        if(isset($user->admin) && $user->admin == true){
-            return $user->admin;
+        if(isset($user->level) && $user->level == "Admin"){
+            return true;
         } else {
             return false;
         }

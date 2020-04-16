@@ -31,7 +31,7 @@
   <!-- Check if Admin -->
   <?php
     $admin = $model->isAdmin();
-    if ($admin == true){
+    if ($admin == false){
       redirect('view/website-name.php');
     }
   ?>
@@ -88,10 +88,12 @@
             </div>
           </div>
         </div>
+        </form>
       </div>
       <div class="tab-pane fade" id="pills-users" role="tabpanel" aria-labelledby="pills-users-tab">
         <h4 class="mt-5 text-muted text-left">All CMS Users</h4>
         <div class="list-group">
+        <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
           <?php
           $userlst = null;
           try {
@@ -101,10 +103,11 @@
             die();
           }
           foreach ($userlst as $user) {
-            echo '<button type="button" class="list-group-item list-group-item-action" name="web" value="' . $user->id . '" onclick="StoreID(' . $user->id . ');$(\'#userOptionsModal\').modal(\'show\')">' . $user->username . ' - '. $user->id .'</button>';
+            echo '<button type="button" class="list-group-item list-group-item-action" name="web" value="' . $user->id . '" onclick="StoreUserID(' . $user->id . ');$(\'#userOptionsModal\').modal(\'show\')">' . $user->username . ' - '. $user->id .'</button>';
           } ?>
-        </div>
         </form>
+        </div>
+        
 
         <!-- Admin user options -->
         <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
@@ -118,14 +121,17 @@
                 </button>
               </div>
               <div class="modal-body">
-                <button name="SITE" type="Submit" id="deleteID" class="btn btn-danger btn-lg btn-block">Delete User</button>
+              <input type="hidden" name="COMMAND" value="USER_DELETE_ADMIN">
+                <button name="SITE" type="submit" id="deleteUserID" class="btn btn-danger btn-lg btn-block">Delete User</button>
                 <button type="button" class="btn btn-secondary btn-lg btn-block">Other option</button>
-                <input type="hidden" name="COMMAND" value="USER_DELETE_ADMIN">
+                
               </div>
             </div>
           </div>
         </div>
+        </form>
       </div>
+      
 
       <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
         <h4 class="mt-5 text-muted text-left">All Submitted Contact</h4>
@@ -140,7 +146,7 @@
             die();
           }
           foreach ($contactlst as $contact) {
-            echo '<button type="button" class="list-group-item list-group-item-action" name="web" value="' . $contact->id . '" onclick="StoreID(' . $contact->id . ');$(\'#contactOptionsModal\').modal(\'show\')"><b>ID:</b> ' . $contact->id . ' <b>Time:</b> ' . $contact->time . ' <b>Name:</b> ' . $contact->name . ' <b>Email:</b> ' . $contact->email . ' <b>Message:</b> ' . $contact->msg .'</button>';
+            echo '<button type="button" class="list-group-item list-group-item-action" name="web" value="' . $contact->id . '" onclick="StoreCommentID(' . $contact->id . ');$(\'#contactOptionsModal\').modal(\'show\')"><b>ID:</b> ' . $contact->id . ' <b>Time:</b> ' . $contact->time . ' <b>Name:</b> ' . $contact->name . ' <b>Email:</b> ' . $contact->email . ' <b>Message:</b> ' . $contact->msg .'</button>';
           } ?>
         </form>
         </div>
@@ -158,20 +164,27 @@
                 </button>
               </div>
               <div class="modal-body">
-                <button name="SITE" type="Submit" id="deleteID" class="btn btn-danger btn-lg btn-block">Delete Message</button>
+                <button name="SITE" type="Submit" id="deleteCommentID" class="btn btn-danger btn-lg btn-block">Delete Message</button>
                 <button type="button" class="btn btn-secondary btn-lg btn-block">Other option</button>
                 <input type="hidden" name="COMMAND" value="CONTACT_DELETE_ADMIN">
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div>\
+      </form>
+    </div>
   </div>
-  </form>
+  
 
   <script>
     function StoreID(f) {
       $("#deleteID").val(f);
+    }
+    function StoreUserID(f) {
+      $("#deleteUserID").val(f);
+    }
+    function StoreCommentID(f) {
+      $("#deleteCommentID").val(f);
     }
   </script>
 
