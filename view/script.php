@@ -915,22 +915,29 @@ function deleteElement() {
 
   if (componentParent == "editor-user-page") {
     if (indexGrid != -1) {
-      components[index].gridContent.splice(indexGrid, 1);
+      editorComponents[index].gridContent.splice(indexGrid, 1);
     } else {
-      components.splice(index, 1);
+      editorComponents.splice(index, 1);
     }
+    showChanges();
+    index = editorComponents.length;
+    indexGrid = -1;
   }
-  showChanges();
-  index = editorComponents.length;
-  indexGrid = -1;
+
+  if (componentParent == "footer-user-page") {
+    if (indexGrid != -1) {
+      footerComponents[index].gridContent.splice(indexGrid, 1);
+    } else {
+      footerComponents.splice(index, 1);
+    }
+    showChanges();
+    index = footerComponents.length;
+    indexGrid = -1;
+  }
+
 }
 
-if (componentParent == "footer-user-page") {
-  footerComponents.splice(index, 1);
-  showChanges();
-  index = footerComponents.length;
-  indexGrid = -1;
-}
+
 
 
 $(document).on('click', '.preview-editor', function () {
