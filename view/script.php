@@ -401,11 +401,11 @@ function getComponent() {
   //indexGrid is -1 if it's not in a grid
 
   console.log("the 1: " + index);
-      console.log("the 2: " + indexGrid);
-      console.log("dad: " + componentParent);
+  console.log("the 2: " + indexGrid);
+  console.log("dad: " + componentParent);
 
   if (componentParent == "editor-user-page") {
-console.log("testing");
+    console.log("testing");
     if (indexGrid == -1) {
       return editorComponents[index];
     } else {
@@ -427,7 +427,7 @@ console.log("testing");
 
   }
 
-console.log("fuck");
+  console.log("fuck");
 
 }
 
@@ -461,7 +461,7 @@ $(document).on('click', '.paragraph-edit-button', function () {
   var component = getComponent();
   component.html = editor.getData();
 
-  
+
   showChanges();
 
 
@@ -478,9 +478,9 @@ $(document).on('click', '.media-edit-button', function () {
 
   text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
 
-    component.content = text;
-    component.height = height;
-    component.width = width;
+  component.content = text;
+  component.height = height;
+  component.width = width;
 
   showChanges();
 })
@@ -501,8 +501,8 @@ $(document).on("click", ".grid-edit-button", function () {
   var component = getComponent();
 
 
-    component.columns = columns;
-    component.gridContent = [];
+  component.columns = columns;
+  component.gridContent = [];
 
   showChanges();
 });
@@ -536,9 +536,9 @@ $(document).on('click', '.button-edit-button', function () {
 
   var component = getComponent();
 
-    component.url = url;
-    component.content = content;
-    component.style = style;
+  component.url = url;
+  component.content = content;
+  component.style = style;
 
   showChanges();
 })
@@ -574,12 +574,12 @@ $(document).on('submit', '#save-webpage-form', function (e) {
 $(document).on("click", ".text-component-grid", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
-    console.log("componentParent" + componentParent);
+  console.log("componentParent" + componentParent);
 
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
   var id = $(this).attr("id");
-  
+
   var idBoth = id.split("-");
   //var component = getComponent();
 
@@ -591,15 +591,15 @@ $(document).on("click", ".text-component-grid", function () {
 
   $('#editTextModal').modal('show');
 
- if (componentParent=="editor-user-page"){
-  $('#editText').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
-  $("#hType").val(editorComponents[idBoth[0]].gridContent[idBoth[1]].header);
- }
+  if (componentParent == "editor-user-page") {
+    $('#editText').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+    $("#hType").val(editorComponents[idBoth[0]].gridContent[idBoth[1]].header);
+  }
 
- if (componentParent=="footer-user-page"){
-  $('#editText').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].content);
-  $("#hType").val(footerComponents[idBoth[0]].gridContent[idBoth[1]].header);
- }
+  if (componentParent == "footer-user-page") {
+    $('#editText').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].content);
+    $("#hType").val(footerComponents[idBoth[0]].gridContent[idBoth[1]].header);
+  }
   //showChanges();
 
 });
@@ -609,7 +609,7 @@ $(document).on("click", ".text-component-grid", function () {
 $(document).on("click", ".media-component-grid", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
-    console.log("componentParent " + componentParent);
+  console.log("componentParent " + componentParent);
 
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -617,7 +617,7 @@ $(document).on("click", ".media-component-grid", function () {
   var idBoth = id.split("-");
 
 
-  
+
   index = idBoth[0];
   indexGrid = idBoth[1];
 
@@ -629,40 +629,40 @@ $(document).on("click", ".media-component-grid", function () {
 
 
 
-  if (componentParent=="editor-user-page"){
+  if (componentParent == "editor-user-page") {
 
-  $('#editMediaURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
-  $('#editMediaHeight').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].height);
+    $('#editMediaURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+    $('#editMediaHeight').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].height);
 
-  $('#editMediaWidth').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].width);
+    $('#editMediaWidth').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].width);
   }
 
 
-  if (componentParent=="footer-user-page"){
+  if (componentParent == "footer-user-page") {
 
-$('#editMediaURL').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].content);
-$('#editMediaHeight').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].height);
+    $('#editMediaURL').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].content);
+    $('#editMediaHeight').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].height);
 
-$('#editMediaWidth').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].width);
-}
+    $('#editMediaWidth').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].width);
+  }
 
 });
 
 $(document).on("click", ".spacer-component-grid", function () {
 
-componentParent = $(this).closest('.editable-area').attr('id');
+  componentParent = $(this).closest('.editable-area').attr('id');
   console.log("componentParent " + componentParent);
 
-preventModal = true; // To prevent parent component click listener from triggering.
-event.preventDefault();
-var id = $(this).attr("id");
-var idBoth = id.split("-");
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
 
-index = idBoth[0];
-indexGrid = idBoth[1];
+  index = idBoth[0];
+  indexGrid = idBoth[1];
 
-$('#editSpacerModal').modal('show');
-$('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+  $('#editSpacerModal').modal('show');
+  $('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
 });
 
 
@@ -671,19 +671,19 @@ $('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content
 
 $(document).on("click", ".image-component-grid", function () {
 
-componentParent = $(this).closest('.editable-area').attr('id');
+  componentParent = $(this).closest('.editable-area').attr('id');
   console.log("componentParent " + componentParent);
 
-preventModal = true; // To prevent parent component click listener from triggering.
-event.preventDefault();
-var id = $(this).attr("id");
-var idBoth = id.split("-");
+  preventModal = true; // To prevent parent component click listener from triggering.
+  event.preventDefault();
+  var id = $(this).attr("id");
+  var idBoth = id.split("-");
 
-index = idBoth[0];
-indexGrid = idBoth[1];
+  index = idBoth[0];
+  indexGrid = idBoth[1];
 
-$('#editImageModal').modal('show');
-$('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+  $('#editImageModal').modal('show');
+  $('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
 });
 
 
@@ -708,7 +708,7 @@ $(document).on("click", ".grid-text-add", function () {
 $(document).on("click", ".grid-image-add", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
-    console.log("componentParent " + componentParent);
+  console.log("componentParent " + componentParent);
 
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -725,7 +725,7 @@ $(document).on("click", ".grid-image-add", function () {
 $(document).on("click", ".grid-spacer-add", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
-    console.log("componentParent " + componentParent);
+  console.log("componentParent " + componentParent);
 
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -740,7 +740,7 @@ $(document).on("click", ".grid-spacer-add", function () {
 $(document).on("click", ".grid-embed-add", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
-    console.log("componentParent " + componentParent);
+  console.log("componentParent " + componentParent);
 
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -757,15 +757,15 @@ $(document).on("click", ".grid-embed-add", function () {
 
 function addTextGrid(gridIndex, componentIndex) {
 
-if (componentParent == "editor-user-page"){ 
-  var comp = editorComponents[componentIndex]
-}
+  if (componentParent == "editor-user-page") {
+    var comp = editorComponents[componentIndex]
+  }
 
-if (componentParent == "footer-user-page"){ 
-  var comp = footerComponents[componentIndex]
-}
+  if (componentParent == "footer-user-page") {
+    var comp = footerComponents[componentIndex]
+  }
 
-comp.gridContent[gridIndex] = makeTextComponent()
+  comp.gridContent[gridIndex] = makeTextComponent()
 
   showChanges();
 }
@@ -773,13 +773,13 @@ comp.gridContent[gridIndex] = makeTextComponent()
 
 function addImageGrid(gridIndex, componentIndex) {
 
-  if (componentParent == "editor-user-page"){ 
-  var comp = editorComponents[componentIndex]
-}
+  if (componentParent == "editor-user-page") {
+    var comp = editorComponents[componentIndex]
+  }
 
-if (componentParent == "footer-user-page"){ 
-  var comp = footerComponents[componentIndex]
-}
+  if (componentParent == "footer-user-page") {
+    var comp = footerComponents[componentIndex]
+  }
 
   comp.gridContent[gridIndex] = makeImageComponent()
   showChanges();
@@ -787,26 +787,26 @@ if (componentParent == "footer-user-page"){
 
 function addSpacerGrid(gridIndex, componentIndex) {
 
-  if (componentParent == "editor-user-page"){ 
-  var comp = editorComponents[componentIndex]
-}
+  if (componentParent == "editor-user-page") {
+    var comp = editorComponents[componentIndex]
+  }
 
-if (componentParent == "footer-user-page"){ 
-  var comp = footerComponents[componentIndex]
-}
+  if (componentParent == "footer-user-page") {
+    var comp = footerComponents[componentIndex]
+  }
   comp.gridContent[gridIndex] = makeSpacerComponent()
   showChanges();
 }
 
 function addEmbedGrid(gridIndex, componentIndex) {
 
-  if (componentParent == "editor-user-page"){ 
-  var comp = editorComponents[componentIndex]
-}
+  if (componentParent == "editor-user-page") {
+    var comp = editorComponents[componentIndex]
+  }
 
-if (componentParent == "footer-user-page"){ 
-  var comp = footerComponents[componentIndex]
-}
+  if (componentParent == "footer-user-page") {
+    var comp = footerComponents[componentIndex]
+  }
 
   comp.gridContent[gridIndex] = makeMediaComponent()
   showChanges();
@@ -894,7 +894,7 @@ function gridComponentOutput(component, index) {
       res += textComponentOutputGrid(component.gridContent[x], x, index)
     else if (component.gridContent[x].type == "image")
       res += imageComponentOutputGrid(component.gridContent[x], x, index)
-      else if (component.gridContent[x].type == "spacer")
+    else if (component.gridContent[x].type == "spacer")
       res += spacerComponentOutputGrid(component.gridContent[x], x, index);
     else if (component.gridContent[x].type == "media")
       res += mediaComponentOutputGrid(component.gridContent[x], x, index);
@@ -1041,16 +1041,16 @@ function deleteElement() {
 
 
 
-if (componentParent == "footer-user-page") {
-  if (indexGrid != -1) {
+  if (componentParent == "footer-user-page") {
+    if (indexGrid != -1) {
       footerComponents[index].gridContent.splice(indexGrid, 1);
     } else {
       footerComponents.splice(index, 1);
     }
-}
-index = editorComponents.length;
+  }
+  index = editorComponents.length;
   indexGrid = -1;
-showChanges();
+  showChanges();
 
 }
 
