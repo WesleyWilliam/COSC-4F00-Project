@@ -479,6 +479,9 @@ $(document).on('click', '.media-edit-button', function () {
   let width = $('#editMediaWidth').val();
 
   $('#editMediaModal').modal('hide')
+      
+  if (height <= 0 && width <= 0) return;
+      
   var component = getComponent();
 
   text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
