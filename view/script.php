@@ -943,7 +943,9 @@ function getOutput(component, index) {
 // Function to render changes
 function showChanges() {
 
-  $('.editable-area').empty()
+  $('.editable-area').empty();
+  $('#editor-user-page').empty();
+  $('#footer-user-page').empty();
 
   //  $('#editor-user-page').empty()
   if (editorComponents.length == 1) {
@@ -1055,18 +1057,6 @@ function deleteElement() {
   showChanges();
 
 }
-
-$(document).on('click', '.preview-editor', function () {
-  const new_page = $('#editor-user-page').html();
-  var strWindowFeatures = "dependent=yes,menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
-
-  let myWindow = window.open("view-webpage.html", "newWindow", strWindowFeatures);
-
-  myWindow.onload = function () {
-    myWindow.document.getElementById('main-body').innerHTML = new_page;
-  }
-
-})
 
 function changeWebpage(name) {
   webpages['webpages'][currentWebpage] = editorComponents;

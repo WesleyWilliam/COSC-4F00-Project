@@ -206,7 +206,7 @@ bottom: 0px;
         <div>
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
           <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save all</button>
-          <button type="button" class="btn btn-outline-info preview-editor">Preview</button>
+          <a role="button" href="<?php echo $config['home-file-path']; ?>/view/publish.php?website=<?php echo $_GET['website'] ?>" class="btn btn-outline-info preview-editor">Preview</a>
         </div>
       </div>
       <!-- Webpages Navbar -->
