@@ -552,6 +552,9 @@ $(document).on('click', '.button-edit-button', function () {
 $(document).on('click', '.spacer-edit-button', function () {
   let height = $('#editSpacerHeight').val();
   $('#editSpacerModal').modal('hide');
+  
+  if (height <= 0) return;
+   
   var component = getComponent();
 
   component.height = height;
