@@ -524,8 +524,9 @@ $(document).on('click', '#delete-webpage-button', function () {
 $(document).on('click', '#deleteWebsiteModalButton', function () {
   var tmpWebpage = currentWebpage;
   changeWebpage('homepage');
-  delete webpages[tmpWebpage];
+  delete webpages['webpages'][tmpWebpage];
   displayWebpages();
+  showChanges();
 });
 
 $(document).on('click', '.button-edit-button', function () {
@@ -565,6 +566,7 @@ $(document).on('click', '.divider-edit-button', function () {
 })
 
 $(document).on('submit', '#save-webpage-form', function (e) {
+  console.log("Something happened")
   e.preventDefault();
   changeWebpage($('#webpageText').val());
   $('#addWebpageModal').modal('hide');
