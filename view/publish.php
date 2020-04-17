@@ -36,6 +36,8 @@ try {
 ?>
 
 
+
+
 <!-- Javascript code -->
 <script>
   <?php include('script.php') ?>
@@ -67,3 +69,10 @@ try {
 <script>
 
 </script>
+
+<!-- Makes spacer transparent  -->
+<style>
+.spacer-component-grid {
+  background: #00000000 !important;
+}
+</style>
