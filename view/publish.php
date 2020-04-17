@@ -75,4 +75,7 @@ try {
 .spacer-component-grid {
   background: #00000000 !important;
 }
+#dropdownMenuButton {
+  visibility: hidden;
+}
 </style>

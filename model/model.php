@@ -93,6 +93,7 @@ class Model {
         } else {
             $website = R::dispense('websites');
             $website -> name = $name;
+            $website -> published = '';
             $website -> webpages = '{"webpages":{"homepage": []},"footer":[]}';
             $user-> xownWebsitesList[] = $website;
             R::store($user);
@@ -109,8 +110,12 @@ class Model {
         if (!isset($website)) {
             return "ERR";
         }
-        $user = $this -> getUser();
         $site = R::load('websites',$website);
+        if ($site->published === 'TRUE') {
+            return $site->webpages;
+        }
+        $user = $this -> getUser();
+        
         if ($user->id === $site->users_id) {
             return $site->webpages;
         } else {
