@@ -1035,7 +1035,7 @@ function deleteElement() {
 
   if (componentParent == "editor-user-page") {
     if (indexGrid != -1) {
-      editorComponents[index].gridContent.splice(indexGrid, 1);
+      editorComponents[index].gridContent[indexGrid] = undefined;
     } else {
       editorComponents.splice(index, 1);
     }
@@ -1045,7 +1045,7 @@ function deleteElement() {
 
   if (componentParent == "footer-user-page") {
     if (indexGrid != -1) {
-      footerComponents[index].gridContent.splice(indexGrid, 1);
+      footerComponents[index].gridContent[indexGrid] = undefined;
     } else {
       footerComponents.splice(index, 1);
     }
