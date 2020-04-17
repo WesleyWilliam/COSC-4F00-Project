@@ -41,7 +41,14 @@ try {
 <!-- Javascript code -->
 <script>
   <?php include('script.php') ?>
+
+  var getWebpage = "<?php if (isset($_GET['webpage'])) {echo $_GET['webpage'];} ?>";
+  if (webpages['webpages'][getWebpage] !== undefined) {
+    changeWebpage(getWebpage);
+  }
 </script>
+
+
 
       <!-- Webpages Navbar -->
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
