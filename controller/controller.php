@@ -257,6 +257,9 @@ try {
         $_SESSION['WEBSITENAME'] = "Contact was succesfully deleted";
         redirect("view/admin-portal.php");
         die();
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'TOGGLE_PUBLISH') {
+        echo $model->togglePublish($_POST['WEBSITE']);
+        die();
     } else {
         redirect('view/login.php');
         die();

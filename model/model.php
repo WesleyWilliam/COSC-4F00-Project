@@ -123,6 +123,43 @@ class Model {
         }
     }
 
+    public function publishStatus($website) {
+        if (!isset($website)) {
+            return "ERR";
+        }
+        $website = R::load('WEBSITE',$website);
+        if (!isset($website)) {
+            return "ERR";
+        }
+        if (isset($website->published) && $website->published == 'TRUE') {
+            return "PUBLISHED";
+        } else {
+            return "UNPUBLISHED";
+        }
+    }
+
+    public function togglePublish($website) {
+        $website = R::load('websites',$website);
+        $user = $this -> getUser();
+        if ($user->id !== $website->users_id) {
+        }
+        
+        if (is_string($website)) {
+            return "ERR";
+        } else {
+            if (isset($website->published) && $website->published == 'TRUE') {
+                $website->published = '';
+                R::store($website);
+                return "UNPUBLISHED";
+            } else {
+                $website->published = 'TRUE';
+                R::store($website);
+                return "PUBLISHED";
+            }
+        }
+        
+    }
+
     public function saveWebsites($website, $components) {
         if (!isset($website) || !isset($components)) {
             return "WRONGUSER";

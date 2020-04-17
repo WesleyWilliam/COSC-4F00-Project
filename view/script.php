@@ -341,7 +341,9 @@ function makeDividerComponent() {
 
 
 
-$(document).on('click', '.save-editor-changes', function () { // Save current state of the editor editorComponents
+$(document).on('click', '.save-editor-changes', saveEditor);
+
+function saveEditor () { // Save current state of the editor editorComponents
   webpages['webpages'][currentWebpage] = editorComponents;
   webpages['footer'] = footerComponents;
 
@@ -362,6 +364,35 @@ $(document).on('click', '.save-editor-changes', function () { // Save current st
   setTimeout(function () {
     $(".save-webpage-alert").hide();
   }, 5000);
+}
+
+$(document).on('click','#publish-button',function () {
+  saveEditor();
+  var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php";
+  var form_data =new FormData();
+  form_data.append("COMMAND","TOGGLE_PUBLISH");
+  var webpage = "<?php if (isset($_GET['website'])) {echo $_GET['website'];} ?>";
+  console.log("Website:" + webpage);
+  form_data.append("WEBSITE", webpage);
+  $.ajax({
+    url: url,
+    method: "POST",
+    data: form_data,
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: function (data, error) {
+      console.log(data);
+      console.log(error);
+      var res = "";
+      if (data == 'PUBLISHED') {
+        res = 'Unpublish';
+      } else if (data =='PUBLISHED') {
+        res = 'Publish';
+      }
+      $('#publish-button').text(res);
+    }
+  });
 })
 
 $(document).on('change', '#imageFile', function () {
