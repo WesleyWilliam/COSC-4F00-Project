@@ -480,7 +480,7 @@ $(document).on('click', '.media-edit-button', function () {
 
   $('#editMediaModal').modal('hide')
       
-  if (height <= 0 && width <= 0) return;
+  if (height <= 0 || width <= 0) return;
       
   var component = getComponent();
 
