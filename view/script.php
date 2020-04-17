@@ -671,8 +671,16 @@ $(document).on("click", ".spacer-component-grid", function () {
   index = idBoth[0];
   indexGrid = idBoth[1];
 
-  $('#editSpacerModal').modal('show');
-  $('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+if (componentParent == "editor-user-page"){
+  $('#editSpacerHeight').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].height);
+}
+
+if (componentParent == "footer-user-page"){
+$('#editSpacerHeight').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].height);
+}
+
+$('#editSpacerModal').modal('show');
+
 });
 
 
