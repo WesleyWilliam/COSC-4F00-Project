@@ -207,7 +207,7 @@ bottom: 0px;
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
           <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save all</button>
           <a role="button" href="<?php echo $config['home-file-path']; ?>/view/publish.php?website=<?php echo $_GET['website'] ?>" class="btn btn-outline-info preview-editor">Preview</a>
-          <button type="button" class="btn btn-outline-danger mr-2" id="publish-button"> 
+          <button type="button" class="btn btn-outline-danger mr-2" id="publish-button" title="When published anyone can view your website"> 
             <?php $res = $model->publishStatus($_GET['website']); if ($res == 'PUBLISHED') {echo 'Unpublish';} elseif ($res == 'UNPUBLISHED') {echo 'Publish';} else {echo $res;}  ?>
           </button>
         </div>

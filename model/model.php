@@ -115,7 +115,6 @@ class Model {
             return $site->webpages;
         }
         $user = $this -> getUser();
-        
         if ($user->id === $site->users_id) {
             return $site->webpages;
         } else {
@@ -127,7 +126,7 @@ class Model {
         if (!isset($website)) {
             return "ERR";
         }
-        $website = R::load('WEBSITE',$website);
+        $website = R::load('websites',$website);
         if (!isset($website)) {
             return "ERR";
         }
@@ -142,6 +141,7 @@ class Model {
         $website = R::load('websites',$website);
         $user = $this -> getUser();
         if ($user->id !== $website->users_id) {
+            return "ERR";
         }
         
         if (is_string($website)) {

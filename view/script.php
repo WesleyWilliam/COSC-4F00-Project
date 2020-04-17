@@ -387,7 +387,7 @@ $(document).on('click','#publish-button',function () {
       var res = "";
       if (data == 'PUBLISHED') {
         res = 'Unpublish';
-      } else if (data =='PUBLISHED') {
+      } else if (data =='UNPUBLISHED') {
         res = 'Publish';
       }
       $('#publish-button').text(res);
