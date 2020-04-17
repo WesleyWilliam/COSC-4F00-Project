@@ -9,6 +9,7 @@ var editor = null;
 var index; //this index is used to keep track of which element is currently selected on the page
 var indexGrid; //this index is used to keep track of which grid element is currently selected on the page
 var preventModal = false;
+var secGridClicked = false;
 
 $('#editor-user-page').hide();
 $(document).ready(function () {
@@ -157,10 +158,14 @@ $(function () {
 
   $(document).on("click", ".component", function () {
 
-
+    console.log("Component clicked")
+    console.log("Prevent modal: " + preventModal)
 
     if (preventModal) {
       preventModal = false;
+      return;
+    } else if (secGridClicked) {
+      secGridClicked = false
       return;
     }
 
@@ -474,6 +479,9 @@ $(document).on('click', '.media-edit-button', function () {
   let width = $('#editMediaWidth').val();
 
   $('#editMediaModal').modal('hide')
+      
+  if (height <= 0 || width <= 0) return;
+      
   var component = getComponent();
 
   text = text.replace("youtube.com/watch?v=", "youtube.com/embed/")
@@ -547,6 +555,9 @@ $(document).on('click', '.button-edit-button', function () {
 $(document).on('click', '.spacer-edit-button', function () {
   let height = $('#editSpacerHeight').val();
   $('#editSpacerModal').modal('hide');
+  
+  if (height <= 0) return;
+   
   var component = getComponent();
 
   component.height = height;
@@ -579,7 +590,6 @@ $(document).on("click", ".text-component-grid", function () {
   console.log("componentParent" + componentParent);
 
   preventModal = true; // To prevent parent component click listener from triggering.
-  event.preventDefault();
   var id = $(this).attr("id");
 
   var idBoth = id.split("-");
@@ -609,12 +619,16 @@ $(document).on("click", ".text-component-grid", function () {
 
 
 $(document).on("click", ".media-component-grid", function () {
+  console.log("Media component on the grid clicked.")
+  preventModal = true; // To prevent parent component click listener from triggering.
+  secGridClicked = true;
+  console.log("Prevent modal: " + preventModal)
+  event.preventDefault();
 
   componentParent = $(this).closest('.editable-area').attr('id');
   console.log("componentParent " + componentParent);
 
-  preventModal = true; // To prevent parent component click listener from triggering.
-  event.preventDefault();
+  
   var id = $(this).attr("id");
   var idBoth = id.split("-");
 
@@ -654,7 +668,7 @@ $(document).on("click", ".spacer-component-grid", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
   console.log("componentParent " + componentParent);
-
+  secGridClicked = true;
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
   var id = $(this).attr("id");
@@ -663,8 +677,16 @@ $(document).on("click", ".spacer-component-grid", function () {
   index = idBoth[0];
   indexGrid = idBoth[1];
 
-  $('#editSpacerModal').modal('show');
-  $('#addImageURL').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].content);
+if (componentParent == "editor-user-page"){
+  $('#editSpacerHeight').val(editorComponents[idBoth[0]].gridContent[idBoth[1]].height);
+}
+
+if (componentParent == "footer-user-page"){
+$('#editSpacerHeight').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].height);
+}
+
+$('#editSpacerModal').modal('show');
+
 });
 
 
@@ -862,7 +884,7 @@ function spacerComponentOutput(component, index) {
 }
 
 function spacerComponentOutputGrid(component, gridIndex, compIndex) {
-  return "<div id='" + compIndex + "-" + gridIndex + "' class='component mb-4 spacer-component-grid' style='height:" + component.height + "px'>&nbsp;</div>"
+  return "<div id='" + compIndex + "-" + gridIndex + "' class='component bg-light pr-5 pl-5 mb-4 spacer-component-grid' style='height:" + component.height + "px'>&nbsp;</div>"
 }
 
 //Function to output divider component 
