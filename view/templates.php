@@ -42,6 +42,16 @@
 
     <!-- Page Content -->
 
+    <div class="container" style="padding-bottom:100px;">
+
+        <div class="container pb-30">            
+            <div class= "container">
+                <img class="d-block w-100" src="img/coming-soon.png" alt="coming-soon">
+            </div>
+            <hr class="mt-5">
+        </div>
+
+    </div>
     <!-- Footer -->
     <footer id="sticky-footer" class="py-4 bg-dark text-white-50 fixed-bottom">
         <div class="container text-center">

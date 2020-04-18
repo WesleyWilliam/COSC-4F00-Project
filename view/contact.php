@@ -1,65 +1,61 @@
-#!/usr/bin/php-cgi
-<!DOCTYPE html>
-<html>
+<!-- If there is a message, show message to user -->
+<?php
+if (!empty($_SESSION['CONTACT_MSG'])) {
+  echo "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">";
+  echo '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+  echo $_SESSION['CONTACT_MSG'];
+  echo "</div>";
+}
+?>
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Contact form -->
+    <form class="card" style="border:none;" action="<?php echo $config['home-file-path']; ?>/controller/controller.php" method="POST">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="md-form mb-0">
+              <label for="emailInput" required>Email address</label>
+              <input type="email" class="form-control" id="emailInput" placeholder="Enter email" name="EMAIL" required autofocus>
+            </div>
+          </div>
+          <div class="col-md-6">
+          <div class="md-form mb-0">
+            <label for="nameInput">Name</label>
+            <input type="text" class="form-control" id="nameInput" name="FULLNAME" placeholder="Enter your full name">
+          </div>
+            </div>
+        </div>
 
-  <!-- Including bootstrap CSS files -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-</head>
+        <div class = "row">
+          <div class="col-md-12 mt-5">
 
-<body>
-  <!--Requirements -->
-  <?php require_once '../utilities/requirements.php' ?>
+            <div class="md-form">
+              <label for="messageInput">Message</label>
+              <textarea type="text" class="form-control" id="messageInput" name="MSG" placeholder="Enter message" rows="5"></textarea>
+            </div>
+            
+            <div class="w-100 pt-3 pr-3 text-right">
+              <button type="button" class="btn btn-lg btn-outline-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-lg btn-outline-success">Send »</button>
+              <input type="hidden" name="COMMAND" value="CONTACT">
+            </div>
+            
 
-  <!-- Nav Bar -->
-  <?php include 'navbar.php' ?>
+          </div>
+        </div>
+      </div>
+    </form>
 
-  <h1 class="display-4 text-center">Contact Us</h1>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-  <!-- If there is a message, show message to user -->
-  <?php
-  if (!empty($_POST['CONTACT_MSG'])) {
-    echo "<div class=\"alert alert-success alert-dismissible\" role=\"alert\">";
-    echo '<button type="button" class="close" data-dismiss="alert">&times;</button>';
-    echo $_POST['CONTACT_MSG'];
-    echo "</div>";
-  }
-  ?>
 
-  <!-- Contact form -->
-  <form class="ml-4" action="#" method="POST">
-    <div class="w-25 p-3">
-      <label for="emailInput">Email address</label>
-      <input type="email" class="form-control" id="emailInput" placeholder="Enter email">
-    </div>
-    <div class="w-25 p-3">
-      <label for="nameInput">Name</label>
-      <input type="text" class="form-control" id="nameInput" placeholder="Enter your full name">
-    </div>
-    <div class="w-50 p-3">
-      <label for="messageInput">Message</label>
-      <textarea type="text" class="form-control" id="messageInput" placeholder="Enter message" rows="5"></textarea>
-    </div>
-    <div class="w-100 p-3">
-      <button type="submit" class="btn btn-primary mb-2">Send</button>
-    </div>
-    <input type="hidden" name="CONTACT_MSG" value="Message sent!">
-  </form>
 
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-</body>
-
-</html>
 <!-- Avoid form resubmission -->
 <script>
-  if (window.history.replaceState) {
-    window.history.replaceState(null, null, window.location.href);
-  }
+if (window.history.replaceState) {
+  window.history.replaceState(null, null, window.location.href);
+}
 </script>

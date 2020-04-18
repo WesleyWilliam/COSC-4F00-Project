@@ -20,20 +20,21 @@ class Model {
 
 
     public function loginAccount($username,$password) {
+        if (!isset($username) || !isset($password) ) {
+            return 'NOTFOUND';
+        }
         $user = NULL;
         try {
             $user = $this->getUser();
             return "SUCCESS";
-        } catch(SessionNotFound $e) {
+        } catch(Exception $e) {
             //Do nothing
         }
         // How you query stuff, mostly just normal sql
         $user = R::findOne('users',' username LIKE ?',[$username]);
         $hash = $user -> password;
         if (isset($user) && password_verify($password, $hash)) {
-            $user -> session = session_id();
-            R::store($user);
-            $_SESSION["loggedinvar"] = "true";
+            $_SESSION["USER_ID"] = $user->id;
             return "SUCCESS";
         } else {
             return 'NOTFOUND';
@@ -41,6 +42,9 @@ class Model {
     }
     
     public function createAccount($username,$email,$password) {
+        if (!isset($username) || !isset($email) || !isset($password)) {
+            return "ERR";
+        }
         //Check if user exists first
         $query = R::findOne('users',' username LIKE ? OR email LIKE ? ', [$username,$email]);
         if (!empty($query) && $query->username == $username) {
@@ -54,7 +58,7 @@ class Model {
             $user->username = $username;
             $user->password = password_hash($password, PASSWORD_BCRYPT);
             $user->email = $email;
-            $user->session = '';
+            $user->level = "Member";
             R::store($user);
             //Store it in the database, Redbean sets up everything
             return "SUCCESS";
@@ -73,48 +77,96 @@ class Model {
 
     public function getUser() {
         //Good query to index
-        $res = R::findOne('users', ' session Like ? ', [session_id()]);
-        if (!isset($res)) {
+        if (!isset($_SESSION['USER_ID'])) {
             throw new SessionNotFound();
         }
-        return $res;
+        return R::load('users',$_SESSION['USER_ID']);
     }
   
     public function addWebsite($name) {
+        if (!isset($name)) {
+            return "ERR";
+        }
         $user = $this -> getUser();
-        if (R::findOne('websites',' name like ? AND user_id = ? ',[$name,$user->id])) {
+        if (R::findOne('websites',' name like ? AND users_id = ? ',[$name,$user->id])) {
             return "ALREADYEXISTS";
         } else {
             $website = R::dispense('websites');
-            $website -> user = $user;
             $website -> name = $name;
-            $website -> components = '[]';
-            return R::store($website);
+            $website -> published = '';
+            $website -> webpages = '{"webpages":{"homepage": []},"footer":[]}';
+            $user-> xownWebsitesList[] = $website;
+            R::store($user);
+            return $website->id;
         }
     }
 
     public function logout () {
-        $user = $this->getUser();
-        $user -> session = '';
-        R::store($user);
-        $_SESSION["loggedinvar"] = "";
+        unset($_SESSION['USER_ID']);
         return "SUCCESS";
     }
-
-    public function getComponents($website) {
-        $user = $this -> getUser();
+    
+    public function getWebsites($website) {
+        if (!isset($website)) {
+            return "ERR";
+        }
         $site = R::load('websites',$website);
-        if ($user->id === $site->user_id) {
-            return $site->components;
+        if ($site->published === 'TRUE') {
+            return $site->webpages;
+        }
+        $user = $this -> getUser();
+        if ($user->id === $site->users_id) {
+            return $site->webpages;
         } else {
             return "WRONGUSER";
         }
     }
 
-    public function saveComponents($website, $components) {
+    public function publishStatus($website) {
+        if (!isset($website)) {
+            return "ERR";
+        }
         $website = R::load('websites',$website);
-        if ($website->user_id === $this->getUser()->id) {
-            $website -> components = $components;
+        if (!isset($website)) {
+            return "ERR";
+        }
+        if (isset($website->published) && $website->published == 'TRUE') {
+            return "PUBLISHED";
+        } else {
+            return "UNPUBLISHED";
+        }
+    }
+
+    public function togglePublish($website) {
+        $website = R::load('websites',$website);
+        $user = $this -> getUser();
+        if ($user->id !== $website->users_id) {
+            return "ERR";
+        }
+        
+        if (is_string($website)) {
+            return "ERR";
+        } else {
+            if (isset($website->published) && $website->published == 'TRUE') {
+                $website->published = '';
+                R::store($website);
+                return "UNPUBLISHED";
+            } else {
+                $website->published = 'TRUE';
+                R::store($website);
+                return "PUBLISHED";
+            }
+        }
+        
+    }
+
+    public function saveWebsites($website, $components) {
+        if (!isset($website) || !isset($components)) {
+            return "WRONGUSER";
+        }
+        $website = R::load('websites',$website);
+        if ($website->users_id === $this->getUser()->id) {
+            $website -> webpages = $components;
             R::store($website);
             return "SUCCESS";
         } else {
@@ -130,24 +182,24 @@ class Model {
 
     public function listWebsites() {
         $user = $this -> getUser();
-        $websites = R::findAll('websites',' user_id = ? ',[$user->id]);
-        return $websites;
+        return $user->ownWebsitesList;
     }
 
     public function listAllWebsites() {
-        $user = $this -> getUser();
         $websites = R::findAll('websites');
         return $websites;
     }
 
     public function listAllUsers() {
-        $user = $this -> getUser();
         $users = R::findAll('users');
         return $users;
     }
 
     //To send to someone if they forget their password
     public function recoverCode($email) {
+        if (!isset($email)) {
+            return "ERR";
+        }
         $user = R::findOne('users',' email Like ? ',[$email]);
         if (!isset($user)) {
             return "EMAILDNE";
@@ -167,6 +219,9 @@ class Model {
     }
     
     public function recoverPassword($code, $password) {
+        if (!isset($code) || !isset($password)) {
+            return "ERR";
+        }
         $recover = R::findOne('recover',' code = ? ',[$code]);
         if (!isset($recover)) {
             return "CODEWRONG";
@@ -189,16 +244,125 @@ class Model {
             $user -> dob = $dob;
             $user -> phonenumber = $phone;
             $user -> email = $email;
-            r::store($user);
+            R::store($user);
             return "SUCCESS";
         } else {
             return 'EMAILEXISTS';
         }
     }
+
+    public function updateUserAccess($level) {
+        $user = $this -> getUser();
+        $user -> level = $level;
+        R::store($user);
+        return "SUCCESS";
+    }
+
+    public function updateAccountPayment($cNum, $eDate, $cvvNum, $Type) {
+        $user = $this -> getUser();
+        $user -> cardnumber = $cNum;
+        $user -> expdate = $eDate;
+        $user -> cvvnum = $cvvNum;
+        $user -> type = $Type;
+        R::store($user);
+        return "SUCCESS";
+    }
+
+    public function updateAccountSubscription($sub) {
+        $user = $this -> getUser();
+        $user -> subcription = $$sub;
+        R::store($user);
+        return "SUCCESS";
+    }
+
+    public function updateAccountPrivacy($vPerm, $blocked) {
+        $user = $this -> getUser();
+        $user -> view_permissions = $vPerm;
+        $user -> blocked = $blocked;
+        R::store($user);
+        return "SUCCESS";
+    }
+
     public function deleteAccount() {
         $user = $this -> getUser();
         R::trash( $user );
         return "SUCCESS";
+    }
+
+    public function deleteWebsite($website_id) {
+        $user = $this -> getUser();
+        unset($user-> xownWebsitesList[$website_id]);
+        R::store($user);
+        return "SUCCESS";
+    }
+
+    public function deleteWebsiteAdmin($website_id) {
+        $website = R::load('websites',$website_id);
+        if(isset($website->users_id)){
+            $user = R::load('users',$website->users_id);
+            unset($user-> xownWebsitesList[$website_id]);
+            R::store($user);
+        } else {
+            R::trash($website);
+        }
+        return "SUCCESS";
+    }
+
+    public function deleteUserAdmin($user_id) {
+        $user = $this -> getUser();
+        if($user->id != $user_id){
+            $userd = R::load('users',$user_id);
+            R::trash($userd);
+            return "SUCCESS";
+        } else {
+            return "FAIL";
+        }
+    }
+
+    public function isAdmin(){
+        $user = $this -> getUser();
+        if(isset($user->admin) && $user->admin == true){
+            return $user->admin;
+        } else {
+            return false;
+        }
+    }
+
+    public function deleteAllUserWebsites() {
+        $user = $this -> getUser();
+        $user-> xownWebsitesList = array();
+        R::store($user);
+        return "SUCCESS";
+    }
+
+    public function deleteAllWebsites() {
+        R::wipe('websites');
+        return "SUCCESS";
+    }
+
+    public function sendContact($email,$name,$msg) {
+        $contact = R::dispense('contact');
+        $contact -> email = $email;
+        $contact -> name = $name;
+        $contact -> msg = $msg;
+        $contact -> time = time();
+        R::store($contact);
+    }
+
+    public function getAllContact() {
+        return R::findAll('contact');
+    }
+
+    public function deleteContact($contactId) {
+        $contact = R::load('contact',$contactId);
+        R::trash($contact);
+        return "SUCCESS";
+    }
+
+    public function setUniques() {
+        R::exec('ALTER TABLE Users ADD UNIQUE (USERNAME);');
+        R::exec('ALTER TABLE Users ADD UNIQUE (EMAIL);');
+        R::exec('ALTER TABLE Websites ADD UNIQUE (NAME,USERS_ID)');
     }
     
     

@@ -10,6 +10,7 @@ try {
     $_SESSION['UPLOAD_MSG'] = '';
     $_SESSION['RECOVEREMAIL_MSG'] = '';
     $_SESSION['RECOVERPWD_MSG'] = '';
+    $_SESSION['CONTACT_MSG'] = '';
 
     //Everytime the front end sends a post request, it requires a 'COMMAND' request to specify what you are asking for
     if (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'LOGIN') {
@@ -26,10 +27,16 @@ try {
             redirect("view/login.php");
             die();
         } else {
-            redirect("view/website-name.php");
+            $user = $model -> getUser();
+            if ($user->$level === "Admin"){
+                redirect("view/admin-portal.php");
+                die();
+            } else {
+                redirect("view/website-name.php");
+                die();
+            }
         }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SIGNUP') {
-
         if (empty($_POST['UNAME']) || strlen($_POST['UNAME']) < 4 || strpos($_POST['UNAME'], ' ') !== false) {
             $_SESSION['SIGNUP_MSG'] = "Username must be at least 4 characters, no spaces";
             redirect("view/signup.php");
@@ -37,6 +44,7 @@ try {
         } elseif (empty($_POST['PWD']) || strlen($_POST['PWD']) < 8) {
             $_SESSION['SIGNUP_MSG'] = "Password must be at least 8 characters";
             redirect("view/signup.php");
+            die();
         } else {
             $res = $model->createAccount($_POST['UNAME'], $_POST['EMAIL'], $_POST['PWD']);
             if ($res == "SUCCESS") {
@@ -50,42 +58,35 @@ try {
             } elseif ($res == "EMAILEXISTS") {
                 $_SESSION['SIGNUP_MSG'] = "Email already exists";
                 redirect("view/signup.php");
+                die();
+            } elseif ($res == "ERR") {
+                $_SESSOIN['SIGNUP_MSG'] = "Error creating account";
+                redirect("view/signup.php");
+                die();
             } else {
                 redirect("view/signup.php");
+                die();
             }
         }
-
         //Uploads an image
-    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'PIC_UPLOAD') {
-        $target_dir = "uploads/images/";
-        $target_file = $target_dir . basename($_FILES["file"]["name"]);
-        // Check if image file is a actual image or fake image
-        $check = getimagesize($_FILES["file"]["tmp_name"]);
-        if ($check === false) {
-            echo "Not an image";
-            //Check if file is bigger than 5 MB
-        } elseif ($_FILES["file"]["size"] > 5000000) {
-            echo "File is too big (over 5MB)";
-        } else {
-            $new_filename = $model->storeImage(basename($_FILES["file"]["name"]));
-            echo $target_dir;
-            if (move_uploaded_file($_FILES["file"]["tmp_name"], '../' . $target_dir . $new_filename)) {
-                echo $new_filename;
-            } else {
-                echo "Sorry, there was an error uploading your file.";
-            }
-        }
-    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_WIZARD') {
-        $_SESSION['WEBSITE_MSG'] = '';
+    }  elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_WIZARD') {
         if (strlen($_POST['WEBSITE']) < 3) {
+            $_SESSION['WEBSITENAME'] = "The name of the website needs to have more than three characters";
             redirect("view/website-name.php");
             die();
         } else {
             $id = $model->addWebsite($_POST['WEBSITE']);
             if ($id == "ALREADYEXISTS") {
+                $_SESSION['WEBSITENAME'] = "This website already exists!";
                 redirect("view/website-name.php");
+                die();
+            } elseif ($id == "ERR") {
+                $_SESSION['WEBSITENAME'] = "There was a problem creating a website";
+                redirect("view/website-name.php");
+                die();
             } else {
                 redirect("view/editor.php?website=" . strval($id));
+                die();
             }
         }
     } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
@@ -93,10 +94,14 @@ try {
         redirect('view/login.php');
         die();
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
-        echo $model->saveComponents($_POST['WEBPAGE'], $_POST['COMPONENTS']);
+        echo $model->saveWebsites($_POST['WEBSITE'], $_POST['WEBPAGES']);
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'RECOVERPWD') {
         $_SESSION['RECOVERPWD_MSG'] = '';
-        if ($_POST['PWD'] != $_POST['PWD2']) {
+        if (empty($_POST['CODE']) || empty($_POST['PWD'])) {
+            $_SESSION['RECOVERPWD_MSG'] = "Make sure you entered the password and that the code is correct";
+            redirect('view/recover-password.php');
+            die();
+        } elseif ($_POST['PWD'] != $_POST['PWD2']) {
             $_SESSION['RECOVERPWD_MSG'] = "Passwords don't match";
             if (is_numeric($_POST['CODE'])) {
                 redirect('view/recover-password.php?code=' . $_POST['CODE']);
@@ -111,18 +116,27 @@ try {
         } else {
             $res = $model->recoverPassword($_POST['CODE'], $_POST['PWD']);
             if ($res == "CODEWRONG") {
-                $_SESSION['RECOVERMAIL_MSG'] = 'Something went wrong, try again';
+                $_SESSION['RECOVEREMAIL_MSG'] = 'Something went wrong, try again';
                 redirect('view/recover-email.php');
                 die();
             } elseif ($res == "TIMEOUT") {
-                $_SESSION['RECOVERPWD_MSG'] = 'Password timed out, try again';
+                $_SESSION['RECOVEREMAIL_MSG'] = 'Password timed out, try again';
+                redirect('view/recover-email.php');
+                die();
+            } elseif ($res == "CODEWRONG") {
+                $_SESSION['RECOVEREMAIL_MSG'] = "Something went wrong, try again";
                 redirect('view/recover-email.php');
                 die();
             } elseif ($res == "SUCCESS") {
                 $_SESSION['LOGIN_MSG'] = 'Enter new password';
                 redirect('view/login.php');
                 die();
+            } elseif ($res == "ERR") {
+                $_SESSION['RECOVEREMAIL_MSG'] = "Something went wrong, try again";
+                redirect('view/recover-email.php');
+                die();
             }
+            
         }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'RECOVEREMAIL') {
         $res = $model->recoverCode($_POST['EMAIL']);
@@ -130,11 +144,16 @@ try {
             $_SESSION['RECOVEREMAIL_MSG'] = "Email does not exist";
             redirect("view/recover-email.php");
             die();
+        } elseif($res == "ERR") {
+            $_SESSION['RECOVEREMAIL_MSG'] = "Error, please try again";
+            redirect("view/recover-email.php");
+            die();
         } else {
             $msg = "Click on this link to reset your password\n www.cosc.brocku.ca" . $config['home-file-path'] . '/view/recover-password.php?code=' . strval($res);
             mail($_POST['EMAIL'], "Recovery email for Brix", $msg);
             $_SESSION['RECOVEREMAIL_MSG'] = 'Message sent, check your email and junk folder';
-            redirect('view/recover-email.php');
+            redirect("view/recover-email.php");
+            die();
         }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPROFILE') {
         if (!empty($_POST['EMAIL'])) {
@@ -150,10 +169,41 @@ try {
             }
         }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPRIVACY') {
+        $res = $model->updateAccountPrivacy($_POST['VPERM'], $_POST['BLOCKED']);
+        if ($res == "SUCCESS") {
+            $_SESSION['UPDATEACCOUNT'] = 'Account has been updated';
+            redirect("view/account.php");
+            die();
+        } else {
+            $_SESSION['UPDATEACCOUNT'] = 'Update Failed';
+            redirect("view/account.php");
+            die();
+        }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPAYMENT') {
+        $res = $model->updateAccountPayment($_POST['CNUM'], $_POST['EDATE'], $_POST['CVVNUM'], $_POST['TYPE']);
+        if ($res == "SUCCESS") {
+            $_SESSION['UPDATEACCOUNT'] = 'Account has been updated';
+            redirect("view/account.php");
+            die();
+        } else {
+            $_SESSION['UPDATEACCOUNT'] = 'Update Failed';
+            redirect("view/account.php");
+            die();
+        }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATESUBSCRIPTIONS') {
+        $res = $model->updateAccountSubscription($_POST['SUB']);
+        if ($res == "SUCCESS") {
+            $_SESSION['UPDATEACCOUNT'] = 'Account has been updated';
+            redirect("view/account.php");
+            die();
+        } else {
+            $_SESSION['UPDATEACCOUNT'] = 'Update Failed';
+            redirect("view/account.php");
+            die();
+        }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'DELETEACCOUNT') {
         $res = $model->deleteAccount();
+        $model->logout();
         if ($res == "SUCCESS") {
             $_SESSION['LOGIN_MSG'] = 'Account has been deleted';
             redirect("view/login.php");
@@ -166,10 +216,56 @@ try {
     } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
         $model->logout();
         redirect('view/login.php');
+        die();
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
-        echo $model->saveComponents($_POST['WEBPAGE'], $_POST['COMPONENTS']);
+        echo $model->saveWebsites($_POST['WEBPAGE'], $_POST['COMPONENTS']);
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'CONTACT') {
+        if (empty($_POST['EMAIL'])) {
+            $_SESSION['CONTACT_MSG'] = "Enter email address";
+            redirect('view/support.php');
+            die();
+        } else {
+            $model->sendContact($_POST['EMAIL'],$_POST['FULLNAME'],$_POST['MSG']);
+            $_SESSION['CONTACT_MSG'] = 'Message sent';
+            redirect('view/support.php');
+            die();
+        }
+    } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND']=='UNIQUE') {
+        $model->setUniques();
+        echo "Unique set in tables";
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_DELETE') {
+        $res = $model->deleteWebsite($_POST['SITE']);
+        $_SESSION['WEBSITENAME'] = "Website was succesfully deleted";
+        redirect("view/website-name.php");
+        die();
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_DELETE_ADMIN') {
+        $res = $model->deleteWebsiteAdmin($_POST['SITE']);
+        $_SESSION['WEBSITENAME'] = "Website was succesfully deleted";
+        redirect("view/admin-portal.php");
+        die();
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'USER_DELETE_ADMIN') {
+        $res = $model->deleteUserAdmin($_POST['SITE']);
+        if($res == "SUCCESS"){
+            $_SESSION['WEBSITENAME'] = "User was succesfully deleted";
+        } else {
+            $_SESSION['WEBSITENAME'] = "Sorry you cannot delete yourself";
+        }
+        redirect("view/admin-portal.php");
+        die();
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'CONTACT_DELETE_ADMIN') {
+        $res = $model->deleteContact($_POST['SITE']);
+        $_SESSION['WEBSITENAME'] = "Contact was succesfully deleted";
+        redirect("view/admin-portal.php");
+        die();
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'TOGGLE_PUBLISH') {
+        echo $model->togglePublish($_POST['WEBSITE']);
+        die();
+    } else {
+        redirect('view/login.php');
+        die();
     }
-} catch (SessionNotFound $e) {
+} catch (Exception $e) {
     redirect('view/login.php');
+    die();
 }
 ?>
