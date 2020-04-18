@@ -115,6 +115,7 @@ class Model
         } else {
             $website = R::dispense('websites');
             $website->name = $name;
+            $website->published = '';
             $website->webpages = '{"webpages":{"homepage": []},"footer":[]}';
             $user->xownWebsitesList[] = $website;
             R::store($user);
@@ -133,8 +134,11 @@ class Model
         if (!isset($website)) {
             return "ERR";
         }
-        $user = $this->getUser();
         $site = R::load('websites', $website);
+        if ($site->published === 'TRUE') {
+            return $site->webpages;
+        }
+        $user = $this->getUser();
         if ($user->id === $site->users_id) {
             return $site->webpages;
         } else {
@@ -142,8 +146,44 @@ class Model
         }
     }
 
-    public function saveWebsites($website, $components)
-    {
+    public function publishStatus($website) {
+        if (!isset($website)) {
+            return "ERR";
+        }
+        $website = R::load('websites',$website);
+        if (!isset($website)) {
+            return "ERR";
+        }
+        if (isset($website->published) && $website->published == 'TRUE') {
+            return "PUBLISHED";
+        } else {
+            return "UNPUBLISHED";
+        }
+    }
+
+    public function togglePublish($website) {
+        $website = R::load('websites', $website);
+        $user = $this->getUser();
+        if ($user->id !== $website->users_id) {
+            return "ERR";
+        }
+        
+        if (is_string($website)) {
+            return "ERR";
+        } else {
+            if (isset($website->published) && $website->published == 'TRUE') {
+                $website->published = '';
+                R::store($website);
+                return "UNPUBLISHED";
+            } else {
+                $website->published = 'TRUE';
+                R::store($website);
+                return "PUBLISHED";
+            }
+        }
+    }
+
+    public function saveWebsites($website, $components) {
         if (!isset($website) || !isset($components)) {
             return "WRONGUSER";
         }

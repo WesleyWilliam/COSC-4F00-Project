@@ -14,12 +14,7 @@
       background-color: yellow;
     }
 
-    /*used for grid*/
-    .column {
-      float: left;
-      width: 50%;
-    }
-
+ 
     #footer-user-page{
 
 position: sticky;
@@ -28,23 +23,36 @@ bottom: 0px;
 
     }
 
-    #editor-user-page{
+ /*making navbar scrollable*/
+  
+    
+    #sidebar { 
+      
+      max-height: 600px;
 
-
-    }
-
-    #footer-user-page{
-
-position: sticky;
-bottom: 0px;
-
-
-    }
-
-    #editor-user-page{
-
+      width: 15%;
+      max-width: 15%;
 
     }
+
+    #sidebarList {
+
+      max-height: inherit;
+
+      max-width: 100%;
+      overflow-y: scroll;
+
+
+
+
+}
+
+
+
+
+
+
+ 
   </style>
 
   <!-- Including bootstrap CSS files -->
@@ -101,11 +109,17 @@ bottom: 0px;
   <?php include 'navbar.php' ?>
 
   <!-- Editor -->
+
+  <div class="row">
+  <i id="sidebarMinimize" data-feather="sidebar"></i>
+
+  </div>
+
   <div class="row">
 
     <!-- Side bar -->
-    <div class="col" id="sidebar">
-      <ul class="list-group" id="sidebarList" style="position:fixed; width:15%;">
+    <div id="sidebar" class="col" >
+      <ul id="sidebarList" class="list-group ui-draggable"  style="position:fixed; width:15%;">
         <li id="text-sidebar-button" class="list-group-item list-group-item-action">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
             <span>Text</span>
@@ -187,12 +201,15 @@ bottom: 0px;
           <a role="button" href="<?php echo $config['home-file-path']; ?>/view/themes.php" class="btn btn-outline-info mr-2 btn-link">Themes</a>
           <button type="button" class="btn btn-outline-info mr-2">Help</button>
           <button type="button" class="btn btn-outline-info">Edit</button>
-          <button type="button" class="btn btn-outline-info add-webpage-button">Add Webpage</button>
+          <button type="button" class="btn btn-outline-danger" id="delete-webpage-button">Delete Webpage</button>
         </div>
         <div>
           <button type="button" class="btn btn-outline-warning mr-2">Undo</button>
           <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save all</button>
-          <button type="button" class="btn btn-outline-info preview-editor">Preview</button>
+          <a role="button" href="<?php echo $config['home-file-path']; ?>/view/publish.php?website=<?php echo $_GET['website'] ?>" class="btn btn-outline-info preview-editor">Preview</a>
+          <button type="button" class="btn btn-outline-danger mr-2" id="publish-button" title="When published anyone can view your website"> 
+            <?php $res = $model->publishStatus($_GET['website']); if ($res == 'PUBLISHED') {echo 'Unpublish';} elseif ($res == 'UNPUBLISHED') {echo 'Publish';} else {echo $res;}  ?>
+          </button>
         </div>
       </div>
       <!-- Webpages Navbar -->
@@ -395,6 +412,24 @@ bottom: 0px;
       </div>
     </div>
 
+
+        <!-- Uploading image modal -->
+        <div class="modal" tabindex="-1" role="dialog" id="imgSpinnerModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Uploading image</h5>
+          </div>
+          <div class="modal-body">
+            <p>Uploading image</p>
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   
 
     <!-- Edit grid -->
@@ -446,20 +481,41 @@ bottom: 0px;
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form id="save-webpage-form">
               <div class="form-group">
                 <label for="userText">Webpage:</label>
-                <input type="text" class="form-control" id="webpageText">
+                <input type="text" class="form-control" id="webpageText" pattern="[A-Za-z0-9]{3,50}" title="3-64 characters allowed, no special characters, no spaces" required>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="save-webpage-button" aria-label="Close">Add</button>
               </div>
             </form>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" id="save-webpage-button" data-dismiss="modal" aria-label="Close">Add</button>
-            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Delete Webpage Modal -->
+    <div class="modal fade" id="deleteWebpageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Webpage</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p id="deleteWebpageModalBody"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="deleteWebsiteModalButton" aria-label="Close" data-dismiss="modal">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>    
 
 <!-- EditButton modal -->
 <div class="modal fade" id="editButtonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
