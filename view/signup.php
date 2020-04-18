@@ -48,7 +48,7 @@
                 <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
                   <div class="form-group">
                     <label for="username1">Username</label>
-                    <input type="text" class="form-control" id="username1" name="UNAME">
+                    <input type="text" class="form-control" id="username1" name="UNAME" pattern="[A-Za-z0-9\-_.]{4,32}" title="Must be between 4-32 characters, alphanumeric and -_. characters only" required>
                   </div>
                   <div class="form-group">
                     <label for="email1">Email Address</label>
