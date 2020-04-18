@@ -27,8 +27,8 @@ try {
             redirect("view/login.php");
             die();
         } else {
-            $user = $model -> getUser();
-            if ($user->$level === "Admin"){
+            $user = $model->getUser();
+            if ($user->level === "Admin") {
                 redirect("view/admin-portal.php");
                 die();
             } else {
@@ -69,7 +69,7 @@ try {
             }
         }
         //Uploads an image
-    }  elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_WIZARD') {
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_WIZARD') {
         if (strlen($_POST['WEBSITE']) < 3) {
             $_SESSION['WEBSITENAME'] = "The name of the website needs to have more than three characters";
             redirect("view/website-name.php");
@@ -136,7 +136,6 @@ try {
                 redirect('view/recover-email.php');
                 die();
             }
-            
         }
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'RECOVEREMAIL') {
         $res = $model->recoverCode($_POST['EMAIL']);
@@ -144,7 +143,7 @@ try {
             $_SESSION['RECOVEREMAIL_MSG'] = "Email does not exist";
             redirect("view/recover-email.php");
             die();
-        } elseif($res == "ERR") {
+        } elseif ($res == "ERR") {
             $_SESSION['RECOVEREMAIL_MSG'] = "Error, please try again";
             redirect("view/recover-email.php");
             die();
@@ -225,12 +224,12 @@ try {
             redirect('view/support.php');
             die();
         } else {
-            $model->sendContact($_POST['EMAIL'],$_POST['FULLNAME'],$_POST['MSG']);
+            $model->sendContact($_POST['EMAIL'], $_POST['FULLNAME'], $_POST['MSG']);
             $_SESSION['CONTACT_MSG'] = 'Message sent';
             redirect('view/support.php');
             die();
         }
-    } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND']=='UNIQUE') {
+    } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'UNIQUE') {
         $model->setUniques();
         echo "Unique set in tables";
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_DELETE') {
@@ -244,17 +243,144 @@ try {
         redirect("view/admin-portal.php");
         die();
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'USER_DELETE_ADMIN') {
-        $res = $model->deleteUserAdmin($_POST['SITE']);
-        if($res == "SUCCESS"){
-            $_SESSION['WEBSITENAME'] = "User was succesfully deleted";
+        if (isset($_POST['SITE'])) {
+            $res = $model->deleteUserAdmin($_POST['SITE']);
+            if ($res == "SUCCESS") {
+                $_SESSION['WEBSITENAME'] = "User was succesfully deleted";
+            } else {
+                $_SESSION['WEBSITENAME'] = "Sorry you cannot delete yourself";
+            }
+        } elseif (isset($_POST['ADD'])) {
+            $res = $model->addUserAsAdmin($_POST['ADD']);
+            if ($res == "SUCCESS") {
+                $_SESSION['WEBSITENAME'] = "User was succesfully made into admin";
+            } else {
+                $_SESSION['WEBSITENAME'] = "Error setting user as admin";
+            }
+        } elseif (isset($_POST['REMOVE'])) {
+            $res = $model->removeUserAsAdmin($_POST['REMOVE']);
+            if ($res == "SUCCESS") {
+                $_SESSION['WEBSITENAME'] = "User was succesfully removed as admin";
+            } else {
+                $_SESSION['WEBSITENAME'] = "Error changing user back to standard user";
+            }
+        } elseif (isset($_POST['TOGGLE'])) {
+            $res = $model->toggleUserAsAdmin($_POST['TOGGLE']);
+            if ($res == "SUCCESS") {
+                $_SESSION['WEBSITENAME'] = "User permissons has succesfully changed";
+            } else {
+                $_SESSION['WEBSITENAME'] = "Error changing user permissons user";
+            }
         } else {
-            $_SESSION['WEBSITENAME'] = "Sorry you cannot delete yourself";
+            $_SESSION['WEBSITENAME'] = "Error! that did not save";
         }
         redirect("view/admin-portal.php");
         die();
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'CONTACT_DELETE_ADMIN') {
         $res = $model->deleteContact($_POST['SITE']);
         $_SESSION['WEBSITENAME'] = "Contact was succesfully deleted";
+        redirect("view/admin-portal.php");
+        die();
+    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'DELETE_DATABASE') {
+        if (isset($_POST['DATABASE']) && $_POST['DATABASE'] == 'website') {
+            $_POST['DATABASE'] = '';
+            $websitelst = null;
+            try {
+                $websitelst = $model->listAllWebsites();
+            } catch (Exception $e) {
+                redirect('view/admin-portal.php');
+                die();
+            }
+            $error = false;
+            foreach ($websitelst as $website) {
+                $res = $model->deleteWebsiteAdmin($website->id);
+                if ($res != "SUCCESS") {
+                    $error = true;
+                }
+            }
+            if ($error == "True") {
+                $_SESSION['WEBSITENAME'] = "Error deleting website did not occur!";
+                redirect("view/admin-portal.php");
+                die();
+            }
+            $res = $model->deleteAllWebsites();
+            if ($res == "SUCCESS") {
+                $_SESSION['WEBSITENAME'] = "All websites have been successfully deleted";
+                redirect("view/admin-portal.php");
+                die();
+            }
+            #delete website
+            die();
+        } elseif (isset($_POST['DATABASE']) && $_POST['DATABASE'] == 'user') {
+            $_POST['DATABASE'] = '';
+            $res = $model->deleteAllUsers();
+            if ($res == "SUCCESS") {
+                $model->logout();
+                $model->createAccount("Admin", "Admin@Admin.com", "Admin");
+                $id = $model->getUserID("Admin");
+                $model->addUserAdAdmin($id);
+                $_SESSION['LOGIN_MSG'] = "All Users have been deleted, recreated generic admin account";
+                redirect("view/login.php");
+                die();
+            }
+            #delete user
+            die();
+        } elseif (isset($_POST['DATABASE']) && $_POST['DATABASE'] == 'ticket') {
+            $_POST['DATABASE'] = '';
+            $res = $model->deleteAllContacts();
+            if ($res == "SUCCESS") {
+                $_SESSION['WEBSITENAME'] = "All tickets have been successfully deleted";
+                redirect("view/admin-portal.php");
+                die();
+            }
+            $_SESSION['WEBSITENAME'] = "Error: Tickets did not delete properly";
+            redirect("view/admin-portal.php");
+            die();
+            #delete ticket
+            die();
+        } elseif (isset($_POST['DATABASE']) && $_POST['DATABASE'] == 'wipe') {
+            $_POST['DATABASE'] = '';
+            $error = false;
+            $res = $model->deleteAllContacts();
+            if ($res != "SUCCESS") {
+                $error = true;
+                $_SESSION['WEBSITENAME'] = "Error: deleting entire contacts from database failed!";
+                redirect("view/admin-portal.php");
+                die();
+            }
+            $res = $model->deleteAllWebsites();
+            if ($res != "SUCCESS") {
+                $error = true;
+                $_SESSION['WEBSITENAME'] = "Error: deleting entire websites from database failed!";
+                redirect("view/admin-portal.php");
+                die();
+            }
+            $res = $model->deleteAllUsers();
+            if ($res != "SUCCESS") {
+                $error = true;
+                $_SESSION['WEBSITENAME'] = "Error: deleting entire Users from database failed!";
+                $_SESSION['WEBSITENAME'] = "Error: deleting entire database failed!";
+                $_SESSION['LOGIN_MSG'] = "Error: deleting entire database failed!";
+                redirect("view/admin-portal.php");
+                die();
+            }
+            if ($error == false) {
+                $model->logout();
+                $model->createAccount("Admin", "Admin@Admin.com", "Admin");
+                $id = $model->getUserID("Admin");
+                $model->addUserAdAdmin($id);
+                $_SESSION['LOGIN_MSG'] = "All Databases have been deleted, recreated generic admin account";
+                redirect("view/login.php");
+                die();
+            } else {
+                $_SESSION['WEBSITENAME'] = "Error: deleting entire database failed!";
+                $_SESSION['LOGIN_MSG'] = "Error: deleting entire database failed!";
+                redirect("view/admin-portal.php");
+            }
+            #delete database
+            die();
+        }
+        $_SESSION['WEBSITENAME'] = "Error delete did not occur!";
         redirect("view/admin-portal.php");
         die();
     } else {
