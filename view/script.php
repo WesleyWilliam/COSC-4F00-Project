@@ -862,7 +862,7 @@ function textComponentOutput(component, index) {
 }
 
 function textComponentOutputGrid(component, gridIndex, compIndex) {
-  return " <div id='" + compIndex + "-" + gridIndex + "' class='mb-4 text-component-grid' ><p class=" + component.header + ">" + component.content + "</p></div>";
+  return " <div id='" + compIndex + "-" + gridIndex + "' class='mb-4 text-component-grid' ><p class=" + escapeHtml(component.header) + ">" + component.content + "</p></div>";
 }
 
 // Function to output image component html code
@@ -895,7 +895,7 @@ function HTMLComponentOutput(component, index) {
 
 //Function to output button component 
 function buttonComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4' ><a href='" + component.url + "' target='_blank' class='" + component.style + "'>" + component.content + "</a></div>"
+  return "<div id='" + index + "' class='component mb-4' ><a href='" + component.url + "' target='_blank' class='" + component.style + "'>" + escapeHtml(component.content) + "</a></div>"
 }
 
 //Function to output spacer component 
