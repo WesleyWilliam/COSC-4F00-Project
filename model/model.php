@@ -10,6 +10,7 @@ class Model
 
     private $config;
 
+    //Setup Database
     public function __construct()
     {
         require_once '../lib/rb-postgres.php';
@@ -22,7 +23,7 @@ class Model
         R::setup('pgsql:host=localhost;dbname=' . $cfg['dbname'], $cfg['db-user'], $cfg['db-pwd']);
     }
 
-
+    //Login to account
     public function loginAccount($username, $password)
     {
         if (!isset($username) || !isset($password)) {
@@ -46,6 +47,7 @@ class Model
         }
     }
 
+    //Create an account
     public function createAccount($username, $email, $password)
     {
         if (!isset($username) || !isset($email) || !isset($password)) {
@@ -72,18 +74,21 @@ class Model
         }
     }
 
+    //returns the user id when a unique username is passed
     public function getUserID($username)
     {
         $user = R::findOne('users', ' username LIKE ? ', [$username]);
         return $user->id;
     }
 
+    //returns username of a user when a unique user ID is passed
     public function getUsername($usernameID)
     {
         $user = R::load('users', $usernameID);
         return $user->username;
     }
 
+    //Store images to database
     public function storeImage($filename)
     {
         $imagebean = R::dispense('image');
@@ -95,6 +100,7 @@ class Model
         return $new_filename;
     }
 
+    //Return a user row
     public function getUser()
     {
         //Good query to index
@@ -104,6 +110,7 @@ class Model
         return R::load('users', $_SESSION['USER_ID']);
     }
 
+    //Add a new website to user
     public function addWebsite($name)
     {
         if (!isset($name)) {
@@ -123,12 +130,14 @@ class Model
         }
     }
 
+    //logout of account
     public function logout()
     {
         unset($_SESSION['USER_ID']);
         return "SUCCESS";
     }
 
+    //Returns the list of websites
     public function getWebsites($website)
     {
         if (!isset($website)) {
@@ -145,7 +154,8 @@ class Model
             return "WRONGUSER";
         }
     }
-
+    
+    //Returns the publish status of a website
     public function publishStatus($website) {
         if (!isset($website)) {
             return "ERR";
@@ -161,6 +171,7 @@ class Model
         }
     }
 
+    //Toggles the publish status of a website and returns the result
     public function togglePublish($website) {
         $website = R::load('websites', $website);
         $user = $this->getUser();
@@ -183,6 +194,7 @@ class Model
         }
     }
 
+    //Saves the website to tables
     public function saveWebsites($website, $components) {
         if (!isset($website) || !isset($components)) {
             return "WRONGUSER";
@@ -197,6 +209,7 @@ class Model
         }
     }
 
+    //Saves a log with the passed message
     public function log($msg)
     {
         $log = R::dispense('logs');
@@ -204,6 +217,7 @@ class Model
         R::store($log);
     }
 
+    //returns a list of websites from the user
     public function listWebsites()
     {
         $user = $this->getUser();
@@ -246,6 +260,7 @@ class Model
         }
     }
 
+    //Recovers the password by checking the code and time elapsed, if ok it will update the password
     public function recoverPassword($code, $password)
     {
         if (!isset($code) || !isset($password)) {
@@ -264,6 +279,8 @@ class Model
             return "SUCCESS";
         }
     }
+
+    //Updates the users accounts preferences
     public function updateAccountPreferences($fName, $lName, $dob, $phone, $email)
     {
         $user = $this->getUser();
@@ -281,6 +298,7 @@ class Model
         }
     }
 
+    //Updates the users access level
     public function updateUserAccess($level)
     {
         $user = $this->getUser();
@@ -289,6 +307,7 @@ class Model
         return "SUCCESS";
     }
 
+    //Updates the users accounts payments
     public function updateAccountPayment($cNum, $eDate, $cvvNum, $Type)
     {
         $user = $this->getUser();
@@ -308,6 +327,7 @@ class Model
         return "SUCCESS";
     }
 
+    //Updates the users accounts privacy page
     public function updateAccountPrivacy($vPerm, $blocked)
     {
         $user = $this->getUser();
@@ -317,6 +337,7 @@ class Model
         return "SUCCESS";
     }
 
+    //deletes this users account
     public function deleteAccount()
     {
         $user = $this->getUser();
@@ -324,6 +345,7 @@ class Model
         return "SUCCESS";
     }
 
+    //deletes this users website
     public function deleteWebsite($website_id)
     {
         $user = $this->getUser();
@@ -332,6 +354,7 @@ class Model
         return "SUCCESS";
     }
 
+    //Deletes the passed website
     public function deleteWebsiteAdmin($website_id)
     {
         $website = R::load('websites', $website_id);
@@ -345,6 +368,7 @@ class Model
         return "SUCCESS";
     }
 
+    //Blocks passed website
     public function blockWebsiteAdmin($website_id)
     {
         $website = R::load('websites', $website_id);
@@ -353,6 +377,7 @@ class Model
         return "SUCCESS";
     }
 
+    //enables a blocked website
     public function enableWebsiteAdmin($website_id)
     {
         $website = R::load('websites', $website_id);
@@ -361,6 +386,7 @@ class Model
         return "SUCCESS";
     }
 
+    //deletes a user that was passed
     public function deleteUserAdmin($user_id)
     {
         $user = $this->getUser();
@@ -372,7 +398,8 @@ class Model
             return "FAIL";
         }
     }
-
+    
+    //Adds admin status to user
     public function addUserAsAdmin($user_id)
     {
         $user = R::load('users', $user_id);
@@ -381,6 +408,7 @@ class Model
         return "SUCCESS";
     }
 
+    //toggles user as admin/member status
     public function toggleUserAsAdmin($user_id)
     {
         $user = R::load('users', $user_id);
@@ -393,6 +421,7 @@ class Model
         return "SUCCESS";
     }
 
+    //Removes any user passed
     public function removeUserAsAdmin($user_id)
     {
         $user = R::load('users', $user_id);
@@ -401,6 +430,7 @@ class Model
         return "SUCCESS";
     }
 
+    //checks if a user in an administrator
     public function isCheckAdmin($user_id)
     {
         $user = R::load('users', $user_id);
@@ -411,6 +441,7 @@ class Model
         }
     }
 
+    //checks if this user is an admin
     public function isAdmin()
     {
         $user = $this->getUser();
@@ -421,6 +452,7 @@ class Model
         }
     }
 
+    //Deletes all websites from this user
     public function deleteAllUserWebsites()
     {
         $user = $this->getUser();
@@ -429,24 +461,28 @@ class Model
         return "SUCCESS";
     }
 
+    //Deletes all website table
     public function deleteAllWebsites()
     {
         R::wipe('websites');
         return "SUCCESS";
     }
 
+    //Deletes the users table
     public function deleteAllUsers()
     {
         R::wipe('users');
         return "SUCCESS";
     }
 
+    //Deletes the contacts table
     public function deleteAllContacts()
     {
         R::wipe('contact');
         return "SUCCESS";
     }
 
+    //creates a contact row with the passed information
     public function sendContact($email, $name, $msg)
     {
         $contact = R::dispense('contact');
@@ -457,11 +493,13 @@ class Model
         R::store($contact);
     }
 
+    //returns all contacts
     public function getAllContact()
     {
         return R::findAll('contact');
     }
 
+    //Deletes a contact passed
     public function deleteContact($contactId)
     {
         $contact = R::load('contact', $contactId);
@@ -469,6 +507,7 @@ class Model
         return "SUCCESS";
     }
 
+    //sets tables as unique
     public function setUniques()
     {
         R::exec('ALTER TABLE Users ADD UNIQUE (USERNAME);');
