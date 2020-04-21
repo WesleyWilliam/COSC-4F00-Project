@@ -19,11 +19,7 @@ $(document).ready(function () {
 
 $(function () {
   var startingItem;
-  //  var startingParent;
   var temp;
-
-  //var theParent;
-
 
   $(".editable-area").sortable({
 
@@ -32,16 +28,13 @@ $(function () {
     start: function (e, ui) {
       startingItem = ui.item.index();
       var startingParent = ui.item.closest('.editable-area').attr('id');
-      //    sortedIDs = $("#" + startingParent).sortable("toArray");
 
 
       if (startingParent === "editor-user-page") {
         temp = editorComponents.splice(startingItem, 1);
-        //  editorComponents.splice(stoppingItem, 0, temp[0]);
       }
       else if (startingParent == "footer-user-page") {
         temp = footerComponents.splice(startingItem, 1);
-        // footerComponents.splice(stoppingItem, 0, temp[0]);
       }
 
       // delete from editorComponents array on start
@@ -53,17 +46,13 @@ $(function () {
 
     stop: function (e, ui) {
       var stoppingParent = ui.item.closest('.editable-area').attr('id');
-      //console.log("work " + stoppingParent);
 
-      //   sortedIDs = $("#"+stoppingParent).sortable("toArray");
       var stoppingItem = ui.item.index();
 
       if (stoppingParent === "editor-user-page") {
-        // var temp = editorComponents.splice(startingItem, 1);
         editorComponents.splice(stoppingItem, 0, temp[0]);
       }
       else if (stoppingParent == "footer-user-page") {
-        //   var temp = footerComponents.splice(startingItem, 1);
         footerComponents.splice(stoppingItem, 0, temp[0]);
       }
 
@@ -129,7 +118,6 @@ $(function () {
           break;
       }
       if (component != null) {
-        //        editorComponents.push(component);
 
         if (theParent === "editor-user-page") {
           editorComponents.push(component);
@@ -142,7 +130,6 @@ $(function () {
 
 
         showChanges();
-        // componentParent = undefined;
       }
     }
 
@@ -250,7 +237,6 @@ $(function () {
     if (componentParent == "footer-user-page") {
       footerComponents = tempComponents;
     }
-    //componentParent = undefined;
 
 
   });
@@ -433,19 +419,14 @@ $(document).on('change', '#imageFile', function () {
 
 //Gets the component from the index and indexGrid global variables
 function getComponent() {
-  //console.log(indexGrid);
   //indexGrid is -1 if it's not in a grid
 
-  console.log("the 1: " + index);
-  console.log("the 2: " + indexGrid);
-  console.log("dad: " + componentParent);
+
 
   if (componentParent == "editor-user-page") {
-    console.log("testing");
     if (indexGrid == -1) {
       return editorComponents[index];
     } else {
-      console.log("hiya: " + editorComponents[index].gridContent[indexGrid]);
 
       return editorComponents[index].gridContent[indexGrid];
     }
@@ -624,7 +605,6 @@ $(document).on("click", ".text-component-grid", function () {
   var id = $(this).attr("id");
 
   var idBoth = id.split("-");
-  //var component = getComponent();
 
   index = idBoth[0];
   indexGrid = idBoth[1];
@@ -643,7 +623,6 @@ $(document).on("click", ".text-component-grid", function () {
     $('#editText').val(footerComponents[idBoth[0]].gridContent[idBoth[1]].content);
     $("#hType").val(footerComponents[idBoth[0]].gridContent[idBoth[1]].header);
   }
-  //showChanges();
 
 });
 
@@ -668,9 +647,6 @@ $(document).on("click", ".media-component-grid", function () {
   index = idBoth[0];
   indexGrid = idBoth[1];
 
-  console.log("idBoth[1]: " + idBoth[1]);
-  console.log("idBoth[0]: " + idBoth[0]);
-  console.log("idBoth[1]: " + idBoth[1]);
 
   $('#editMediaModal').modal('show');
 
@@ -698,7 +674,6 @@ $(document).on("click", ".media-component-grid", function () {
 $(document).on("click", ".spacer-component-grid", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
-  console.log("componentParent " + componentParent);
   secGridClicked = true;
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -727,7 +702,6 @@ $('#editSpacerModal').modal('show');
 $(document).on("click", ".image-component-grid", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
-  console.log("componentParent " + componentParent);
 
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -763,7 +737,6 @@ $(document).on("click", ".grid-text-add", function () {
 $(document).on("click", ".grid-image-add", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
-  console.log("componentParent " + componentParent);
 
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -780,7 +753,6 @@ $(document).on("click", ".grid-image-add", function () {
 $(document).on("click", ".grid-spacer-add", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
-  console.log("componentParent " + componentParent);
 
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -795,7 +767,6 @@ $(document).on("click", ".grid-spacer-add", function () {
 $(document).on("click", ".grid-embed-add", function () {
 
   componentParent = $(this).closest('.editable-area').attr('id');
-  console.log("componentParent " + componentParent);
 
   preventModal = true; // To prevent parent component click listener from triggering.
   event.preventDefault();
@@ -1000,7 +971,6 @@ function showChanges() {
   $('#editor-user-page').empty();
   $('#footer-user-page').empty();
 
-  //  $('#editor-user-page').empty()
   if (editorComponents.length == 1) {
     $('#editor-user-page').removeClass("invisible").addClass("visible");
   }
