@@ -1,5 +1,10 @@
 var str = <?php echo json_encode($component); ?>;
-var webpages = JSON.parse(str);
+try {
+  var webpages = JSON.parse(str);
+} catch (err) {
+  alert("Something went wrong with loading the editor");
+}
+
 var currentWebpage = 'homepage';
 var editorComponents = webpages['webpages'][currentWebpage];
 var footerComponents = webpages['footer'];
@@ -838,9 +843,22 @@ function addEmbedGrid(gridIndex, componentIndex) {
   showChanges();
 }
 
+
+
+function escapeHtml(unsafe) {
+  return unsafe
+       .replace(/&/g, "&amp;")
+       .replace(/</g, "&lt;")
+       .replace(/>/g, "&gt;")
+       .replace(/"/g, "&quot;")
+       .replace(/'/g, "&#039;");
+}
+
+
+
 //Function to output text component html code
 function textComponentOutput(component, index) {
-  return " <div id='" + index + "' class='component mb-4'   ><p class=" + component.header + ">" + component.content + "</p></div>";
+  return " <div id='" + index + "' class='component mb-4'   ><p class=" + component.header + ">" + escapeHtml(component.content) + "</p></div>";
 }
 
 function textComponentOutputGrid(component, gridIndex, compIndex) {
