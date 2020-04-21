@@ -9,7 +9,6 @@ var currentWebpage = 'homepage';
 var editorComponents = webpages['webpages'][currentWebpage];
 var footerComponents = webpages['footer'];
 var componentParent; //when an element is clicked, we need to know which area it was clicked on in order to edit/delete it
-var sortedIDs;
 var editor = null;
 var index; //this index is used to keep track of which element is currently selected on the page
 var indexGrid; //this index is used to keep track of which grid element is currently selected on the page
@@ -23,14 +22,17 @@ $(document).ready(function () {
 });
 
 $(function () {
+  //on document ready
   var startingItem;
   var temp;
 
+  
   $(".editable-area").sortable({
-
-    axis: "y",
+    //need to make all editable areas sortable so you can re order them
+    axis: "y", //limits to only reorganizing vertically
 
     start: function (e, ui) {
+      //on sorting start
       startingItem = ui.item.index();
       var startingParent = ui.item.closest('.editable-area').attr('id');
 
@@ -50,6 +52,8 @@ $(function () {
     },
 
     stop: function (e, ui) {
+      //on sorting stop
+
       var stoppingParent = ui.item.closest('.editable-area').attr('id');
 
       var stoppingItem = ui.item.index();
@@ -62,14 +66,15 @@ $(function () {
       }
 
 
-      showChanges();
+      showChanges(); //refresh page
 
 
     }
-  }); //when sorting stops, the sortedIDs are updated
+  }); //when sorting stops, the components array is updated
 
 
   $("#sidebarList > li").draggable({
+    //this is to set the widgets to be draggable
     
     helper: 'clone',
     appendTo: '#sidebar',
@@ -82,18 +87,21 @@ $(function () {
 
 
   $(".editable-area").droppable({
-
-
+    //this is to make the footer and editor area droppable
+    //needs to be set to trigger an event when a draggable element
+    //is dropped here
 
     drop: function (e, ui) {
-
-      var dropped = ui.draggable.attr("id");
-      var theParent = $(this).attr('id');
-      componentParent = theParent;
-      console.log("theparent: " + theParent);
+    //the actual code that executes on drop
+      var dropped = ui.draggable.attr("id"); //the element that's dropped
+      var theParent = $(this).attr('id'); //the section it's dropped to
+      componentParent = theParent; //global variable 
+      
 
       var component = null;
       switch (dropped) {
+        //checks for which widget is dropped on the page
+
         case 'text-sidebar-button':
           component = makeTextComponent();
           break;
@@ -123,7 +131,7 @@ $(function () {
           break;
       }
       if (component != null) {
-
+        //after component is made, we check to where it was dropped so we can update the correct components array
         if (theParent === "editor-user-page") {
           editorComponents.push(component);
 
@@ -134,24 +142,21 @@ $(function () {
         }
 
 
-        showChanges();
+        showChanges(); //refresh page
       }
     }
 
   }); //make editor droppable
 
   $(document).on("click", "#sidebarMinimize", function () {
+    //used to minimize the sidebar
     $("#sidebar").toggle();
 
   });
 
-
-
-
   $(document).on("click", ".component", function () {
 
-    console.log("Component clicked")
-    console.log("Prevent modal: " + preventModal)
+    //this is to trigger the edit modals when any component element is clicked
 
     if (preventModal) {
       preventModal = false;
@@ -161,10 +166,9 @@ $(function () {
       return;
     }
 
-    componentParent = $(this).closest('.editable-area').attr('id');
-    console.log("componentParent " + componentParent);
+    componentParent = $(this).closest('.editable-area').attr('id'); //the area component is in
 
-    var tempComponents;
+    var tempComponents; //put the components in that area into a temp array
 
     if (componentParent == "editor-user-page") {
       tempComponents = editorComponents;
@@ -174,14 +178,14 @@ $(function () {
       tempComponents = footerComponents;
     }
 
-    console.log("id " + $(this).attr("id"));
     var id = $(this).attr("id");
-    var type = tempComponents[id].type;
+    var type = tempComponents[id].type; //check the type of the clicked component
 
     index = id;
     indexGrid = -1;
 
     switch (type) {
+      //depending on the component that was clicked, show the correct modal with the values from the clicked modal
       case 'text':
         $('#editTextModal').modal('show');
         $('#editText').val(tempComponents[id].content);
@@ -234,7 +238,7 @@ $(function () {
     }
 
 
-
+    //update the right components array
     if (componentParent == "editor-user-page") {
       editorComponents = tempComponents;
     }
@@ -247,7 +251,9 @@ $(function () {
   });
 }); //used to make the elements on the page draggable, sortable, droppable, editable
 
+
 function makeTextComponent() {
+  //makes a text component to be stored in a components array
   var component = {
     type: "text",
     header: "h3",
@@ -257,6 +263,7 @@ function makeTextComponent() {
 };
 
 function makeMediaComponent() {
+  //makes a media component to be stored in a components array
   var component = {
     type: "media",
     height: 315,
@@ -267,6 +274,7 @@ function makeMediaComponent() {
 };
 
 function makeHTMLComponent() {
+  //makes an HTML component to be stored in a components array
   var component = {
     type: "html",
     content: "<p> Click to edit code </p>"
@@ -276,6 +284,7 @@ function makeHTMLComponent() {
 };
 
 function makeImageComponent() {
+  //makes an image component to be stored in a components array
   var component = {
     type: "image",
     header: "img",
@@ -285,6 +294,7 @@ function makeImageComponent() {
 }
 
 function makeParagraphComponent() {
+  //makes a rich text component to be stored in a components array
   var component = {
     type: "paragraph",
     html: "<p>Click to edit paragraph<\/p>"
@@ -293,6 +303,7 @@ function makeParagraphComponent() {
 }
 
 function makeGridComponent() {
+  //makes a grid component to be stored in a components array
   var component = {
     type: "grid",
     content: "",
@@ -302,6 +313,7 @@ function makeGridComponent() {
   return component;
 }
 function makeButtonComponent() {
+  //makes a button component to be stored in a components array
   var component = {
     type: "button",
     url: "https://youtu.be/8PNO9unyE-I",
@@ -312,6 +324,7 @@ function makeButtonComponent() {
 };
 
 function makeSpacerComponent() {
+  //makes a Spacer component to be stored in a components array
   var component = {
     type: "spacer",
     height: "100"
@@ -321,6 +334,7 @@ function makeSpacerComponent() {
 };
 
 function makeDividerComponent() {
+  //makes a divider component to be stored in a components array
   var component = {
     type: "divider",
     height: "100"
@@ -328,9 +342,6 @@ function makeDividerComponent() {
   };
   return component;
 };
-
-
-
 
 $(document).on('click', '.save-editor-changes', saveEditor);
 
@@ -422,11 +433,9 @@ $(document).on('change', '#imageFile', function () {
   });
 })
 
-//Gets the component from the index and indexGrid global variables
+//Gets and returns the component from the index and indexGrid global variables
 function getComponent() {
   //indexGrid is -1 if it's not in a grid
-
-
 
   if (componentParent == "editor-user-page") {
     if (indexGrid == -1) {
@@ -449,48 +458,51 @@ function getComponent() {
 
   }
 
-  console.log("fuck");
-
 }
 
 $(document).on('click', '.text-edit-button', function () {
+  //modal function
+  //when save button is clicked in edit text modal, updates the selected text component with modal values
   let text = $('#editText').val();
   var component = getComponent();
   component.content = text;
   component.header = $("#hType").val();
   $('#editTextModal').modal('hide');
 
-
-
-
-  showChanges();
+  showChanges();//refresh page
 
 })
 
 $(document).on('click', '.image-edit-button', function () {
+    //modal function
+  //when save button is clicked in edit image modal, updates the selected image component with modal values
   let text = $('#addImageURL').val();
   $('#editImageModal').modal('hide')
   var component = getComponent();
   component.content = text;
 
-  showChanges();
+  showChanges();//refresh page
 });
 
 
 $(document).on('click', '.paragraph-edit-button', function () {
+    //modal function
+  //when save button is clicked in edit rich text modal, updates the selected rich text component with modal values
   let res = editor.getData();
   $('#editParagraphModal').modal('hide');
   var component = getComponent();
   component.html = editor.getData();
 
 
-  showChanges();
+  showChanges();//refresh page
 
 
 });
 
 
 $(document).on('click', '.media-edit-button', function () {
+    //modal function
+  //when save button is clicked in edit embedded content modal, updates the selected embedded content component with modal values
   let text = $('#editMediaURL').val();
   let height = $('#editMediaHeight').val();
   let width = $('#editMediaWidth').val();
@@ -507,20 +519,24 @@ $(document).on('click', '.media-edit-button', function () {
   component.height = height;
   component.width = width;
 
-  showChanges();
+  showChanges();//refresh page
 })
 
 $(document).on('click', '.html-edit-button', function () {
+    //modal function
+  //when save button is clicked in edit html modal, updates the selected html component with modal values
   let code = $('#editHTML').val();
   $('#editHTMLModal').modal('hide')
   var component = getComponent();
 
   component.content = code;
 
-  showChanges();
+  showChanges();//refresh page
 })
 
 $(document).on("click", ".grid-edit-button", function () {
+    //modal function
+  //when save button is clicked in edit grid modal, updates the selected grid component with modal values
   let columns = $("#editGridCol").val();
   $("#editGridModal").modal("hide");
   var component = getComponent();
@@ -529,8 +545,54 @@ $(document).on("click", ".grid-edit-button", function () {
   component.columns = columns;
   component.gridContent = [];
 
-  showChanges();
+  showChanges();//refresh page
 });
+
+$(document).on('click', '.button-edit-button', function () {
+      //modal function
+  //when save button is clicked in edit button modal, updates the selected button component with modal values
+  let url = $('#editButtonURL').val();
+  let content = $('#editButtonText').val();
+  let style = $('#editButtonStyle').val();
+  $('#editButtonModal').modal('hide');
+
+  var component = getComponent();
+
+  component.url = url;
+  component.content = content;
+  component.style = style;
+
+  showChanges();//refresh page
+})
+
+$(document).on('click', '.spacer-edit-button', function () {
+      //modal function
+  //when save button is clicked in edit spacer modal, updates the selected spacer component with modal values
+  let height = $('#editSpacerHeight').val();
+  $('#editSpacerModal').modal('hide');
+  
+  if (height <= 0) return;
+   
+  var component = getComponent();
+
+  component.height = height;
+
+  showChanges();//refresh page
+})
+
+$(document).on('click', '.divider-edit-button', function () {
+      //modal function
+  //when save button is clicked in edit divider modal, updates the selected divider component with modal values
+  let height = $('#editDividerHeight').val();
+  $('#editDividerModal').modal('hide');
+  var component = getComponent();
+
+  component.height = height;
+
+
+  showChanges(); //refresh page
+})
+
 
 $(document).on('click', '.add-webpage-button', function () {
   $('#addWebpageModal').modal('show');
@@ -554,44 +616,7 @@ $(document).on('click', '#deleteWebsiteModalButton', function () {
   showChanges();
 });
 
-$(document).on('click', '.button-edit-button', function () {
-  let url = $('#editButtonURL').val();
-  let content = $('#editButtonText').val();
-  let style = $('#editButtonStyle').val();
-  $('#editButtonModal').modal('hide');
 
-  var component = getComponent();
-
-  component.url = url;
-  component.content = content;
-  component.style = style;
-
-  showChanges();
-})
-
-$(document).on('click', '.spacer-edit-button', function () {
-  let height = $('#editSpacerHeight').val();
-  $('#editSpacerModal').modal('hide');
-  
-  if (height <= 0) return;
-   
-  var component = getComponent();
-
-  component.height = height;
-
-  showChanges();
-})
-
-$(document).on('click', '.divider-edit-button', function () {
-  let height = $('#editDividerHeight').val();
-  $('#editDividerModal').modal('hide');
-  var component = getComponent();
-
-  component.height = height;
-
-
-  showChanges();
-})
 
 $(document).on('submit', '#save-webpage-form', function (e) {
   console.log("Something happened")
@@ -861,6 +886,7 @@ function textComponentOutput(component, index) {
   return " <div id='" + index + "' class='component mb-4'   ><p class=" + component.header + ">" + escapeHtml(component.content) + "</p></div>";
 }
 
+//Function to output text component html codeinto grid
 function textComponentOutputGrid(component, gridIndex, compIndex) {
   return " <div id='" + compIndex + "-" + gridIndex + "' class='mb-4 text-component-grid' ><p class=" + component.header + ">" + escapeHtml(component.content) + "</p></div>";
 }
@@ -870,6 +896,7 @@ function imageComponentOutput(component, index) {
   return "<div id='" + index + "' class='component mb-4'   ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
 }
 
+// Function to output image component html code into grid
 function imageComponentOutputGrid(component, gridIndex, compIndex) {
   return "<div  id='" + compIndex + "-" + gridIndex + "' class='mb-4 image-component-grid' ><img src=\"" + component.content + "\"  height=\"300\"  alt=\"description\" > </div>";
 }
@@ -879,6 +906,7 @@ function mediaComponentOutput(component, index) {
   return "<div id='" + index + "' class='component mb-4'   style='padding:20px'> <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
 }
 
+// Function to output media component html code into grid
 function mediaComponentOutputGrid(component, gridIndex, compIndex) {
   return "<div id='" + compIndex + "-" + gridIndex + "' class='component mb-4 media-component-grid' style='padding:20px'> <iframe width='" + component.width + "' height='" + component.height + "' src=" + component.content + " frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> </div>";
 }
@@ -903,6 +931,7 @@ function spacerComponentOutput(component, index) {
   return "<div id='" + index + "' class='component mb-4' style='height:" + component.height + "px'>&nbsp;</div>"
 }
 
+//Function to output spacer component into grid
 function spacerComponentOutputGrid(component, gridIndex, compIndex) {
   return "<div id='" + compIndex + "-" + gridIndex + "' class='component bg-light pr-5 pl-5 mb-4 spacer-component-grid' style='height:" + component.height + "px'>&nbsp;</div>"
 }
@@ -950,6 +979,7 @@ function gridComponentOutput(component, index) {
   return res;
 }
 
+//given a component, this method returns that components html output (ie the stuff that needs to be put on the page)
 function getOutput(component, index) {
   switch (component.type) {
     case 'text':
