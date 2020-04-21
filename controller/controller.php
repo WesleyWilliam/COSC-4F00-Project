@@ -13,6 +13,7 @@ try {
     $_SESSION['CONTACT_MSG'] = '';
 
     //Everytime the front end sends a post request, it requires a 'COMMAND' request to specify what you are asking for
+    //Login Controller for login page
     if (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'LOGIN') {
         if (empty($_POST['UNAME']) || empty($_POST['PWD'])) {
             //Use this to set temporary messages for login where you don't want to store it in the database
@@ -36,6 +37,8 @@ try {
                 die();
             }
         }
+
+    //Sign up in login page Controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SIGNUP') {
         if (empty($_POST['UNAME']) || strlen($_POST['UNAME']) < 4 || strpos($_POST['UNAME'], ' ') !== false) {
             $_SESSION['SIGNUP_MSG'] = "Username must be at least 4 characters, no spaces";
@@ -68,7 +71,8 @@ try {
                 die();
             }
         }
-        //Uploads an image
+
+    //Website Creation for website name page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_WIZARD') {
         if (strlen($_POST['WEBSITE']) < 3) {
             $_SESSION['WEBSITENAME'] = "The name of the website needs to have more than three characters";
@@ -89,12 +93,18 @@ try {
                 die();
             }
         }
+    
+    //Log out for navbar controller
     } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
         $model->logout();
         redirect('view/login.php');
         die();
+    
+    //Save Editor for editor page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
         echo $model->saveWebsites($_POST['WEBSITE'], $_POST['WEBPAGES']);
+    
+    //Password recovery  for login page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'RECOVERPWD') {
         $_SESSION['RECOVERPWD_MSG'] = '';
         if (empty($_POST['CODE']) || empty($_POST['PWD'])) {
@@ -137,6 +147,8 @@ try {
                 die();
             }
         }
+    
+    //Recovery email for login page contoller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'RECOVEREMAIL') {
         $res = $model->recoverCode($_POST['EMAIL']);
         if ($res == "EMAILDNE") {
@@ -154,6 +166,8 @@ try {
             redirect("view/recover-email.php");
             die();
         }
+    
+    //Update profile for accounts page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPROFILE') {
         if (!empty($_POST['EMAIL'])) {
             $res = $model->updateAccountPreferences($_POST['FNAME'], $_POST['LNAME'], $_POST['DOB'], $_POST['PHONE'], $_POST['EMAIL']);
@@ -167,6 +181,8 @@ try {
                 die();
             }
         }
+    
+    //Update profile privacy for accounts page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPRIVACY') {
         $res = $model->updateAccountPrivacy($_POST['VPERM'], $_POST['BLOCKED']);
         if ($res == "SUCCESS") {
@@ -178,6 +194,8 @@ try {
             redirect("view/account.php");
             die();
         }
+    
+    //Update profile payment for accounts page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATEPAYMENT') {
         $res = $model->updateAccountPayment($_POST['CNUM'], $_POST['EDATE'], $_POST['CVVNUM'], $_POST['TYPE']);
         if ($res == "SUCCESS") {
@@ -189,6 +207,8 @@ try {
             redirect("view/account.php");
             die();
         }
+    
+    //Update profile subscriptions for accounts page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'UPDATESUBSCRIPTIONS') {
         $res = $model->updateAccountSubscription($_POST['SUB']);
         if ($res == "SUCCESS") {
@@ -200,6 +220,8 @@ try {
             redirect("view/account.php");
             die();
         }
+    
+    //Delete profile for accounts page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'DELETEACCOUNT') {
         $res = $model->deleteAccount();
         $model->logout();
@@ -212,12 +234,8 @@ try {
             redirect("view/account.php");
             die();
         }
-    } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'LOGOUT') {
-        $model->logout();
-        redirect('view/login.php');
-        die();
-    } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'SAVE-EDITOR') {
-        echo $model->saveWebsites($_POST['WEBPAGE'], $_POST['COMPONENTS']);
+    
+    //Ticket creating in supports page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'CONTACT') {
         if (empty($_POST['EMAIL'])) {
             $_SESSION['CONTACT_MSG'] = "Enter email address";
@@ -229,19 +247,27 @@ try {
             redirect('view/support.php');
             die();
         }
+    
+    //Create unique tables controller
     } elseif (isset($_REQUEST['COMMAND']) && $_REQUEST['COMMAND'] == 'UNIQUE') {
         $model->setUniques();
         echo "Unique set in tables";
+    
+    //Delete profile website for accounts page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_DELETE') {
         $res = $model->deleteWebsite($_POST['SITE']);
         $_SESSION['WEBSITENAME'] = "Website was succesfully deleted";
         redirect("view/website-name.php");
         die();
+    
+    //Delete a website method for administrator controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'WEBSITE_DELETE_ADMIN') {
         $res = $model->deleteWebsiteAdmin($_POST['SITE']);
         $_SESSION['WEBSITENAME'] = "Website was succesfully deleted";
         redirect("view/admin-portal.php");
         die();
+    
+    //Delete a user method for administrator controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'USER_DELETE_ADMIN') {
         if (isset($_POST['SITE'])) {
             $res = $model->deleteUserAdmin($_POST['SITE']);
@@ -276,11 +302,15 @@ try {
         }
         redirect("view/admin-portal.php");
         die();
+    
+    //Delete tickets for admin portal controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'CONTACT_DELETE_ADMIN') {
         $res = $model->deleteContact($_POST['SITE']);
         $_SESSION['WEBSITENAME'] = "Contact was succesfully deleted";
         redirect("view/admin-portal.php");
         die();
+    
+    //Delete tables for admin portal page controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'DELETE_DATABASE') {
         if (isset($_POST['DATABASE']) && $_POST['DATABASE'] == 'website') {
             $_POST['DATABASE'] = '';
@@ -383,13 +413,19 @@ try {
         $_SESSION['WEBSITENAME'] = "Error delete did not occur!";
         redirect("view/admin-portal.php");
         die();
+    
+    //Toggle publish for editor controller
     } elseif (isset($_POST['COMMAND']) && $_POST['COMMAND'] == 'TOGGLE_PUBLISH') {
         echo $model->togglePublish($_POST['WEBSITE']);
         die();
+    
+    //Redirect to login if an invalid command is found
     } else {
         redirect('view/login.php');
         die();
     }
+
+//Redirect to login page if an exception is caught
 } catch (Exception $e) {
     redirect('view/login.php');
     die();
