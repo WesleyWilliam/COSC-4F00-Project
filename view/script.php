@@ -891,7 +891,7 @@ function textComponentOutput(component, index) {
 }
 
 function textComponentOutputGrid(component, gridIndex, compIndex) {
-  return " <div id='" + compIndex + "-" + gridIndex + "' class='mb-4 text-component-grid' ><p class=" + escapeHtml(component.header) + ">" + component.content + "</p></div>";
+  return " <div id='" + compIndex + "-" + gridIndex + "' class='mb-4 text-component-grid' ><p class=" + component.header + ">" + escapeHTML(component.content) + "</p></div>";
 }
 
 // Function to output image component html code
