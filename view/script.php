@@ -924,7 +924,7 @@ function HTMLComponentOutput(component, index) {
 
 //Function to output button component 
 function buttonComponentOutput(component, index) {
-  return "<div id='" + index + "' class='component mb-4' ><a href='" + component.url + "' target='_blank' class='" + component.style + "'>" + component.content + "</a></div>"
+  return "<div id='" + index + "' class='component mb-4' ><a href='" + component.url + "' target='_blank' class='" + component.style + "'>" + escapeHtml(component.content) + "</a></div>"
 }
 
 //Function to output spacer component 
