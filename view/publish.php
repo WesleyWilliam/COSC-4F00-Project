@@ -79,6 +79,10 @@ try {
 
 <!-- Makes spacer transparent  -->
 <style>
+#footer-user-page{
+  position: fixed;
+  bottom: 0px;
+}
 .spacer-component-grid {
   background: #00000000 !important;
 }
