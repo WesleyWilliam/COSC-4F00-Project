@@ -14,14 +14,6 @@
       background-color: yellow;
     }
 
- 
-    #footer-user-page{
-
-position: sticky;
-bottom: 0px;
-
-
-    }
 
  /*making navbar scrollable*/
   
