@@ -34,17 +34,8 @@
       max-width: 100%;
       overflow-y: scroll;
 
-
-
-
 }
 
-
-
-
-
-
- 
   </style>
 
   <!-- Including bootstrap CSS files -->
@@ -65,6 +56,7 @@
   <!--Requirements -->
   <?php require_once '../utilities/requirements.php' ?>
 
+  <!-- Used for checking if user has correct permission to access -->
   <?php
   try {
     $component = NULL;
