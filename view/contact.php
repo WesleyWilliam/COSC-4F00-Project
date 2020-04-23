@@ -1,3 +1,5 @@
+<!-- This file is used by support.php to send messages to the ticket system -->
+
 <!-- If there is a message, show message to user -->
 <?php
 if (!empty($_SESSION['CONTACT_MSG'])) {

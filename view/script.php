@@ -1,3 +1,4 @@
+//Loads the JSON from database
 var str = <?php echo json_encode($component); ?>;
 try {
   var webpages = JSON.parse(str);
@@ -16,6 +17,7 @@ var indexGrid; //this index is used to keep track of which grid element is curre
 var preventModal = false;
 var secGridClicked = false;
 
+//Used for dealing with moving components in editor
 $('#editor-user-page').hide();
 $(document).ready(function () {
   showChanges();
@@ -84,7 +86,7 @@ $(function () {
   $(".editable-area").droppable({
 
 
-
+//For creating component when one is dragged and dropped on editor
     drop: function (e, ui) {
 
       var dropped = ui.draggable.attr("id");
@@ -147,7 +149,7 @@ $(function () {
 
 
 
-
+  //For popping up component edit modal when clicked
   $(document).on("click", ".component", function () {
 
     console.log("Component clicked")
@@ -229,11 +231,7 @@ $(function () {
         $('#editDividerModal').modal('show');
         $('#editDividerHeight').val(components[id].height);
         break;
-
-
     }
-
-
 
     if (componentParent == "editor-user-page") {
       editorComponents = tempComponents;
@@ -247,6 +245,8 @@ $(function () {
   });
 }); //used to make the elements on the page draggable, sortable, droppable, editable
 
+
+//Functions for creating default components
 function makeTextComponent() {
   var component = {
     type: "text",
@@ -357,6 +357,7 @@ function saveEditor () { // Save current state of the editor editorComponents
   }, 5000);
 }
 
+//Toggle publish/unpublish
 $(document).on('click','#publish-button',function () {
   saveEditor();
   var url = "<?php echo $config['home-file-path']; ?>/controller/controller.php";
@@ -386,6 +387,7 @@ $(document).on('click','#publish-button',function () {
   });
 })
 
+//Triggered when selecting image to upload, handles uploading image
 $(document).on('change', '#imageFile', function () {
   $('#imgSpinnerModal').modal('show');
   var url = "<?php echo $config['home-file-path']; ?>/controller/imgupload.php";
@@ -453,15 +455,13 @@ function getComponent() {
 
 }
 
+// When you hit save in edit modal
 $(document).on('click', '.text-edit-button', function () {
   let text = $('#editText').val();
   var component = getComponent();
   component.content = text;
   component.header = $("#hType").val();
   $('#editTextModal').modal('hide');
-
-
-
 
   showChanges();
 
@@ -485,8 +485,6 @@ $(document).on('click', '.paragraph-edit-button', function () {
 
 
   showChanges();
-
-
 });
 
 
@@ -546,6 +544,7 @@ $(document).on('click', '#delete-webpage-button', function () {
 
 })
 
+//When you delete a website a modal asking if you're sure pops up, this handles accepting that modal
 $(document).on('click', '#deleteWebsiteModalButton', function () {
   var tmpWebpage = currentWebpage;
   changeWebpage('homepage');
@@ -593,6 +592,7 @@ $(document).on('click', '.divider-edit-button', function () {
   showChanges();
 })
 
+//For creating a new webpage
 $(document).on('submit', '#save-webpage-form', function (e) {
   console.log("Something happened")
   e.preventDefault();
@@ -854,7 +854,7 @@ function escapeHtml(unsafe) {
        .replace(/'/g, "&#039;");
 }
 
-
+// These are all for turning a component (as a javascript object) into it's html representation so it can be displayed
 
 //Function to output text component html code
 function textComponentOutput(component, index) {
@@ -1065,6 +1065,7 @@ function showChanges() {
 
 }
 
+//Deleting components
 function deleteElement() {
 
   $('.editable-area').empty()
@@ -1083,8 +1084,6 @@ function deleteElement() {
       editorComponents.splice(index, 1);
     }
   }
-
-
 
   if (componentParent == "footer-user-page") {
     if (indexGrid != -1) {
@@ -1110,6 +1109,7 @@ function changeWebpage(name) {
   showChanges();
 }
 
+//Takes the list of components and displays it as html
 function displayWebpages() {
   $('#webpages-nav-list').empty();
   Object.keys(webpages['webpages']).forEach(function (value, index) {
