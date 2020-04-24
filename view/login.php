@@ -47,7 +47,7 @@
           <div class="container" style="padding-top: 100px;">
             <div class="row justify-content-center">
               <div class="col-8">
-                <img src="img/sign-in.png" style="width: 300px; padding-bottom:30px;" alt="brix-colours"></span>
+                <img src="img/log-in.png" style="width: 300px; padding-bottom:30px;" alt="brix-colours"></span>
                 <form action="<?php echo $config['home-file-path'] . '/controller/controller.php' ?>" method="POST">
                   <div class="form-group">
                     <label for="username1">Username</label>
