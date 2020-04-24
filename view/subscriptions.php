@@ -70,7 +70,7 @@
                         <li>Email support</li>
                         <li>Help center access</li>
                     </ul>
-                    <a type="button" class="btn btn-lg btn-block btn-primary" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Sign up for free</a>
+                    <a type="button" class="btn btn-lg btn-block btn-outline-primary" href="<?php echo $config['home-file-path'] . '/view/signup.php' ?>">Sign up for free</a>
                 </div>
             </div>
             <div class="card mb-4 shadow mb-5 bg-white rounded">

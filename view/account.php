@@ -223,11 +223,11 @@
                     </div>
                     <div class="row">
                         <div class="col-5 text-right">
-                            <p>Experation Date:</p>
+                            <p>Expiration Date:</p>
                         </div>
                         <div class="col-3">
                             <div class="form-group">
-                                <input type="month" class="form-control" id="experation" name="EDATE" value="<?php echo $user->expdate; ?>">
+                                <input type="month" max="2030-04" min="2020-05" class="form-control" id="experation" name="EDATE" value="<?php echo $user->expdate; ?>">
                             </div>
                         </div>
                     </div>
