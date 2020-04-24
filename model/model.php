@@ -154,6 +154,21 @@ class Model
             return "WRONGUSER";
         }
     }
+
+    public function checkUserOwnsWebsite($website) {
+        if (!isset($website)) {
+            return "ERR";
+        }
+
+        $site = R::load('websites', $website);
+
+        $user = $this->getUser();
+        if ($user->id === $site->users_id) {
+            return "SUCCESS";
+        } else {
+            return "ERR";
+        }
+    }
     
     //Returns the publish status of a website
     public function publishStatus($website) {
