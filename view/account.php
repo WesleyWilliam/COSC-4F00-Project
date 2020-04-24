@@ -108,11 +108,11 @@
                     </div>
                     <div class="row">
                         <div class="col-5 text-right">
-                            <p>Date Of Birth:</p>
+                            <p>Date Of Birth*:</p>
                         </div>
                         <div class="col-3">
                             <div class="form-group">
-                                <input type="date" class="form-control" id="dob" name="DOB" placeholder="Enter date of birth" value="<?php echo $user->dob; ?>">
+                                <input type="date" class="form-control" id="dob" name="DOB" placeholder="Enter date of birth" value="<?php echo $user->dob; ?>" required>
                             </div>
                         </div>
                     </div>

@@ -62,7 +62,9 @@
     $component = NULL;
     if (isset($_GET['website'])) {
       $component = $model->getWebsites($_GET['website']);
-      if ($component == "WRONGUSER") {
+      $user = $model->getUser();
+      $checkUser = $model->checkUserOwnsWebsite($_GET['website']);
+      if ($component == "WRONGUSER" || $checkUser != "SUCCESS") {
         echo '</head><body> <h1> Error, you do not have permission to access this page </h1> </body> </html>';
         die();
       }
@@ -208,7 +210,10 @@
         </div>
       </nav>
       <div class="alert alert-success save-webpage-alert mr-4" role="alert">
-        Webpage changes saved.
+        Saving website changes.
+        <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
       </div>
       
 <div>

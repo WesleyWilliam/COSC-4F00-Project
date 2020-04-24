@@ -348,7 +348,7 @@ try {
                 $model->logout();
                 $model->createAccount("Admin", "Admin@Admin.com", "Admin");
                 $id = $model->getUserID("Admin");
-                $model->addUserAdAdmin($id);
+                $model->addUserAsAdmin($id);
                 $_SESSION['LOGIN_MSG'] = "All Users have been deleted, recreated generic admin account";
                 redirect("view/login.php");
                 die();
@@ -398,7 +398,7 @@ try {
                 $model->logout();
                 $model->createAccount("Admin", "Admin@Admin.com", "Admin");
                 $id = $model->getUserID("Admin");
-                $model->addUserAdAdmin($id);
+                $model->addUserAsAdmin($id);
                 $_SESSION['LOGIN_MSG'] = "All Databases have been deleted, recreated generic admin account";
                 redirect("view/login.php");
                 die();
