@@ -270,7 +270,7 @@
     </script>
 
     <!-- EditText modal -->
-    <div class="modal fade" id="editTextModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editTextModal" >
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -280,12 +280,10 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
               <div class="form-group">
                 <label for="userText">Text:</label>
                 <input type="text" class="form-control" id="editText">
               </div>
-            </form>
             <div class="form-group">
               <label for="hType">Select Header:</label>
               <select class="form-control" id="hType">
@@ -316,14 +314,12 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
               <div class="form-group">
                 <label for="userText">Code:</label>
                 <textarea class="form-control" id="editHTML" rows="4" cols="50">
                 "Code goes here"
                  </textarea>
               </div>
-            </form>
 
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
@@ -346,7 +342,6 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
               <div class="form-group">
                 <label for="addImageURL">Image URL (optional)</label>
                 <input type="text" class="form-control" id="addImageURL">
@@ -355,7 +350,6 @@
                 <input type="file" class="custom-file-input" id="imageFile" name="file">
                 <label class="custom-file-label" for="customFile">Choose file</label>
               </div>
-            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
@@ -376,7 +370,6 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
               <div class="form-group">
                 <label for="editMediaUrl">URL:</label>
                 <input type="text" class="form-control" id="editMediaURL">
@@ -386,7 +379,6 @@
                 <input type="number" class="form-control" id="editMediaWidth">
 
               </div>
-            </form>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
               <button type="button" class="btn btn-primary media-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
@@ -512,7 +504,6 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
               <div class="form-group">
                 <label for="editButtonUrl">URL:</label>
                 <input type="text" class="form-control" id="editButtonURL">
@@ -533,7 +524,6 @@
               </select>
 
               </div>
-            </form>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
               <button type="button" class="btn btn-primary button-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
@@ -554,7 +544,6 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
               <div class="form-group">
        
                 <label for="editSpacerHeight">Height:</label>
@@ -562,7 +551,6 @@
 
 
               </div>
-            </form>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>
               <button type="button" class="btn btn-primary spacer-edit-button" data-dismiss="modal" aria-label="Close">Save</button>
@@ -583,7 +571,6 @@
             </button>
           </div>
           <div class="modal-body">
-          <form>
               <div class="form-group">
        
                 <label for="editDividerHeight">Height:</label>
@@ -591,7 +578,6 @@
 
 
               </div>
-            </form>
 
             <div class="modal-footer">
               <button type="button" class="btn btn-primary" onclick="deleteElement()" data-dismiss="modal">Delete</button>

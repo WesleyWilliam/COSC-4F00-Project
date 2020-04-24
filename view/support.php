@@ -127,7 +127,7 @@
         <h1 class="display-5 text-muted font-weight-light mb-4" id="how-to-contact">How do I contact support?</h1>
         <p>Our experts are here to help 24/7.</p>
         <p>You can reach us by phone at: 1-800-555-5555</p>
-        <p>Or by email at: <a href="" data-toggle="modal" data-target="#email">brix-support@brixcare.ca</a></p>
+        <p><a href="" data-toggle="modal" data-target="#email">Click here to send message</a></p>
 
         <div class="text-right">
             <a class ="align-right btn btn-outline-primary" href="#top">Back to Top</a>
