@@ -190,9 +190,9 @@
         <div>
           <button type="button" class="btn btn-outline-success mr-2 save-editor-changes">Save all</button>
           <a role="button" href="<?php echo $config['home-file-path']; ?>/view/publish.php?website=<?php echo $_GET['website'] ?>" target="_blank" class="btn btn-outline-info preview-editor">Preview</a>
-          <a role="button" href="" class="btn btn-outline-danger mr-2" id="publish-button" title="When published anyone can view your website"> 
+          <button type="button" class="btn btn-outline-danger mr-2" id="publish-button" title="When published anyone can view your website"> 
           <?php $res = $model->publishStatus($_GET['website']); if ($res == 'PUBLISHED') {echo 'Unpublish';} elseif ($res == 'UNPUBLISHED') {echo 'Publish';} else {echo $res;}  ?>
-          </a>
+          </button>
 
 
 
