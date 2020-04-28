@@ -8,6 +8,7 @@ Wesley Nantais 5903455 wn15rb@brocku.ca
 <br>Ege Can Kaya 6150817 <ek16lg@brocku.ca></br>
 Emmanuel Guarino 6038970 eg15rc@brocku.ca </br>
 Brock Jones 5859723 bj15nv@brocku.ca
+Bikram Gill 5938923 bg15ru@brocku.ca
 
 To setup this project, run sh setup.sh and then edit the config/config.php file to your setup.
 
