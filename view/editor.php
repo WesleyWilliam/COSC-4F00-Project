@@ -142,7 +142,7 @@
 
         <li id="paragraph-sidebar-button" class="list-group-item list-group-item-action paragraph-sidebar">
           <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-            <span>Rich Text</span>
+            <span>Rich Text (beta, might cause issues)</span>
             <i data-feather="align-left"></i>
           </div>
         </li>
