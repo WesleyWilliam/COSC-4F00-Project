@@ -4,7 +4,7 @@ Group Members:
 <br>
 Wesley Nantais 5903455 wn15rb@brocku.ca
 <br>Tyler  Applin  5920616 ta15jc@brocku.ca
-<br>Eduardo Galindo 5480504 <eg13vh@brocku.ca></br>
+<br>Eduardo Galindo 5480504 <eg13vh@brocku.ca>
 <br>Ege Can Kaya 6150817 <ek16lg@brocku.ca></br>
 Emmanuel Guarino 6038970 eg15rc@brocku.ca </br>
 Brock Jones 5859723 bj15nv@brocku.ca
